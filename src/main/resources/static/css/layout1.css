@@ -1,0 +1,35 @@
+html {
+    position: relative;
+    min-height: 100%;
+    margin: 0;
+}
+
+body {
+    min-height: 100%;
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+}
+
+.content {
+    margin: 50px 200px 100px;
+}
+
+/* 중복아이디 존재하지 않는경우 */
+.id_input_re_1 {
+    color: green;
+    display: none;
+}
+
+/* 중복아이디 존재하는 경우 */
+.id_input_re_2 {
+    color: red;
+    display: none;
+}

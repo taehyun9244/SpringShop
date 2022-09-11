@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.carousel').carousel({
+                interval: 4000,
+                pause: "hover",
+                wrap: true,
+                keyboard : true
+            });
+        });
+    </script>
+</th:block>
+
+<th:block layout:fragment="css">
+    <style>
+        .carousel-inner > .item {
+            height: 350px;
+        }
+        .margin{
+            margin-bottom:30px;
+        }
+        .banner{
+            height: 300px;
+            position: absolute; top:0; left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .card-text{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        a:hover{
+            text-decoration:none;
+        }
+        .center{
+            text-align:center;
+        }
+        .carousel-item{
+            padding-bottom:60px;
+        }
+
+    </style>
+</th:block>
+
+<div class="row">
+    <th:block th:each="item, status: ${items.getContent()}">
+        <div class="col-md-4 margin">
+            <div class="card">
+                <a th:href="'/user/items' +${item.id}" class="text-dark">
+                    <img th:src="${item.imgUrl}" class="card-img-top" th:alt="${item.itemName}" height="300">
+                    <div class="card-body">
+                        <h4 class="card-title">[[${item.itemName}]]</h4>
+                        <p class="card-text">[[${item.Body}]]</p>
+                        <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </th:block>
+
+</div>
+</body>
+</html>
