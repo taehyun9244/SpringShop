@@ -1,6 +1,6 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.dto.item.ItemDto;
+import com.example.mvcprac.dto.item.ItemAddDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,16 +27,16 @@ public class Item {
     private int price;
 
     @Column(nullable = false)
-    private int quantity;
-
-    @Column(nullable = false)
     private String itemSellStatus;
 
+    @Column(nullable = false)
+    private String deliveryChoice;
 
-    public Item(ItemDto addDto) {
+    public Item(ItemAddDto addDto) {
         this.itemName = addDto.getItemName();
         this.itemBody = addDto.getItemBody();
         this.price = addDto.getPrice();
-        this.quantity = addDto.getQuantity();
+        this.itemSellStatus = addDto.getItemSellStatus();
+        this.deliveryChoice = addDto.getDeliveryChoice();
     }
 }

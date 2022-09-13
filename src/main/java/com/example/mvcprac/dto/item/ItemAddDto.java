@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
-public class ItemDto {
+public class ItemAddDto {
 
     private Long id;
 
@@ -21,10 +21,9 @@ public class ItemDto {
     @NotNull(message = "상품의 가격을 입력해 주세요")
     private int price;
 
-    @NotNull(message = "상품의 수량을 입력해 주세요")
-    private int quantity;
-
     private String itemSellStatus;
+
+    private String deliveryChoice;
 
     private List<MultipartFile> imageFiles;
 }

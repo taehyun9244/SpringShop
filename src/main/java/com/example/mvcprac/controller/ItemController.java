@@ -1,6 +1,7 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.item.ItemDto;
+import com.example.mvcprac.dto.item.ItemAddDto;
+import com.example.mvcprac.dto.item.ItemDetailDto;
 import com.example.mvcprac.service.ItemService;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,9 @@ public class ItemController {
      * 상품 상세페이지 불러오기
      */
     @GetMapping("/{id}")
-    public String editItem(Model model, @PathVariable Long id) throws NotFoundException {
+    public String findItem(Model model, @PathVariable("id") Long id) throws NotFoundException {
         itemServiceImpl.findById(id);
-        model.addAttribute("itemDto", new ItemDto());
+        model.addAttribute("itemDetailDto", new ItemDetailDto());
         return "item/itemOne";
     }
 
@@ -36,7 +37,7 @@ public class ItemController {
      */
     @GetMapping("/add")
     public String addItem(Model model) {
-        model.addAttribute("itemDto", new ItemDto());
+        model.addAttribute("itemAddDto", new ItemAddDto());
         return "item/itemAdd";
     }
 
@@ -44,7 +45,7 @@ public class ItemController {
      * 상품 등록하기
      */
     @PostMapping("/add")
-    public String addItem(@Validated @ModelAttribute("itemDto") ItemDto addDto,
+    public String addItem(@Validated @ModelAttribute("itemDetailDto") ItemAddDto addDto,
                           BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         //validation 실패하면
@@ -57,7 +58,7 @@ public class ItemController {
         Long saveItem = itemServiceImpl.createItem(addDto);
         redirectAttributes.addAttribute("itemId", saveItem);
         redirectAttributes.addAttribute("status", true);
-        return "redirect:/user/item/add/{itemId}";
+        return "redirect:/user/items/{itemId}";
     }
 
 
@@ -65,7 +66,7 @@ public class ItemController {
      * 상품 수정하기
      */
     @PutMapping("/edit/{id}")
-    public String editItem(@Validated @ModelAttribute("itemDto") ItemDto addDto,
+    public String editItem(@Validated @ModelAttribute("itemDetailDto") ItemAddDto addDto,
                            BindingResult bindingResult, @PathVariable Long id) throws NotFoundException {
         //validation 실패하면
         if (bindingResult.hasErrors()) {

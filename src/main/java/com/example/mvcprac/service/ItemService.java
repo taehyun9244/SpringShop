@@ -1,17 +1,19 @@
 package com.example.mvcprac.service;
 
-import com.example.mvcprac.dto.item.ItemDto;
+import com.example.mvcprac.dto.item.ItemAddDto;
+import com.example.mvcprac.dto.item.ItemDetailDto;
 import com.example.mvcprac.dto.item.ItemListDto;
 import com.example.mvcprac.model.Item;
 import com.example.mvcprac.repository.ItemRepository;
+import com.example.mvcprac.repository.queryRepository.ItemQueryRepository;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -19,24 +21,37 @@ import java.util.List;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final ItemQueryRepository itemQueryRepository;
     private final ModelMapper modelMapper;
+
+    /**
+     *  아이템 리스트 전체
+     */
+    public Page<ItemListDto> findAll(Pageable pageable) {
+        Page<ItemListDto> findAllItem = itemQueryRepository.findItemList(pageable);
+        for (ItemListDto itemListDto : findAllItem){
+            log.info("itemListDto", itemListDto);
+        }
+        return findAllItem;
+    }
 
     /**
      * 아이템 하나만 조회
      */
     @Transactional(readOnly = true)
-    public Long findById(Long id) throws NotFoundException {
+    public ItemDetailDto findById(Long id) throws NotFoundException {
         Item findItem = itemRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("존재하지 않는 게시글 입니다")
         );
-        return findItem.getId();
+        ItemDetailDto itemDetailDto = modelMapper.map(findItem, ItemDetailDto.class);
+        return itemDetailDto;
     }
 
     /**
      * 아이템 생성
      */
     @Transactional
-    public Long createItem(ItemDto addDto) {
+    public Long createItem(ItemAddDto addDto) {
         Item item = new Item(addDto);
         Item saveItem = itemRepository.save(item);
         return saveItem.getId();
@@ -46,12 +61,13 @@ public class ItemService {
      * 아이템 수정
      */
     @Transactional
-    public void editItem(ItemDto editDto, Long id) throws NotFoundException {
-        Item editItem = itemRepository.findById(id).orElseThrow(
+    public Long editItem(ItemAddDto editDto, Long id) throws NotFoundException {
+        Item findItem = itemRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("존재하지 않는 게시글 입니다")
         );
         Item item = new Item(editDto);
-        itemRepository.save(item);
+        Item editItem = itemRepository.save(item);
+        return editItem.getId();
     }
 
     /**
@@ -59,21 +75,9 @@ public class ItemService {
      */
     @Transactional
     public void delete(Long id) throws NotFoundException {
-        Item findById = itemRepository.findById(id).orElseThrow(
+        Item findItem = itemRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("존재하지 않는 게시글 입니다")
         );
-        itemRepository.delete(findById);
-    }
-
-    /**
-     *  아이템 리스트 전체
-     */
-    public List<ItemListDto> findAll() {
-        List<Item> findAll = itemRepository.findByAllItemIdOrderByIdAsc();
-        ItemListDto listDto = modelMapper.map(findAll, ItemListDto.class);
-        for (ItemListDto findAl : findAll) {
-            log.info("deliveryBoard = {}", deliveryBoard);
-        }
-        return
+        itemRepository.delete(findItem);
     }
 }
