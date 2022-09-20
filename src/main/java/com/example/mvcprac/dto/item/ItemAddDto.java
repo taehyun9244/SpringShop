@@ -10,8 +10,6 @@ import java.util.List;
 @Data
 public class ItemAddDto {
 
-    private Long id;
-
     @NotBlank(message = "상품의 이름을 입력해 주세요")
     private String itemName;
 
@@ -22,8 +20,6 @@ public class ItemAddDto {
     private int price;
 
     private String itemSellStatus;
-
     private String deliveryChoice;
-
     private List<MultipartFile> imageFiles;
 }

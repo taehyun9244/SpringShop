@@ -2,7 +2,7 @@ package com.example.mvcprac.controller;
 
 import com.example.mvcprac.dto.user.LoginDto;
 import com.example.mvcprac.dto.user.SignupDto;
-import com.example.mvcprac.service.impl.UserServiceImpl;
+import com.example.mvcprac.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
 
 
     @GetMapping(value = "/signup")
@@ -43,7 +43,7 @@ public class UserController {
         }
 
         //검증 성공시
-        userServiceImpl.createUser(dto);
+        userService.createUser(dto);
         redirectAttributes.addAttribute("status", true);
 
         return "login/login";

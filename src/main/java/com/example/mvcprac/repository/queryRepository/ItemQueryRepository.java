@@ -3,6 +3,7 @@ package com.example.mvcprac.repository.queryRepository;
 import com.example.mvcprac.dto.item.ItemDetailDto;
 import com.example.mvcprac.dto.item.ItemListDto;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.example.mvcprac.model.QImage.image;
 import static com.example.mvcprac.model.QItem.item;
 
 @Repository
@@ -36,6 +38,7 @@ public class ItemQueryRepository {
                         item.deliveryChoice,
                         item.price))
                 .from(item)
+                .leftJoin(item.images)
                 .orderBy(item.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -47,19 +50,25 @@ public class ItemQueryRepository {
         return PageableExecutionUtils.getPage(itemList, pageable, countQuery :: fetchOne);
     }
 
-    /**
-     * 아이템 하나 조회
-     */
-    public ItemDetailDto findOneItem(Long id) {
-        queryFactory
-                .select(Projections.constructor(ItemDetailDto.class,
-                        item.id,
+    public ItemDetailDto findDetailItem(Long id) {
+        return queryFactory
+                .select(Projections.constructor(
+                        ItemDetailDto.class,
                         item.itemName,
                         item.itemBody,
                         item.itemSellStatus,
                         item.deliveryChoice,
-                        item.price))
-                .from(item);
+                        item.price,
+                        item.images
+                ))
+                .from(item)
+                .leftJoin(item.images, image)
+                .where(itemIdEq(id))
+                .orderBy(image.id.desc())
+                .fetchOne();
+    }
 
+    private BooleanExpression itemIdEq(Long id) {
+        return id != null ? item.id.eq(id) : item.isNull();
     }
 }

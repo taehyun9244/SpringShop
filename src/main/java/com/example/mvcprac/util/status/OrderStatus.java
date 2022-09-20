@@ -1,14 +1,13 @@
-package com.example.mvcprac.util;
+package com.example.mvcprac.util.status;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ItemSellStatus {
-
-    SELL("SELL", "SELL", "판매중"),
-    SOLD("SOLD", "SOLD_OUT", "재고없음");
+public enum OrderStatus {
+    ORDER("ORDER", "ORDER", "주문"),
+    CANCEL("CANCEL", "CANCEL", "주문취소");
 
     private final String code;
     private final String name;

@@ -34,32 +34,32 @@
     </style>
 </th:block>
 
-<div layout:fragment="content" style="margin-left:25%;margin-right:25%">
+<div layout:fragment="content" style="margin-left:25%; margin-right:25%">
 
     <input type="hidden" id="itemId" th:value="${itemDetailDto.id}">
 
     <div class="d-flex">
-<!--        <div class="repImgDiv">-->
-<!--            <img th:src="${itemDetailDto.itemImgDtoList[0].imgUrl}" class="rounded repImg" th:alt="${itemDetailDto.itemName}">-->
-<!--        </div>-->
+        <div class="repImgDiv">
+            <img th:src="${itemDetailDto.imageFiles.get(0).getStoreFileName()}" class="rounded repImg" th:alt="${itemDetailDto.itemName}">
+        </div>
         <div class="wd50">
-      <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.ItemSellStatus).SELL }"
+      <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL }"
             class="badge badge-primary mgb-15">
         판매중
       </span>
-            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.ItemSellStatus).SELL}"
+            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL}"
                   class="badge btn-danger mgb-15">
         품절
       </span>
-            <span th:if="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.DeliveryEnum).POST }"
-            class="badge badge-primary mgb-15">
+            <span th:if="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).POST }"
+                  class="badge badge-primary mgb-15">
         우체국
       </span>
-            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.DeliveryEnum).LOTTE}"
+            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.DeliveryEnum).LOTTE}"
                   class="badge btn-danger mgb-15">
         롯데
       </span>
-            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.DeliveryEnum).CJ}"
+            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.DeliveryEnum).CJ}"
                   class="badge btn-danger mgb-15">
         CJ
       </span>
@@ -73,20 +73,6 @@
                 </div>
             </div>
             <hr class="my-4">
-
-            <div class="text-right mgt-50">
-                <h5>결제 금액</h5>
-                <h3 name="totalPrice" id="totalPrice" class="font-weight-bold"></h3>
-            </div>
-            <div th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.ItemSellStatus).SELL}" class="text-right">
-                <button type="button" class="btn btn-light border border-primary btn-lg"
-                        onclick="addCart()">장바구니 담기
-                </button>
-                <button type="button" class="btn btn-primary btn-lg" onclick="order()">주문하기</button>
-            </div>
-            <div th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.ItemSellStatus).SELL}" class="text-right">
-                <button type="button" class="btn btn-danger btn-lg">품절</button>
-            </div>
         </div>
     </div>
 
@@ -97,10 +83,19 @@
             <p class="lead" th:text="${itemDetailDto.itemBody}"></p>
         </div>
     </div>
-<!--    <div th:each="itemImg : ${itemDetailDto.itemImgDtoList}" class="text-center">-->
-<!--        <img th:if="${not #strings.isEmpty(itemImg.imgUrl)}" th:src="${itemImg.imgUrl}" class="rounded mgb-15"-->
-<!--             width="800">-->
-<!--    </div>-->
+    <div th:each="imageFile : ${itemDetailDto.imageFiles}" class="text-center">
+        <img th:if="${not #strings.isEmpty(imageFile.getStoreFileName())}" th:src="${imageFile.getStoreFileName()}" class="rounded mgb-15"
+             width="800">
+    </div>
+
+    <div style="text-align: center">
+        <button th:formaction="@{'/user/items/edit' + ${itemDetailDto.id} }" type="submit" class="btn btn-primary">수정
+        </button>
+    </div>
+    <div style="text-align: center">
+        <button th:formaction="@{'/user/items/delete' + ${itemDetailDto.id} }" type="submit" class="btn btn-primary">삭제
+        </button>
+    </div>
 </div>
 </body>
 </html>

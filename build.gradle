@@ -53,6 +53,10 @@ dependencies {
     //model mapper
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
 
+    //mapstruct
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+
     //querydsl 추가
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
