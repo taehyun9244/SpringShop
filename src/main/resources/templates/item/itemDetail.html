@@ -40,7 +40,7 @@
 
     <div class="d-flex">
         <div class="repImgDiv">
-            <img th:src="${itemDetailDto.imageFiles.get(0).getStoreFileName()}" class="rounded repImg" th:alt="${itemDetailDto.itemName}">
+            <img th:src="${itemDetailDto.getImageFiles().get(0)}" class="rounded repImg" th:alt="${itemDetailDto.itemName}">
         </div>
         <div class="wd50">
       <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL }"
@@ -55,14 +55,11 @@
                   class="badge badge-primary mgb-15">
         우체국
       </span>
-            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.DeliveryEnum).LOTTE}"
+            <span th:unless="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).LOTTE}"
                   class="badge btn-danger mgb-15">
         롯데
       </span>
-            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.DeliveryEnum).CJ}"
-                  class="badge btn-danger mgb-15">
-        CJ
-      </span>
+
             <div class="h4" th:value="${itemDetailDto.itemName}"></div>
             <hr class="my-4">
 
@@ -84,7 +81,7 @@
         </div>
     </div>
     <div th:each="imageFile : ${itemDetailDto.imageFiles}" class="text-center">
-        <img th:if="${not #strings.isEmpty(imageFile.getStoreFileName())}" th:src="${imageFile.getStoreFileName()}" class="rounded mgb-15"
+        <img th:src="|/images/${imageFile.getStoreFileName()}|" class="rounded mgb-15"
              width="800">
     </div>
 

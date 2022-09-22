@@ -33,7 +33,7 @@
 </th:block>
 
 <div layout:fragment="content">
-    <form th:action role="form" method="post" enctype="multipart/form-data" th:object="${itemAddDto}">
+    <form th:action role="form" method="post" enctype="multipart/form-data" th:object="${form}">
 
         <p class="h2">
             상품 등록
@@ -51,7 +51,6 @@
             <select th:field="*{deliveryChoice}" class="custom-select">
                 <option value="">=== 택배사 선택 ===</option>
                 <option value="POST">우체국</option>
-                <option value="CJ">CJ</option>
                 <option value="LOTTE">롯데</option>
             </select>
         </div>

@@ -1,7 +1,7 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.item.ItemAddDto;
 import com.example.mvcprac.dto.item.ItemDetailDto;
+import com.example.mvcprac.dto.item.ItemForm;
 import com.example.mvcprac.service.ItemService;
 import com.example.mvcprac.service.file.FileStore;
 import lombok.RequiredArgsConstructor;
@@ -28,16 +28,16 @@ public class ItemController {
 
 
     /**
-     * 상품 상세페이지 불러오기
+     * findById item
      */
     @GetMapping("/{id}")
     public String findItem(@PathVariable Long id, Model model) {
 
-        ItemDetailDto itemDetailDto = itemServiceImpl.findById(id);
+        ItemDetailDto itemDetailDto  = itemServiceImpl.findById(id);
         log.info("itemDetail = {}", itemDetailDto);
         model.addAttribute("itemDetailDto", itemDetailDto);
 
-        return "item/itemOne";
+        return "item/itemDetail";
     }
 
     @ResponseBody
@@ -48,66 +48,36 @@ public class ItemController {
 
 
     /**
-     * 상품 등록페이지 가져오기
+     * create Item Form
      */
     @GetMapping("/add")
-    public String addItem(@ModelAttribute ItemAddDto itemAddDto) {
-        return "item/itemAdd";
+    public String addItem(@ModelAttribute(name = "form") ItemForm form) {
+        return "item/itemForm";
     }
 
+
     /**
-     * 상품 등록하기
+     * create Item
      */
     @PostMapping("/add")
-    public String addItem(@Validated @ModelAttribute("itemAddDto") ItemAddDto itemAddDto,
+    public String addItem(@Validated @ModelAttribute(name = "form") ItemForm form,
                           BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
 
-        log.info("itemAddDto = {}", itemAddDto);
+        log.info("itemForm = {}", form);
 
         //validation 실패하면
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
-            return "item/itemAdd";
+            return "item/itemForm";
         }
 
         //validation 성공하면
-        Long itemId = itemServiceImpl.createItem(itemAddDto);
+        Long itemId = itemServiceImpl.createItem(form);
         log.info("itemId = {}", itemId);
 
         redirectAttributes.addAttribute("itemId", itemId);
         return "redirect:/user/items/{itemId}";
     }
 
-
-    /**
-     * 상품 수정하기
-     */
-    @PutMapping("/edit/{id}")
-    public String editItem(@Validated @ModelAttribute("itemDetailDto") ItemAddDto editDto,
-                           BindingResult bindingResult, @PathVariable Long id) throws IOException {
-        //validation 실패하면
-        if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
-            return "item/itemEdit";
-        }
-
-        //image file 존재여부 체크
-        if (editDto.getImageFiles().get(0).isEmpty()) {
-            return "item/itemEdit";
-        }
-
-        //validation 성공하면
-        itemServiceImpl.editItem(editDto, id);
-        return "redirect:/";
-    }
-
-    /**
-     * 상품 삭제하기
-     */
-    @DeleteMapping("/delete/{id}")
-    public String deleteItem(@PathVariable Long id) {
-        itemServiceImpl.delete(id);
-        return "redirect:/";
-    }
 
 }

@@ -1,6 +1,6 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.dto.item.ItemAddDto;
+import com.example.mvcprac.dto.item.ItemForm;
 import com.example.mvcprac.util.Timestamped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,12 +38,12 @@ public class Item extends Timestamped {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<Image>();
 
-    public Item(ItemAddDto addDto, List<Image> images) {
+    public Item(ItemForm addDto, List<Image> storeImageFiles) {
         this.itemName = addDto.getItemName();
         this.itemBody = addDto.getItemBody();
         this.price = addDto.getPrice();
         this.itemSellStatus = addDto.getItemSellStatus();
         this.deliveryChoice = addDto.getDeliveryChoice();
-        this.images = images;
+        this.images = storeImageFiles;
     }
 }

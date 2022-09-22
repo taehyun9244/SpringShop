@@ -10,7 +10,7 @@
                 interval: 4000,
                 pause: "hover",
                 wrap: true,
-                keyboard: true
+                keyboard : true
             });
         });
     </script>
@@ -24,6 +24,10 @@
 
         .margin {
             margin-bottom: 30px;
+        }
+
+        select{
+            margin-right:10px;
         }
 
         .card-text {
@@ -40,11 +44,13 @@
 </th:block>
 
 <div layout:fragment="content" style="min-width: 700px; max-width: 900px; margin: 50px auto 100px auto;">
+
+
     <div class="row">
-        <th:block th:each="item : ${itemListDto}">
+        <th:block th:each="item : ${itemList}">
             <div class="col-md-4 margin">
                 <div class="card" style="width: 18rem; float:left; float: bottom; margin:0px 100px 100px 0px">
-                    <img th:src="${item.imageFiles.get(0).getStoreFileName()}" class="card-img-top" th:alt="${item.itemName}" height="300">
+                    <img th:src="${item.storeFileName}" class="card-img-top" th:alt="${item.itemName}" height="300">
                     <div class="card-body">
                         <a th:href="'/user/items/' +${item.id}" class="text-dark">
                             <h4 class="card-title">[[${item.itemName}]]</h4>
