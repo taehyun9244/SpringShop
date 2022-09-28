@@ -28,26 +28,6 @@ public class ItemController {
 
 
     /**
-     * findById item
-     */
-    @GetMapping("/{id}")
-    public String findItem(@PathVariable Long id, Model model) {
-
-        ItemDetailDto itemDetailDto  = itemServiceImpl.findById(id);
-        log.info("itemDetail = {}", itemDetailDto);
-        model.addAttribute("itemDetailDto", itemDetailDto);
-
-        return "item/itemDetail";
-    }
-
-    @ResponseBody
-    @GetMapping("/images/{fileName}")
-    public Resource downloadImage(@PathVariable String fileName) throws MalformedURLException {
-        return new UrlResource("file:"+ fileStore.getFullPath(fileName));
-    }
-
-
-    /**
      * create Item Form
      */
     @GetMapping("/add")
@@ -79,5 +59,30 @@ public class ItemController {
         return "redirect:/user/items/{itemId}";
     }
 
+
+    /**
+     * findById item
+     */
+    @GetMapping("/{id}")
+    public String findItem(@PathVariable Long id, Model model) {
+
+        ItemDetailDto itemDetailDto = itemServiceImpl.findById(id);
+        model.addAttribute("itemDetailDto", itemDetailDto);
+
+        return "item/itemDetail";
+    }
+
+
+    @ResponseBody
+    @GetMapping("/images/{fileName}")
+    public Resource downloadImage(@PathVariable String fileName) throws MalformedURLException {
+        return new UrlResource("file:"+ fileStore.getFullPath(fileName));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteItem(@PathVariable Long id) {
+        itemServiceImpl.deleteItem(id);
+        return "home";
+    }
 
 }

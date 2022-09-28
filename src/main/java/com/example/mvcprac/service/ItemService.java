@@ -1,15 +1,16 @@
 package com.example.mvcprac.service;
 
-import com.example.mvcprac.dto.item.ItemDetailDto;
-import com.example.mvcprac.dto.item.ItemForm;
-import com.example.mvcprac.dto.item.ItemListDto;
+import com.example.mvcprac.dto.item.*;
 import com.example.mvcprac.model.Image;
 import com.example.mvcprac.model.Item;
+import com.example.mvcprac.repository.ImageRepository;
+import com.example.mvcprac.repository.ItemQueryRepository;
 import com.example.mvcprac.repository.ItemRepository;
-import com.example.mvcprac.repository.queryRepository.ItemQueryRepository;
 import com.example.mvcprac.service.file.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,37 +25,40 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final ItemRepository itemRepository;
-    private final ItemQueryRepository itemQueryRepository;
+    private final ItemQueryRepository queryRepository;
+    private final ImageRepository imageRepository;
     private final FileStore fileStore;
 
 
     /**
-     * find all item of querydsl
+     * find all item
      */
+
     @Transactional(readOnly = true)
-    public List<ItemListDto> findAllItem() {
-        List<Item> itemList = itemRepository.findAll();
-        List<ItemListDto> itemListDto = itemList.stream()
-                .map(item -> new ItemListDto(item))
-                .collect(Collectors.toList());
-        return itemListDto;
+
+    public Page<ItemListDto> findAllItem(ItemSearchDto itemSearchDto, Pageable pageable) {
+        return queryRepository.findAllItem(itemSearchDto, pageable);
     }
 
-
     /**
-     * findId item
+     * findById item
      */
+
     @Transactional(readOnly = true)
     public ItemDetailDto findById(Long id) {
+
+        List<Image> findImageByItemId = imageRepository.findAllByItemIdOrderByCreatedAtDesc(id);
+        List<ItemImageDto> imageDtoList = findImageByItemId.stream()
+                .map(image -> new ItemImageDto(image))
+                .collect(Collectors.toList());
 
         Item item = itemRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시글입니다")
         );
 
-        ItemDetailDto itemDetailDto = new ItemDetailDto(item);
+        ItemDetailDto itemDetailDto = new ItemDetailDto(item, imageDtoList);
         return itemDetailDto;
     }
-
 
 
     /**
@@ -63,14 +67,34 @@ public class ItemService {
     @Transactional
     public Long createItem(ItemForm form) throws IOException {
 
-        List<MultipartFile> imageFiles = form.getImageFiles();
-        List<Image> storeImageFiles = fileStore.saveImages(imageFiles);
-
-        Item item = new Item(form, storeImageFiles);
+        Item item = new Item(form);
         Item saveItem = itemRepository.save(item);
+
+        List<MultipartFile> imageFiles = form.getImageFiles();
+        fileStore.saveImages(imageFiles, saveItem);
+
         return saveItem.getId();
     }
 
+    /**
+     *  editItem
+     */
+//    @Transactional
+//    public Long edit(ItemForm form, Long id) {
+//        Item item = itemRepository.findById(id).orElseThrow(
+//                () -> new IllegalArgumentException("존재하지 않는 게시글입니다")
+//        );
+//    }
 
+    /**
+     * deleteItem
+     */
+    @Transactional
+    public void deleteItem(Long id) {
 
+        Item item = itemRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 게시글입니다")
+        );
+        itemRepository.delete(item);
+    }
 }

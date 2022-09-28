@@ -2,12 +2,14 @@ package com.example.mvcprac;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-public class MvcpracApplication {
+@EnableJpaAuditing
+public class App {
 
     public static void main(String[] args) {
-        SpringApplication.run(MvcpracApplication.class, args);
+        SpringApplication.run(App.class, args);
     }
 
 }

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
+
 <th:block layout:fragment="css">
     <style>
         .mgb-15 {
@@ -40,7 +41,7 @@
 
     <div class="d-flex">
         <div class="repImgDiv">
-            <img th:src="${itemDetailDto.getImageFiles().get(0)}" class="rounded repImg" th:alt="${itemDetailDto.itemName}">
+            <img th:src="|/images/${itemDetailDto.itemImageDto[0].getStoreFileName()}|" class="rounded repImg" th:alt="${itemDetailDto.itemName}">
         </div>
         <div class="wd50">
       <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL }"
@@ -80,17 +81,17 @@
             <p class="lead" th:text="${itemDetailDto.itemBody}"></p>
         </div>
     </div>
-    <div th:each="imageFile : ${itemDetailDto.imageFiles}" class="text-center">
-        <img th:src="|/images/${imageFile.getStoreFileName()}|" class="rounded mgb-15"
+    <div th:each="imageFile : ${itemDetailDto.itemImageDto}" class="text-center">
+        <img th:if="${not #strings.isEmpty(imageFile.getStoreFileName())}" th:src="|/images/${imageFile.getStoreFileName()}|" class="rounded mgb-15"
              width="800">
     </div>
 
     <div style="text-align: center">
-        <button th:formaction="@{'/user/items/edit' + ${itemDetailDto.id} }" type="submit" class="btn btn-primary">수정
+        <button th:href="@{'/user/items/edit' + ${itemDetailDto.id}}" type="submit" class="btn btn-primary">수정
         </button>
     </div>
     <div style="text-align: center">
-        <button th:formaction="@{'/user/items/delete' + ${itemDetailDto.id} }" type="submit" class="btn btn-primary">삭제
+        <button th:href="@{/user/items/delete(id=${itemDetailDto.id})}" th:method="delete" type="submit" class="btn btn-primary">삭제
         </button>
     </div>
 </div>

@@ -35,15 +35,23 @@ public class Item extends Timestamped {
     @Column(nullable = false)
     private String deliveryChoice;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Image> images = new ArrayList<Image>();
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Image> images = new ArrayList<>();
 
-    public Item(ItemForm addDto, List<Image> storeImageFiles) {
-        this.itemName = addDto.getItemName();
-        this.itemBody = addDto.getItemBody();
-        this.price = addDto.getPrice();
-        this.itemSellStatus = addDto.getItemSellStatus();
-        this.deliveryChoice = addDto.getDeliveryChoice();
-        this.images = storeImageFiles;
+    public Item(ItemForm form) {
+        this.itemName = form.getItemName();
+        this.itemBody = form.getItemBody();
+        this.price = form.getPrice();
+        this.itemSellStatus = form.getItemSellStatus();
+        this.deliveryChoice = form.getDeliveryChoice();
+    }
+
+    public Item(Item item, ItemForm form) {
+        this.id = item.id;
+        this.itemName = form.getItemName();
+        this.itemBody = form.getItemBody();
+        this.price = form.getPrice();
+        this.itemSellStatus = form.getItemSellStatus();
+        this.deliveryChoice = form.getDeliveryChoice();
     }
 }

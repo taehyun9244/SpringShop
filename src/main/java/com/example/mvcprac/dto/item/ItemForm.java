@@ -5,7 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -23,6 +22,4 @@ public class ItemForm {
     private String itemSellStatus;
     private String deliveryChoice;
     private List<MultipartFile> imageFiles;
-    private LocalDateTime creatAt;
-    private LocalDateTime updateAt;
 }

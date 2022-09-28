@@ -1,7 +1,8 @@
 package com.example.mvcprac.service.file;
 
 import com.example.mvcprac.model.Image;
-import com.example.mvcprac.repository.ItemRepository;
+import com.example.mvcprac.model.Item;
+import com.example.mvcprac.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileStore {
 
-    private final ItemRepository itemRepository;
+    private final ImageRepository imageRepository;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -26,18 +27,19 @@ public class FileStore {
         return fileDir + filename;
     }
 
-    public List<Image> saveImages(List<MultipartFile> multipartFiles) throws IOException {
+    public List<Image> saveImages(List<MultipartFile> multipartFiles, Item saveItem) throws IOException {
         List<Image> storeFileResult = new ArrayList<>();
 
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
-                storeFileResult.add(saveImage(multipartFile));
+                storeFileResult.add(saveImage(multipartFile, saveItem));
             }
         }
-        return storeFileResult;
+        List<Image> images = imageRepository.saveAll(storeFileResult);
+        return images;
     }
 
-    public Image saveImage(MultipartFile multipartFile) throws IOException {
+    public Image saveImage(MultipartFile multipartFile, Item saveItem) throws IOException {
         if (multipartFile.isEmpty()) {
             return null;
         }
@@ -45,8 +47,11 @@ public class FileStore {
         String originalFilename = multipartFile.getOriginalFilename();
         String storeFileName = createStoreFileName(originalFilename);
         multipartFile.transferTo(new File(getFullPath(storeFileName)));
-        return new Image(originalFilename, storeFileName);
+
+        Image image = new Image(originalFilename, storeFileName, saveItem);
+        return image;
     }
+
 
     private String createStoreFileName(String originalFilename) {
         String ext = extractExt(originalFilename);

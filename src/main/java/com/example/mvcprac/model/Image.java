@@ -1,5 +1,7 @@
 package com.example.mvcprac.model;
 
+import com.example.mvcprac.util.Timestamped;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "images")
-public class Image {
+public class Image extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +27,17 @@ public class Image {
     ////서버에 저장하는 파일명
     private String storeFileName;
 
+    private String firstImageFileName;
 
-    public Image(String uploadFileName, String storeFileName) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    @JsonIgnore
+    private Item item;
+
+
+    public Image(String uploadFileName, String storeFileName, Item saveItem) {
         this.uploadFileName = uploadFileName;
         this.storeFileName = storeFileName;
+        this.item = saveItem;
     }
 }

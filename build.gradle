@@ -61,6 +61,9 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
+    //Developer
+    compileOnly("org.springframework.boot:spring-boot-devtools")
+
 }
 
 //querydsl 추가 시작

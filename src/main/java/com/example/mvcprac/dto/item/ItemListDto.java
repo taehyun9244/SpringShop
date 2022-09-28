@@ -1,6 +1,5 @@
 package com.example.mvcprac.dto.item;
 
-import com.example.mvcprac.model.Item;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,12 +14,12 @@ public class ItemListDto {
     private int price;
     private String storeFileName;
 
-    public ItemListDto(Item item) {
-        this.id = item.getId();
-        this.itemName = item.getItemName();
-        this.itemSellStatus = item.getItemSellStatus();
-        this.deliveryChoice = item.getDeliveryChoice();
-        this.deliveryChoice = item.getDeliveryChoice();
-        this.storeFileName = item.getImages().get(0).getStoreFileName();
+    public ItemListDto(Long id, String itemName, String itemSellStatus, String deliveryChoice, int price, String storeFileName) {
+        this.id = id;
+        this.itemName = itemName;
+        this.itemSellStatus = itemSellStatus;
+        this.deliveryChoice = deliveryChoice;
+        this.price = price;
+        this.storeFileName = storeFileName;
     }
 }
