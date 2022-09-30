@@ -1,7 +1,7 @@
 package com.example.mvcprac.service;
 
 import com.example.mvcprac.dto.user.EditDto;
-import com.example.mvcprac.dto.user.SignupDto;
+import com.example.mvcprac.dto.user.SignUpForm;
 import com.example.mvcprac.model.User;
 import com.example.mvcprac.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User createUser(SignupDto dto) {
+    public User createUser(SignUpForm dto) {
 
         log.info("user = {}", dto);
 

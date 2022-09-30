@@ -28,13 +28,6 @@ public class HomeController {
     private final ItemService itemService;
     private final FileStore fileStore;
 
-//    @GetMapping("/")
-//    public String home(Model model) {
-//        List<ItemListDto> itemList = itemService.findAllItem();
-//        model.addAttribute("itemList", itemList);
-//        return "home";
-//    }
-
     @GetMapping("/")
     public String home(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
 

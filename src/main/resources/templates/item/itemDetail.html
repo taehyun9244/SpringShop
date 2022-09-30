@@ -41,7 +41,7 @@
 
     <div class="d-flex">
         <div class="repImgDiv">
-            <img th:src="|/images/${itemDetailDto.itemImageDto[0].getStoreFileName()}|" class="rounded repImg" th:alt="${itemDetailDto.itemName}">
+            <img th:src="|/images/${itemDetailDto.itemImageDto[0].storeFileName}|" class="rounded repImg" th:alt="${itemDetailDto.itemName}">
         </div>
         <div class="wd50">
       <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL }"

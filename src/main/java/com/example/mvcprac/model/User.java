@@ -1,6 +1,6 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.dto.user.SignupDto;
+import com.example.mvcprac.dto.user.SignUpForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +39,7 @@ public class User {
     @Column(nullable = false)
     private String role;
 
-    public User(SignupDto signupDto) {
+    public User(SignUpForm signupDto) {
         this.username = signupDto.getUsername();
         this.password = signupDto.getPassword();
         this.password = signupDto.getPassword();

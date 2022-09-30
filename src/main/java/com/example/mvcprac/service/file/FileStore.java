@@ -2,7 +2,6 @@ package com.example.mvcprac.service.file;
 
 import com.example.mvcprac.model.Image;
 import com.example.mvcprac.model.Item;
-import com.example.mvcprac.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileStore {
 
-    private final ImageRepository imageRepository;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -35,8 +33,7 @@ public class FileStore {
                 storeFileResult.add(saveImage(multipartFile, saveItem));
             }
         }
-        List<Image> images = imageRepository.saveAll(storeFileResult);
-        return images;
+        return storeFileResult;
     }
 
     public Image saveImage(MultipartFile multipartFile, Item saveItem) throws IOException {

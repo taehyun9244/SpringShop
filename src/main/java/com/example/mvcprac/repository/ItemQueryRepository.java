@@ -92,5 +92,4 @@ public class ItemQueryRepository {
     private BooleanExpression itemId(Long id) {
         return id != null ? image.item.id.eq(id) : image.item.isNull();
     }
-
 }

@@ -1,18 +1,17 @@
 package com.example.mvcprac.controller;
 
 import com.example.mvcprac.dto.user.LoginDto;
-import com.example.mvcprac.dto.user.SignupDto;
+import com.example.mvcprac.dto.user.SignUpForm;
 import com.example.mvcprac.service.UserService;
+import com.example.mvcprac.validation.SignUpFormValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
@@ -22,16 +21,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserController {
 
     private final UserService userService;
+    private final SignUpFormValidator signUpFormValidator;
 
+    @InitBinder("signUpForm")
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(signUpFormValidator);
+    }
 
     @GetMapping(value = "/signup")
     public String createUser(Model model){
-        model.addAttribute("signupDto", new SignupDto());
+        model.addAttribute("signUpForm", new SignUpForm());
         return "login/register";
     }
 
     @PostMapping(value="/signup")
-    public String createUser(@Validated @ModelAttribute SignupDto dto,
+    public String createUser(@Validated @ModelAttribute SignUpForm dto,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes){
         log.info("Signup = {}", dto);
@@ -67,16 +71,5 @@ public class UserController {
         //검증성공시
         return "redirect:/";
     }
-
-//    @GetMapping("/logout")
-//    public String logout(HttpServletRequest request, HttpServletResponse response){
-//
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication != null){
-//            new SecurityContextLogoutHandler().logout(request, response, authentication);
-//        }
-//        return "redirect:/";
-//    }
 
 }

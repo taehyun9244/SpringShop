@@ -27,7 +27,7 @@ public class Image extends Timestamped {
     ////서버에 저장하는 파일명
     private String storeFileName;
 
-    private String firstImageFileName;
+    private boolean exitFirstImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
@@ -39,5 +39,6 @@ public class Image extends Timestamped {
         this.uploadFileName = uploadFileName;
         this.storeFileName = storeFileName;
         this.item = saveItem;
+        this.exitFirstImage = exitFirstImage;
     }
 }

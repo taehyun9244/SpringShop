@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ItemDetailDto {
 
-        private Long id;
+    private Long id;
     private String itemName;
     private String itemBody;
     private String itemSellStatus;
@@ -27,14 +27,4 @@ public class ItemDetailDto {
         this.price = item.getPrice();
         this.itemImageDto = imageDtoList;
     }
-//
-//    public ItemDetailDto(Long id, String itemName, String itemBody, String itemSellStatus, String deliveryChoice, int price, List<ItemImageDto> itemImageDto) {
-//        this.id = id;
-//        this.itemName = itemName;
-//        this.itemBody = itemBody;
-//        this.itemSellStatus = itemSellStatus;
-//        this.deliveryChoice = deliveryChoice;
-//        this.price = price;
-//        this.itemImageDto = itemImageDto;
-//    }
 }

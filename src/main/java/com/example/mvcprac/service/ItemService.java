@@ -47,7 +47,7 @@ public class ItemService {
     @Transactional(readOnly = true)
     public ItemDetailDto findById(Long id) {
 
-        List<Image> findImageByItemId = imageRepository.findAllByItemIdOrderByCreatedAtDesc(id);
+        List<Image> findImageByItemId = imageRepository.findAllByItemIdOrderByCreatedAtAsc(id);
         List<ItemImageDto> imageDtoList = findImageByItemId.stream()
                 .map(image -> new ItemImageDto(image))
                 .collect(Collectors.toList());
@@ -71,10 +71,12 @@ public class ItemService {
         Item saveItem = itemRepository.save(item);
 
         List<MultipartFile> imageFiles = form.getImageFiles();
-        fileStore.saveImages(imageFiles, saveItem);
+        List<Image> images = fileStore.saveImages(imageFiles, saveItem);
+        imageRepository.saveAll(images);
 
         return saveItem.getId();
     }
+
 
     /**
      *  editItem
