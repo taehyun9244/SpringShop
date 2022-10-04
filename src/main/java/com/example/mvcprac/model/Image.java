@@ -35,10 +35,10 @@ public class Image extends Timestamped {
     private Item item;
 
 
-    public Image(String uploadFileName, String storeFileName, Item saveItem) {
+    public Image(String uploadFileName, String storeFileName, Item saveItem, boolean firstImage) {
         this.uploadFileName = uploadFileName;
         this.storeFileName = storeFileName;
         this.item = saveItem;
-        this.exitFirstImage = exitFirstImage;
+        this.exitFirstImage = firstImage;
     }
 }

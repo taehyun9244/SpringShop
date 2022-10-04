@@ -33,17 +33,15 @@ public class ItemService {
     /**
      * find all item
      */
-
     @Transactional(readOnly = true)
-
     public Page<ItemListDto> findAllItem(ItemSearchDto itemSearchDto, Pageable pageable) {
         return queryRepository.findAllItem(itemSearchDto, pageable);
+        //TODO 대표 image 내려주기
     }
 
     /**
      * findById item
      */
-
     @Transactional(readOnly = true)
     public ItemDetailDto findById(Long id) {
 
@@ -71,8 +69,7 @@ public class ItemService {
         Item saveItem = itemRepository.save(item);
 
         List<MultipartFile> imageFiles = form.getImageFiles();
-        List<Image> images = fileStore.saveImages(imageFiles, saveItem);
-        imageRepository.saveAll(images);
+        fileStore.saveImages(imageFiles, saveItem);
 
         return saveItem.getId();
     }

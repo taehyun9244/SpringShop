@@ -44,6 +44,7 @@ public class ItemQueryRepository {
                 ))
                 .from(image)
                 .join(image.item, item)
+                .where(image.exitFirstImage.isTrue())
                 .where(itemNameLike(itemSearchDto.getSearchQuery()))
                 .orderBy(item.id.desc())
                 .offset(pageable.getOffset())
