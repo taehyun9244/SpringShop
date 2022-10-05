@@ -22,7 +22,8 @@ public class SignUpForm {
     @Password
     private String password;
 
-    @NotBlank(message = "YYMMDD 형태로 입력해주세요")
+    @NotBlank(message = "주민등록 형식의 생년월일을 입력해주세요")
+    @Pattern(regexp = "^((19|20)\\d\\d)?([-/.])?(0[1-9]|1[012])([-/.])?(0[1-9]|[12][0-9]|3[01])$")
     private String birthday;
 
     @NotBlank
@@ -34,8 +35,8 @@ public class SignUpForm {
     @Email
     private String email;
 
-    @NotBlank(message = "배송받을 주소를 입력해 주세요")
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣0-9]*$\\s ")
+    @NotBlank(message = "배송받을 신 도로명과 주소를 입력해 주세요")
+    @Pattern(regexp = "(([가-힣]|(\\d{1,5}(~|-)\\d{1,5})|\\d{1,5})+(로|길))")
     private String address;
 
     @NotBlank

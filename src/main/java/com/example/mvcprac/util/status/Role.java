@@ -1,4 +1,4 @@
-package com.example.mvcprac.util;
+package com.example.mvcprac.util.status;
 
 public enum Role {
 

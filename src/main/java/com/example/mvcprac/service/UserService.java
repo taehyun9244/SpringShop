@@ -1,50 +1,47 @@
-//package com.example.mvcprac.service;
-//
-//import com.example.mvcprac.dto.user.EditDto;
-//import com.example.mvcprac.dto.user.SignUpForm;
-//import com.example.mvcprac.model.User;
-//import com.example.mvcprac.repository.UserRepository;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.stereotype.Service;
-//
-//import javax.transaction.Transactional;
-//import java.util.List;
-//
-//@Service
-//@RequiredArgsConstructor
-//@Transactional
-//@Slf4j
-//public class UserService {
-//
-//    private final UserRepository userRepository;
-//
-//    public User createUser(SignUpForm dto) {
-//
-//        log.info("user = {}", dto);
-//
-//        User findUsername = userRepository.findByEmail(dto.getEmail());
-//        if (findUsername != null){
-//            throw new RuntimeException("이미 등록된 이메일입니다");
-//        }
-//        User user = new User(dto);
-//        User saveUser = userRepository.save(user);
-//        return saveUser;
-//    }
-//
-//    public User editUser(EditDto dto) {
-//        return null;
-//    }
-//
-//    public User deleteUser(Long id) {
-//        return null;
-//    }
-//
-//    public User findById(Long id) {
-//        return null;
-//    }
-//
-//    public List<User> findByAll() {
-//        return null;
-//    }
-//}
+package com.example.mvcprac.service;
+
+import com.example.mvcprac.dto.user.SignUpForm;
+import com.example.mvcprac.model.User;
+import com.example.mvcprac.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final JavaMailSender javaMailSender;
+    private final PasswordEncoder passwordEncoder;
+
+    @Transactional
+    public void createUser(SignUpForm signUpForm) {
+        User newUser = saveNewUser(signUpForm);
+        newUser.generateEmailCheckToke();
+        sendSignUpConfirmEmail(newUser);
+    }
+
+    private User saveNewUser(SignUpForm signUpForm) {
+        String password = signUpForm.getPassword();
+        String encodePassword = passwordEncoder.encode(password);
+        User user = new User(signUpForm, encodePassword, true, true, true);
+        User newUser = userRepository.save(user);
+        return newUser;
+    }
+
+    private void sendSignUpConfirmEmail(User newUser) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(newUser.getEmail());
+        mailMessage.setSubject("스프링 shop 회원 가입인증");
+        mailMessage.setText("/check-email-token?token=" + newUser.getEmailCheckToken() +
+                "&email=" + newUser.getEmail());
+
+        javaMailSender.send(mailMessage);
+    }
+}

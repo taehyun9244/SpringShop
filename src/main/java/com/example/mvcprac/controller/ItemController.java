@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/user/items")
+@RequestMapping("/items")
 public class ItemController {
     private final ItemService itemServiceImpl;
     private final FileStore fileStore;
