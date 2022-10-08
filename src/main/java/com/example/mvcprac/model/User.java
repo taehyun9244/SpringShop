@@ -42,8 +42,6 @@ public class User {
     @Column(nullable = false)
     private String birthday;
 
-    @Column(nullable = false)
-    private String role;
 
     private boolean emailVerified;
 
@@ -61,11 +59,22 @@ public class User {
 
     private boolean shopUpdatedByWeb;
 
+    public User(Long id, String username, String nickname, String password, String email, String address, String phoneNumber, String birthday) {
+        this.id = id;
+        this.username = username;
+        this.nickname = nickname;
+        this.password = password;
+        this.email = email;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+    }
+
     public User(SignUpForm signupDto, String encodePassword, boolean b, boolean b1, boolean b2) {
         this.username = signupDto.getUsername();
         this.nickname = signupDto.getNickname();
         this.password = encodePassword;
-        this.password = signupDto.getPassword();
+        this.birthday = signupDto.getBirthday();
         this.email = signupDto.getEmail();
         this.address = signupDto.getAddress();
         this.phoneNumber = signupDto.getPhoneNumber();
@@ -76,5 +85,9 @@ public class User {
 
     public void generateEmailCheckToke() {
         this.emailCheckToken = UUID.randomUUID().toString();
+    }
+
+    public void completeSignUp() {
+        this.emailVerified = true;
     }
 }

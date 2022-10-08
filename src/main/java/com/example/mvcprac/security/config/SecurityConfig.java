@@ -26,16 +26,18 @@ public class SecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-    @Bean
+    @Bean //TODO item 등록 막아놓기
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests()
-                .mvcMatchers("/", "/login", "/signup", "/check-email", "/check-email-token", "/email-login",
-                        "/check-email-login", "/login-link").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/items/*").permitAll()
+                .antMatchers("/", "/login", "/signup", "/check-email", "/check-email-token", "/email-login",
+                        "/check-email-login", "/login-link", "/h2-console/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/items").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
+                .headers().frameOptions().disable()
+                .and()
                 .build();
     }
 }

@@ -28,27 +28,25 @@ public class UserController {
     @GetMapping("/signup")
     public String createUser(Model model){
         model.addAttribute("signUpForm", new SignUpForm());
-        return "/user/signup";
+        return "user/signup";
     }
 
     @PostMapping("/signup")
     public String createUser(@Valid @ModelAttribute SignUpForm dto, BindingResult bindingResult){
-        log.info("Signup = {}", dto);
-
         //검증실패시
         if (bindingResult.hasErrors()) {
             log.info("errors={} ", bindingResult);
-            return "/user/signup";
+            return "user/signup";
         }
 
         //검증 성공시
-        userService.createUser(dto);
-        return "user/login";
+        User user = userService.createUser(dto);
+        userService.login(user);
+        return "redirect:/";
     }
 
     @GetMapping("/check-email-token")
     public String checkEmailToken(String token, String email, Model model) {
-
         User user = userRepository.findByEmail(email);
         String view = "user/checked-email";
 
@@ -61,7 +59,8 @@ public class UserController {
             return view;
         }
 
-        user.setEmailVerified(true);
+        user.completeSignUp();
+        userService.login(user);
         model.addAttribute("numberOfUser", userRepository.count());
         model.addAttribute("nickname", user.getNickname());
         return view;
@@ -82,8 +81,11 @@ public class UserController {
             return "user/login";
         }
 
+        //TODO 로그인
+//        User loginUser = userService.login(dto);
+
         //검증성공시
-        return "redirect:home";
+        return "redirect:/";
     }
 
 }

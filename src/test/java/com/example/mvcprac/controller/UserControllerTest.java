@@ -12,17 +12,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
@@ -36,13 +40,46 @@ class UserControllerTest {
     private JavaMailSender javaMailSender;
 
     @Test
+    @DisplayName("인증메일 확인 - 입력값 오류")
+    void checkEmailToken_with_wrong_input() throws Exception {
+        mockMvc.perform(get("/check-email-token")
+                        .param("token", "qwerasdfzxcv")
+                        .param("email", "email@email.com"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("error"))
+                .andExpect(view().name("user/checked-email"))
+                .andExpect(unauthenticated());
+    }
+
+    @Test
+    @DisplayName("인증메일 확인 - 입력값 정상")
+    void checkEmailToken() throws Exception {
+
+        User user = new User(1L, "남태현", "시모키타자와", "12345678!a",
+                "email@email.com", "서울서초", "01012345678", "1992.04.04");
+        User newUser = userRepository.save(user);
+        newUser.generateEmailCheckToke();
+
+        mockMvc.perform(get("/check-email-token")
+                        .param("token", newUser.getEmailCheckToken())
+                        .param("email", newUser.getEmail()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeDoesNotExist("error"))
+                .andExpect(model().attributeExists("nickname"))
+                .andExpect(model().attributeExists("numberOfUser"))
+                .andExpect(view().name("user/checked-email"))
+                .andExpect(authenticated().withUsername("시모키타자와"));
+    }
+
+    @Test
     @DisplayName("회원가입 화면 보이는지 테스트")
     void signupForm() throws Exception {
         mockMvc.perform(get("/signup"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(view().name("user/register"))
-                .andExpect(model().attributeExists("signUpForm"));
+                .andExpect(view().name("user/signup"))
+                .andExpect(model().attributeExists("signUpForm"))
+                .andExpect(unauthenticated());;
     }
 
     @Test
@@ -58,7 +95,8 @@ class UserControllerTest {
                         .param("phoneNumber", "01012345678")
                         .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("user/register"));
+                .andExpect(view().name("user/signup"))
+                .andExpect(unauthenticated());
     }
 
     @Test
@@ -67,14 +105,15 @@ class UserControllerTest {
         mockMvc.perform(post("/signup")
                         .param("name", "남태현")
                         .param("nickname", "시모키타자와")
-                        .param("password", "123456789!")
-                        .param("birthday", "920404")
+                        .param("password", "a123456789!")
+                        .param("birthday", "1992.04.04")
                         .param("address", "명달로99길99")
                         .param("email", "email@email.com")
                         .param("phoneNumber", "01012345678")
                         .with(csrf()))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("user/login"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername("시모키타자와"));
 
         User user = userRepository.findByEmail("taehyun@email.com");
         assertNotNull(user);

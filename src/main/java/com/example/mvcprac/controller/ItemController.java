@@ -56,7 +56,7 @@ public class ItemController {
         log.info("itemId = {}", itemId);
 
         redirectAttributes.addAttribute("itemId", itemId);
-        return "redirect:/user/items/{itemId}";
+        return "redirect:/items/{itemId}";
     }
 
 

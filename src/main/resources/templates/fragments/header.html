@@ -1,5 +1,6 @@
 !DOCTYPE html>
-<html xmlns:th=http://www.thymeleaf.org>
+<html xmlns:th=http://www.thymeleaf.org
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div th:fragment="header">
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -8,31 +9,47 @@
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/">Shop</a>
+        <a class="navbar-brand" href="/">외국인 상품거래 서비스</a>
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/myPage">마이페이지</a>
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        프로필
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="userDropdown">
+                        <h6 class="dropdown-header">
+                            <span sec:authentication="name">Username</span>
+                        </h6>
+                        <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
+                        <a class="dropdown-item">장바구니</a>
+                        <a class="dropdown-item">상품관리</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
+                        <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
+                            <button class="dropdown-item" type="submit">로그아웃</button>
+                        </form>
+                    </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/items/add">상품 등록</a>
+                    <a class="nav-link" href="/items/add" sec:authorize="isAuthenticated()">상품 등록</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/items">상품 관리</a>
+                    <a class="nav-link" href="/items" sec:authorize="isAuthenticated()">주문 상품</a>
+                </li>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/cart">장바구니</a>-->
+<!--                </li>-->
+                <li class="nav-item">
+                    <a class="nav-link" href="/signup" sec:authorize="!isAuthenticated()">회원가입</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/cart">장바구니</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">로그인</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">로그아웃</a>
+                    <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">로그인</a>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0" th:action="@{/}" method="get">
-                <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="상품검색" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>

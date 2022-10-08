@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 public class SignUpForm {
 
     @NotBlank(message = "이름을 입력해 주세요")
-    @Pattern(regexp = "^[가-힣]*$")
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9_-]{3,20}$")
     private String username;
 
     @NotBlank
@@ -36,7 +36,6 @@ public class SignUpForm {
     private String email;
 
     @NotBlank(message = "배송받을 신 도로명과 주소를 입력해 주세요")
-    @Pattern(regexp = "(([가-힣]|(\\d{1,5}(~|-)\\d{1,5})|\\d{1,5})+(로|길))")
     private String address;
 
     @NotBlank

@@ -2,7 +2,9 @@
 //
 //
 //import com.example.mvcprac.model.Item;
+//import com.example.mvcprac.model.User;
 //import com.example.mvcprac.repository.ItemRepository;
+//import com.example.mvcprac.repository.UserRepository;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.stereotype.Component;
 //
@@ -13,6 +15,7 @@
 //public class TestDataInit {
 //
 //    private final ItemRepository itemRepository;
+//    private final UserRepository userRepository;
 //
 //    /**
 //     * 테스트용 데이터 추가
@@ -24,6 +27,8 @@
 //        itemRepository.save(new Item(3L,"아이폰14", "프로맥스 최신", 100000, "판매중", "롯데", null));
 //        itemRepository.save(new Item(4L,"게이밍 컴퓨터", "중고 감안 싸게 함", 50000, "판매중", "CJ", null));
 //        itemRepository.save(new Item(5L,"삼성 갤럭시", "신형 삼성 갤럭시", 100000, "품절", "CJ", null));
+//
+//        userRepository.save(new User(1L, "남태현", "시모키타자와", "a12345678!", "email@eamil.com", "서울특별시 서초구 서초동", "01012345678", "1992.04.04"))
 //
 //    }
 //}
