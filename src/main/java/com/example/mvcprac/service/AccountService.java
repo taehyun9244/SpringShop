@@ -1,8 +1,9 @@
 package com.example.mvcprac.service;
 
-import com.example.mvcprac.dto.user.SignUpForm;
-import com.example.mvcprac.model.User;
-import com.example.mvcprac.repository.UserRepository;
+import com.example.mvcprac.dto.account.SignUpForm;
+import com.example.mvcprac.model.Account;
+import com.example.mvcprac.repository.AccountRepository;
+import com.example.mvcprac.validation.UserAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -19,42 +20,42 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserService {
+public class AccountService {
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public User createUser(SignUpForm signUpForm) {
-        User newUser = saveNewUser(signUpForm);
-        newUser.generateEmailCheckToke();
-        sendSignUpConfirmEmail(newUser);
-        return newUser;
+    public Account createUser(SignUpForm signUpForm) {
+        Account newAccount = saveNewUser(signUpForm);
+        newAccount.generateEmailCheckToke();
+        sendSignUpConfirmEmail(newAccount);
+        return newAccount;
     }
 
-    private User saveNewUser(SignUpForm signUpForm) {
+    private Account saveNewUser(SignUpForm signUpForm) {
         String password = signUpForm.getPassword();
         String encodePassword = passwordEncoder.encode(password);
-        User user = new User(signUpForm, encodePassword, true, true, true);
-        User newUser = userRepository.save(user);
-        return newUser;
+        Account account = new Account(signUpForm, encodePassword, true, true, true);
+        Account newAccount = accountRepository.save(account);
+        return newAccount;
     }
 
-    private void sendSignUpConfirmEmail(User newUser) {
+    private void sendSignUpConfirmEmail(Account newAccount) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newUser.getEmail());
+        mailMessage.setTo(newAccount.getEmail());
         mailMessage.setSubject("스프링 shop 회원 가입인증");
-        mailMessage.setText("/check-email-token?token=" + newUser.getEmailCheckToken() +
-                "&email=" + newUser.getEmail());
+        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken() +
+                "&email=" + newAccount.getEmail());
 
         javaMailSender.send(mailMessage);
     }
 
-    public void login(User user) {
+    public void login(Account newAccount) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                user.getNickname(),
-                user.getPassword(),
+                new UserAccount(newAccount),
+                newAccount.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
         SecurityContextHolder.getContext().setAuthentication(token);

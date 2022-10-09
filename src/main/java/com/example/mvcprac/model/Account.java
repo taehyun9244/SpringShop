@@ -1,6 +1,6 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.dto.user.SignUpForm;
+import com.example.mvcprac.dto.account.SignUpForm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,7 +59,7 @@ public class User {
 
     private boolean shopUpdatedByWeb;
 
-    public User(Long id, String username, String nickname, String password, String email, String address, String phoneNumber, String birthday) {
+    public Account(Long id, String username, String nickname, String password, String email, String address, String phoneNumber, String birthday) {
         this.id = id;
         this.username = username;
         this.nickname = nickname;
@@ -70,7 +70,7 @@ public class User {
         this.birthday = birthday;
     }
 
-    public User(SignUpForm signupDto, String encodePassword, boolean b, boolean b1, boolean b2) {
+    public Account(SignUpForm signupDto, String encodePassword, boolean b, boolean b1, boolean b2) {
         this.username = signupDto.getUsername();
         this.nickname = signupDto.getNickname();
         this.password = encodePassword;

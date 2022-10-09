@@ -3,6 +3,11 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div th:fragment="header">
+
+    <script src="https://cdn.jsdelivr.net/npm/jdenticon@3.2.0/dist/jdenticon.min.js" async
+            integrity="sha384-yBhgDqxM50qJV5JPdayci8wCfooqvhFYbIKhv0hTtLvfeeyJMJCscRfFNKIxt43M" crossorigin="anonymous">
+    </script>
+
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03"
@@ -16,7 +21,8 @@
                 <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
-                        프로필
+                        <svg data-jdenticon-value="user127" width="24" height="24"
+                             th:data-jdenticon-value="${#authentication.name}" class="rounded border bg-light"></svg>
                     </a>
                     <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="userDropdown">
                         <h6 class="dropdown-header">

@@ -2,8 +2,10 @@ package com.example.mvcprac.controller;
 
 import com.example.mvcprac.dto.item.ItemListDto;
 import com.example.mvcprac.dto.item.ItemSearchDto;
+import com.example.mvcprac.model.Account;
 import com.example.mvcprac.service.ItemService;
 import com.example.mvcprac.service.file.FileStore;
+import com.example.mvcprac.validation.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -29,7 +31,11 @@ public class HomeController {
     private final FileStore fileStore;
 
     @GetMapping("/")
-    public String home(ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
+    public String home(@CurrentUser Account account, ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
+
+        if (account != null) {
+            model.addAttribute(account);
+        }
 
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
         Page<ItemListDto> itemList = itemService.findAllItem(itemSearchDto, pageable);

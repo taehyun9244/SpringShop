@@ -1,7 +1,7 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.model.User;
-import com.example.mvcprac.repository.UserRepository;
+import com.example.mvcprac.model.Account;
+import com.example.mvcprac.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,12 +30,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
-class UserControllerTest {
+class AccountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
     @MockBean
     private JavaMailSender javaMailSender;
 
@@ -55,14 +55,14 @@ class UserControllerTest {
     @DisplayName("인증메일 확인 - 입력값 정상")
     void checkEmailToken() throws Exception {
 
-        User user = new User(1L, "남태현", "시모키타자와", "12345678!a",
+        Account account = new Account(1L, "남태현", "시모키타자와", "12345678!a",
                 "email@email.com", "서울서초", "01012345678", "1992.04.04");
-        User newUser = userRepository.save(user);
-        newUser.generateEmailCheckToke();
+        Account newAccount = accountRepository.save(account);
+        newAccount.generateEmailCheckToke();
 
         mockMvc.perform(get("/check-email-token")
-                        .param("token", newUser.getEmailCheckToken())
-                        .param("email", newUser.getEmail()))
+                        .param("token", newAccount.getEmailCheckToken())
+                        .param("email", newAccount.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(model().attributeExists("nickname"))
@@ -115,10 +115,10 @@ class UserControllerTest {
                 .andExpect(view().name("redirect:/"))
                 .andExpect(authenticated().withUsername("시모키타자와"));
 
-        User user = userRepository.findByEmail("taehyun@email.com");
-        assertNotNull(user);
-        assertNotEquals(user.getPassword(), "123456789");
-        assertNotNull(user.getEmailCheckToken());
+        Account account = accountRepository.findByEmail("taehyun@email.com");
+        assertNotNull(account);
+        assertNotEquals(account.getPassword(), "123456789");
+        assertNotNull(account.getEmailCheckToken());
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
     }
 

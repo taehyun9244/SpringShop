@@ -1,4 +1,4 @@
-package com.example.mvcprac.dto.user;
+package com.example.mvcprac.dto.account;
 
 import com.example.mvcprac.validation.Password;
 import lombok.*;

@@ -1,10 +1,10 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.user.LoginDto;
-import com.example.mvcprac.dto.user.SignUpForm;
-import com.example.mvcprac.model.User;
-import com.example.mvcprac.repository.UserRepository;
-import com.example.mvcprac.service.UserService;
+import com.example.mvcprac.dto.account.LoginDto;
+import com.example.mvcprac.dto.account.SignUpForm;
+import com.example.mvcprac.model.Account;
+import com.example.mvcprac.repository.AccountRepository;
+import com.example.mvcprac.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -20,10 +20,10 @@ import javax.validation.Valid;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class UserController {
+public class AccountController {
 
-    private final UserService userService;
-    private final UserRepository userRepository;
+    private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
     @GetMapping("/signup")
     public String createUser(Model model){
@@ -40,29 +40,29 @@ public class UserController {
         }
 
         //검증 성공시
-        User user = userService.createUser(dto);
-        userService.login(user);
+        Account account = accountService.createUser(dto);
+        accountService.login(account);
         return "redirect:/";
     }
 
     @GetMapping("/check-email-token")
     public String checkEmailToken(String token, String email, Model model) {
-        User user = userRepository.findByEmail(email);
+        Account account = accountRepository.findByEmail(email);
         String view = "user/checked-email";
 
-        if (user == null) {
+        if (account == null) {
             model.addAttribute("error", "wrong.email");
             return view;
         }
-        if (!user.getEmailCheckToken().equals(token)) {
+        if (!account.getEmailCheckToken().equals(token)) {
             model.addAttribute("error", "wrong.token");
             return view;
         }
 
-        user.completeSignUp();
-        userService.login(user);
-        model.addAttribute("numberOfUser", userRepository.count());
-        model.addAttribute("nickname", user.getNickname());
+        account.completeSignUp();
+        accountService.login(account);
+        model.addAttribute("numberOfUser", accountRepository.count());
+        model.addAttribute("nickname", account.getNickname());
         return view;
     }
 
