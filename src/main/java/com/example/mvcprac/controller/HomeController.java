@@ -51,4 +51,9 @@ public class HomeController {
     public Resource downloadImage(@PathVariable String fileName) throws MalformedURLException {
         return new UrlResource("file:"+ fileStore.getFullPath(fileName));
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "user/login";
+    }
 }

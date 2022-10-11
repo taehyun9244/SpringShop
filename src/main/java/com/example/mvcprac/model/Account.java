@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -59,6 +60,8 @@ public class Account {
 
     private boolean shopUpdatedByWeb;
 
+    private LocalDateTime emailCheckTokenGeneratedAt;
+
     public Account(Long id, String username, String nickname, String password, String email, String address, String phoneNumber, String birthday) {
         this.id = id;
         this.username = username;
@@ -85,9 +88,14 @@ public class Account {
 
     public void generateEmailCheckToke() {
         this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailCheckTokenGeneratedAt = LocalDateTime.now();
     }
 
     public void completeSignUp() {
         this.emailVerified = true;
+    }
+
+    public boolean canSendConfirmEmail() {
+        return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
     }
 }

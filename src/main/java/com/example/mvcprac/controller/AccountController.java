@@ -1,16 +1,15 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.account.LoginDto;
 import com.example.mvcprac.dto.account.SignUpForm;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.service.AccountService;
+import com.example.mvcprac.validation.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,25 +65,21 @@ public class AccountController {
         return view;
     }
 
-    @GetMapping("/login")
-    public String login(Model model){
-        model.addAttribute("loginDto", new LoginDto());
-        return "user/login";
+    @GetMapping("/check-email")
+    public String checkEmail(@CurrentUser Account account, Model model) {
+        model.addAttribute("email", account.getEmail());
+        return "user/check-email";
     }
 
-    @PostMapping("/login")
-    public String login(@Validated @ModelAttribute LoginDto dto,
-                        BindingResult bindingResult){
-        //검증실패시
-        if (bindingResult.hasErrors()) {
-            log.info("errors={} ", bindingResult);
-            return "user/login";
+    @GetMapping("/resend-confirm-email")
+    public String resendConfirmEmail(@CurrentUser Account account, Model model) {
+        if (!account.canSendConfirmEmail()) {
+            model.addAttribute("error", "인증 이메일은 1시간에 한번만 전송할 수 있습니다.");
+            model.addAttribute("email", account.getEmail());
+            return "user/check-email";
         }
 
-        //TODO 로그인
-//        User loginUser = userService.login(dto);
-
-        //검증성공시
+        accountService.sendSignUpConfirmEmail(account);
         return "redirect:/";
     }
 
