@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
-<body class="bg-light">
+
+<body class="bg-light" layout:fragment="content">
 <div class="container">
     <div class="row mt-5 justify-content-center">
         <div class="col-2">
@@ -14,7 +15,7 @@
                  width="125" height="125"/>
         </div>
         <div class="col-8">
-            <h1 class="display-4 " th:text="${account.nickname}">Whiteship</h1>
+            <h1 class="display-4 " th:text="${account.nickname}">taehyun</h1>
             <p class="lead" th:if="${!#strings.isEmpty(account.bio)}" th:text="${account.bio}">bio</p>
             <p class="lead" th:if="${#strings.isEmpty(account.bio) && isOwner}">
                 한 줄 소개를 추가하세요.
@@ -25,10 +26,10 @@
     <div class="row mt-3 justify-content-center">
         <div class="col-2">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-intro-tab" data-toggle="pill" href="#v-pills-profile"
+                <a class="nav-link" id="v-pills-intro-tab" data-toggle="pill" href="#v-pills-profile"
                    role="tab" aria-controls="v-pills-profile" aria-selected="true">소개</a>
-                <a class="nav-link" id="v-pills-study-tab" data-toggle="pill" href="#v-pills-study"
-                   role="tab" aria-controls="v-pills-study" aria-selected="false">스터디</a>
+                <a class="nav-link" id="v-pills-item-tab" data-toggle="pill" href="#v-pills-item"
+                   role="tab" aria-controls="v-pills-item" aria-selected="false">판매상품</a>
             </div>
         </div>
         <div class="col-8">
@@ -37,15 +38,21 @@
                      aria-labelledby="v-pills-home-tab">
                     <p th:if="${!#strings.isEmpty(account.url)}">
                             <span style="font-size: 20px;">
-                                <i class="fa fa-link col-1"></i>
+                                <i class="fa fa-external-link" aria-hidden="true"></i>
                             </span>
                         <span th:text="${account.url}" class="col-11"></span>
                     </p>
                     <p th:if="${!#strings.isEmpty(account.occupation)}">
                             <span style="font-size: 20px;">
-                                <i class="fa fa-briefcase col-1"></i>
+                                <i class="fa fa-briefcase" aria-hidden="true"></i>
                             </span>
                         <span th:text="${account.occupation}" class="col-9"></span>
+                    </p>
+                    <p th:if="${!#strings.isEmpty(account.companyName)}">
+                            <span style="font-size: 20px;">
+                                <i class="bi bi-building"></i>
+                            </span>
+                        <span th:text="${account.companyName}" class="col-9"></span>
                     </p>
                     <p th:if="${!#strings.isEmpty(account.location)}">
                             <span style="font-size: 20px;">
@@ -55,7 +62,7 @@
                     </p>
                     <p th:if="${isOwner}">
                             <span style="font-size: 20px;">
-                                <i class="fa fa-envelope-o col-1"></i>
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
                             </span>
                         <span th:text="${account.email}" class="col-9"></span>
                     </p>
@@ -73,8 +80,8 @@
                         <a class="btn btn-outline-primary" href="#" th:href="@{/settings/profile}">프로필 수정</a>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="v-pills-study" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                    Study
+                <div class="tab-pane fade" id="v-pills-item" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    Items
                 </div>
             </div>
         </div>

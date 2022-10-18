@@ -1,10 +1,10 @@
 //package com.example.mvcprac.util;
 //
 //
-//import com.example.mvcprac.model.Item;
-//import com.example.mvcprac.model.User;
+//import com.example.mvcprac.dto.account.SignUpForm;
+//import com.example.mvcprac.model.Account;
+//import com.example.mvcprac.repository.AccountRepository;
 //import com.example.mvcprac.repository.ItemRepository;
-//import com.example.mvcprac.repository.UserRepository;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.stereotype.Component;
 //
@@ -15,20 +15,16 @@
 //public class TestDataInit {
 //
 //    private final ItemRepository itemRepository;
-//    private final UserRepository userRepository;
+//    private final AccountRepository accountRepository;
 //
 //    /**
 //     * 테스트용 데이터 추가
 //     */
 //    @PostConstruct
 //    public void init() {
-//        itemRepository.save(new Item(1L,"맥북", "신형 16인치 실버", 300000, "판매중", "우체국", null));
-//        itemRepository.save(new Item(2L,"아이패드", "신형 12.9 스페이스 그레이", 200000, "품절", "CJ", null));
-//        itemRepository.save(new Item(3L,"아이폰14", "프로맥스 최신", 100000, "판매중", "롯데", null));
-//        itemRepository.save(new Item(4L,"게이밍 컴퓨터", "중고 감안 싸게 함", 50000, "판매중", "CJ", null));
-//        itemRepository.save(new Item(5L,"삼성 갤럭시", "신형 삼성 갤럭시", 100000, "품절", "CJ", null));
-//
-//        userRepository.save(new User(1L, "남태현", "시모키타자와", "a12345678!", "email@eamil.com", "서울특별시 서초구 서초동", "01012345678", "1992.04.04"))
+//        SignUpForm signUpForm = new SignUpForm("남태현", "시모키타자와", "12341234!a", "namtaehyun9244@gmail.com", "서울특별시 서초구 서초동", "01012345678", "1992.04.04", );
+//        Account account = new Account(signUpForm);
+//        accountRepository.save(account);
 //
 //    }
 //}

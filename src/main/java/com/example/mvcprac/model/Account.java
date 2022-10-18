@@ -62,6 +62,21 @@ public class Account {
 
     private LocalDateTime emailCheckTokenGeneratedAt;
 
+    @Lob @Basic(fetch = FetchType.EAGER)
+    private String profileImage;
+
+    private String bio;
+
+    private String url;
+
+    private String occupation;
+
+    private String companyName;
+
+    private String location;
+
+    private LocalDateTime joinedAt;
+
     public Account(Long id, String username, String nickname, String password, String email, String address, String phoneNumber, String birthday) {
         this.id = id;
         this.username = username;
@@ -93,6 +108,7 @@ public class Account {
 
     public void completeSignUp() {
         this.emailVerified = true;
+        this.joinedAt = LocalDateTime.now();
     }
 
     public boolean canSendConfirmEmail() {

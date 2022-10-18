@@ -39,14 +39,16 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/items/add" sec:authorize="isAuthenticated()">상품 등록</a>
+                    <a class="nav-link" href="/items/add" sec:authorize="isAuthenticated()">
+                        <i class="fa fa-bell-o" aria-hidden="true"></i>
+                        상품 등록</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/items" sec:authorize="isAuthenticated()">주문 상품</a>
                 </li>
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="/cart">장바구니</a>-->
-<!--                </li>-->
+                <!--                <li class="nav-item">-->
+                <!--                    <a class="nav-link" href="/cart">장바구니</a>-->
+                <!--                </li>-->
                 <li class="nav-item">
                     <a class="nav-link" href="/signup" sec:authorize="!isAuthenticated()">회원가입</a>
                 </li>
@@ -55,7 +57,8 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0" th:action="@{/}" method="get">
-                <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="상품검색" aria-label="Search">
+                <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="상품검색"
+                       aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>
