@@ -5,8 +5,10 @@ import com.example.mvcprac.model.Account;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.service.AccountService;
 import com.example.mvcprac.validation.CurrentUser;
+import com.example.mvcprac.validation.UserAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -84,17 +86,14 @@ public class AccountController {
     }
 
     @GetMapping("/profile/{nickname}")
-    public String viewProfile(@PathVariable String nickname, Model model, @CurrentUser Account account) {
+    public String viewProfile(@PathVariable String nickname, Model model, @AuthenticationPrincipal UserAccount userAccount) {
         Account byNickname = accountRepository.findByNickname(nickname);
-        if (nickname == null) {
+        if (byNickname == null) {
             throw new IllegalArgumentException((nickname + "에 해당하는 사용자가 없습니다"));
         }
 
-        log.info("nickname = {}", nickname);
-        log.info("account = {}", account.getEmail());
-
-        model.addAttribute("account", byNickname);
-        model.addAttribute("isOwner", byNickname.equals(account));
+        model.addAttribute(byNickname);
+        model.addAttribute("isOwner", userAccount.getUsername().equals(nickname));
         return "user/profile";
     }
 

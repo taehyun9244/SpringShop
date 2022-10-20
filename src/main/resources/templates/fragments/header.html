@@ -9,12 +9,12 @@
     </script>
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03"
-                aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="/">외국인 상품거래 서비스</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="/">외국인 상품거래 서비스</a>
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -31,6 +31,7 @@
                         <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
                         <a class="dropdown-item">장바구니</a>
                         <a class="dropdown-item">상품관리</a>
+                        <a class="dropdown-item">내가 쓴 글</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
                         <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
@@ -46,9 +47,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/items" sec:authorize="isAuthenticated()">주문 상품</a>
                 </li>
-                <!--                <li class="nav-item">-->
-                <!--                    <a class="nav-link" href="/cart">장바구니</a>-->
-                <!--                </li>-->
+                <li class="nav-item">
+                    <a class="nav-link" href="/restaurant">맛집정보</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/visa">VISA정보</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/school">학교정보</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/signup" sec:authorize="!isAuthenticated()">회원가입</a>
                 </li>
@@ -63,6 +70,15 @@
             </form>
         </div>
     </nav>
+</div>
+
+<div th:fragment="settings-menu (currentMenu)" class="list-group">
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'}? active" href="#" th:href="@{/settings/profile}">프로필</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'}? active" href="#" th:href="@{/settings/password}">패스워드</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'notifications'}? active" href="#" th:href="@{/settings/notifications}">알림</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'}? active" href="#" th:href="@{/settings/tags}">관심 주제</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'}? active" href="#" th:href="@{/settings/zones}">활동 지역</a>
+    <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMenu == 'account'}? active" href="#" th:href="@{/settings/account}">계정</a>
 </div>
 
 </html>

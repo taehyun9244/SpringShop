@@ -35,7 +35,7 @@ public class SignUpForm {
     @Email
     private String email;
 
-    @NotBlank(message = "배송받을 신 도로명과 주소를 입력해 주세요")
+    @NotBlank(message = "배송받을 주소를 입력해 주세요")
     private String address;
 
     @NotBlank

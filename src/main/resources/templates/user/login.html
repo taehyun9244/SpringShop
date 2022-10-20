@@ -1,55 +1,27 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
 
-<th:block layout:fragment="css">
-    <style>
-        .error {
-            color: #bd2130;
-        }
-    </style>
-</th:block>
-
-<th:block layout:fragment="script">
-    <script>
-        // Example starter JavaScript for disabling form submissions if there are invalid fields
-        (function () {
-            'use strict';
-            window.addEventListener('load', function () {
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                var forms = document.getElementsByClassName('needs-validation');
-                // Loop over them and prevent submission
-                var validation = Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-    </script>
-</th:block>
-
-<div class="py-5 text-center">
-    <p class="lead">외국인 상품거래 서비스</p>
-    <h2>로그인</h2>
-</div>
-<div class="row justify-content-center">
-    <div th:if="${param.error}" class="alert alert-danger" role="alert">
-        <p>이메일(또는 닉네임)과 패스워드가 정확하지 않습니다.</p>
-        <p>또는 확인되지 않은 이메일을 사용했습니다. 이메일을 확인해 주세요.</p>
-        <p>
-            확인 후 다시 입력하시거나, <a href="#" th:href="@{/find-passsword}">패스워드 찾기</a>를 이용하세요.
-        </p>
+<div class="container">
+    <div class="py-5 text-center">
+        <p class="lead">외국인 상품거래 서비스</p>
+        <h2>로그인</h2>
     </div>
-    <div layout:fragment="content">
-        <form class="needs-validation" role="form" method="post" action="#" th:action="@{/login}" novalidate>
+    <div class="row justify-content-center">
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            <p>이메일(또는 닉네임)과 패스워드가 정확하지 않습니다.</p>
+            <p>또는 확인되지 않은 이메일을 사용했습니다. 이메일을 확인해 주세요.</p>
+            <p>
+                확인 후 다시 입력하시거나, <a href="#" th:href="@{/find-passsword}">패스워드 찾기</a>를 이용하세요.
+            </p>
+        </div>
+
+        <form class="needs-validation col-sm-6" action="#" th:action="@{/login}" method="post" novalidate>
             <div class="form-group">
-                <label th:for="email">이메일 또는 닉네임</label>
+                <label for="username">이메일 또는 닉네임</label>
                 <input id="username" type="text" name="username" class="form-control"
                        placeholder="your@email.com" aria-describedby="emailHelp" required>
                 <small id="emailHelp" class="form-text text-muted">
@@ -58,7 +30,7 @@
                 <small class="invalid-feedback">이메일을 입력하세요.</small>
             </div>
             <div class="form-group">
-                <label th:for="password">패스워드</label>
+                <label for="password">패스워드</label>
                 <input id="password" type="password" name="password" class="form-control"
                        aria-describedby="passwordHelp" required>
                 <small id="passwordHelp" class="form-text text-muted">
@@ -72,12 +44,14 @@
                 <label class="form-check-label" for="rememberMe" aria-describedby="rememberMeHelp">로그인 유지</label>
             </div>
 
-            <p th:if="${loginErrorMsg}" class="error" th:text="${loginErrorMsg}"></p>
-            <button class="btn btn-primary">로그인</button>
-            <small id="submitHelp" class="form-text text-muted">
-                처음 오신거라면 <a href="#" th:href="@{/signup}">계정을 먼저 만드세요.</a>
-            </small>
+            <div class="form-group">
+                <button class="btn btn-success btn-block" type="submit"
+                        aria-describedby="submitHelp">로그인
+                </button>
+                <small id="submitHelp" class="form-text text-muted">
+                    외국인 상품거래 서비스에 처음 오신거라면 <a href="#" th:href="@{/signup}">계정을 먼저 만드세요.</a>
+                </small>
+            </div>
         </form>
     </div>
-</div>
 </html>

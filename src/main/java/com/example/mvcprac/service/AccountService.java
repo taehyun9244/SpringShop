@@ -84,5 +84,4 @@ public class AccountService implements UserDetailsService {
         account.completeSignUp();
         login(account);
     }
-
 }

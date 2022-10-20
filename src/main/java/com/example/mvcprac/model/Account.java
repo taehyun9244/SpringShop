@@ -71,8 +71,6 @@ public class Account {
 
     private String occupation;
 
-    private String companyName;
-
     private String location;
 
     private LocalDateTime joinedAt;
