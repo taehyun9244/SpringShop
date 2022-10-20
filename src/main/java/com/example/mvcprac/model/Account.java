@@ -75,6 +75,9 @@ public class Account {
 
     private LocalDateTime joinedAt;
 
+    /**
+     * test create account
+     */
     public Account(Long id, String username, String nickname, String password, String email, String address, String phoneNumber, String birthday) {
         this.id = id;
         this.username = username;
@@ -86,6 +89,9 @@ public class Account {
         this.birthday = birthday;
     }
 
+    /**
+     * create account
+     */
     public Account(SignUpForm signupDto, String encodePassword, boolean b, boolean b1, boolean b2) {
         this.username = signupDto.getUsername();
         this.nickname = signupDto.getNickname();
@@ -98,6 +104,7 @@ public class Account {
         this.shopEnrollmentResultByWeb = b1;
         this.shopUpdatedByWeb = b2;
     }
+
 
     public void generateEmailCheckToke() {
         this.emailCheckToken = UUID.randomUUID().toString();

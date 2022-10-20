@@ -9,6 +9,12 @@
             <div th:replace="fragments.html :: settings-menu(currentMenu='profile')"></div>
         </div>
         <div class="col-8">
+            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                <span th:text="${message}">메시지</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
             <div class="row">
                 <h2 class="col-sm-12" th:text="${account.nickname}">taehyun</h2>
             </div>
@@ -30,7 +36,7 @@
                     <div class="form-group">
                         <label for="url">링크</label>
                         <input id="url" type="url" th:field="*{url}" class="form-control"
-                               placeholder="http://studyolle.com" aria-describedby="urlHelp" required>
+                               placeholder="http://springshop.com" aria-describedby="urlHelp" required>
                         <small id="urlHelp" class="form-text text-muted">
                             블로그, 유튜브 또는 포트폴리오나 좋아하는 웹 사이트 등 본인을 표현할 수 있는 링크를 추가하세요.
                         </small>
@@ -59,11 +65,124 @@
                     </div>
 
                     <div class="form-group">
+                        <input id="profileImage" type="hidden" th:field="*{profileImage}" class="form-control"/>
+                    </div>
+
+                    <div class="form-group">
                         <button class="btn btn-primary btn-block" type="submit"
                                 aria-describedby="submitHelp">수정하기
                         </button>
                     </div>
                 </form>
+                <div class="col-sm-6">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            프로필 이미지
+                        </div>
+                        <div id="current-profile-image" class="mt-3">
+                            <svg th:if="${#strings.isEmpty(profile.profileImage)}" class="rounded"
+                                 th:data-jdenticon-value="${account.nickname}" width="125" height="125"></svg>
+                            <img th:if="${!#strings.isEmpty(profile.profileImage)}" class="rounded"
+                                 th:src="${profile.profileImage}"
+                                 width="125" height="125" alt="name" th:alt="${account.nickname}"/>
+                        </div>
+                        <div id="new-profile-image" class="mt-3"></div>
+                        <div class="card-body">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="profile-image-file">
+                                <label class="custom-file-label" for="profile-image-file">프로필 이미지 변경</label>
+                            </div>
+                            <div id="new-profile-image-control" class="mt-3">
+                                <button class="btn btn-outline-primary btn-block" id="cut-button">자르기</button>
+                                <button class="btn btn-outline-success btn-block" id="confirm-button">확인</button>
+                                <button class="btn btn-outline-warning btn-block" id="reset-button">취소</button>
+                            </div>
+                            <div id="cropped-new-profile-image" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.css"
+                      integrity="sha512-+VDbDxc9zesADd49pfvz7CgsOl2xREI/7gnzcdyA9XjuTxLXrdpuz21VVIqc5HPfZji2CypSbxx1lgD7BgBK5g=="
+                      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"
+                        integrity="sha512-ooSWpxJsiXe6t4+PPjCgYmVfr1NS5QXJACcR/FPpsdm6kqG1FmQ2SVyg2RXeVuCRBLr0lWHnWJP6Zs1Efvxzww=="
+                        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cropper/1.0.1/jquery-cropper.min.js"
+                        integrity="sha512-V8cSoC5qfk40d43a+VhrTEPf8G9dfWlEJgvLSiq2T2BmgGRmZzB8dGe7XAABQrWj3sEfrR5xjYICTY4eJr76QQ=="
+                        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                <script type="application/javascript">
+                    $(function () {
+                        cropper = '';
+                        let $confirmBtn = $("#confirm-button");
+                        let $resetBtn = $("#reset-button");
+                        let $cutBtn = $("#cut-button");
+                        let $newProfileImage = $("#new-profile-image");
+                        let $currentProfileImage = $("#current-profile-image");
+                        let $resultImage = $("#cropped-new-profile-image");
+                        let $profileImage = $("#profileImage");
+
+                        $newProfileImage.hide();
+                        $cutBtn.hide();
+                        $resetBtn.hide();
+                        $confirmBtn.hide();
+
+                        $("#profile-image-file").change(function (e) {
+                            if (e.target.files.length === 1) {
+                                const reader = new FileReader();
+                                reader.onload = e => {
+                                    if (e.target.result) {
+                                        let img = document.createElement("img");
+                                        img.id = 'new-profile';
+                                        img.src = e.target.result;
+                                        img.width = 250;
+
+                                        $newProfileImage.html(img);
+                                        $newProfileImage.show();
+                                        $currentProfileImage.hide();
+
+                                        let $newImage = $(img);
+                                        $newImage.cropper({aspectRatio: 1});
+                                        cropper = $newImage.data('cropper');
+
+                                        $cutBtn.show();
+                                        $confirmBtn.hide();
+                                        $resetBtn.show();
+                                    }
+                                };
+
+                                reader.readAsDataURL(e.target.files[0]);
+                            }
+                        });
+
+                        $resetBtn.click(function () {
+                            $currentProfileImage.show();
+                            $newProfileImage.hide();
+                            $resultImage.hide();
+                            $resetBtn.hide();
+                            $cutBtn.hide();
+                            $confirmBtn.hide();
+                            $profileImage.val('');
+                        });
+
+                        $cutBtn.click(function () {
+                            let dataUrl = cropper.getCroppedCanvas().toDataURL();
+                            let newImage = document.createElement("img");
+                            newImage.id = "cropped-new-profile-image";
+                            newImage.src = dataUrl;
+                            newImage.width = 125;
+                            $resultImage.html(newImage);
+                            $resultImage.show();
+                            $confirmBtn.show();
+
+                            $confirmBtn.click(function () {
+                                $newProfileImage.html(newImage);
+                                $cutBtn.hide();
+                                $confirmBtn.hide();
+                                $profileImage.val(dataUrl);
+                            });
+                        });
+                    });
+                </script>
             </div>
         </div>
     </div>
