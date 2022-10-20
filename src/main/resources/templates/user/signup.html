@@ -53,7 +53,7 @@
 </th:block>
 
 <div layout:fragment="content">
-    <form class="needs-validation" action="/signup" role="form" method="post" th:object="${signUpForm}" novalidate>
+    <form class="needs-validation" th:action="@{/signup}" role="form" method="post" th:object="${signUpForm}" novalidate>
 
         <div class="form-group">
             <label th:for="username" th:text="#{label.user.username}">이름</label>

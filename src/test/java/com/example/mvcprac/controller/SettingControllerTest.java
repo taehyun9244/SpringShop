@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +31,9 @@ class SettingControllerTest {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void beforeEach() {
@@ -92,4 +96,46 @@ class SettingControllerTest {
         Account taehyun = accountRepository.findByNickname("시모키타자와");
         Assertions.assertNull(taehyun.getBio());
     }
+
+    @WithUserDetails(value = "시모키타자와", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @Test
+    @DisplayName("password 수정하기 view")
+    void updatePassword_view() throws Exception {
+        mockMvc.perform(get(SettingController.SETTINGS_PASSWORD_URL))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("passwordForm"));
+    }
+    @WithUserDetails(value = "시모키타자와", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @Test
+    @DisplayName("password 수정하기 - 입력값 에러 - 불일치")
+    void updatePassword_fail() throws Exception {
+        mockMvc.perform(post(SettingController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword", "12345678@a")
+                        .param("newPasswordConfirm", "11111111@a")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingController.SETTINGS_PASSWORD_VIEW_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("account"));
+    }
+
+    @WithUserDetails(value = "시모키타자와", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @Test
+    @DisplayName("password 수정하기 - 입력값 정상")
+    void updatePassword_success() throws Exception {
+        mockMvc.perform(post(SettingController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword", "12345678@a")
+                        .param("newPasswordConfirm", "12345678@a")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(SettingController.SETTINGS_PASSWORD_URL))
+                .andExpect(flash().attributeExists("message"));
+
+        Account byEmail = accountRepository.findByEmail("email@email.com");
+        Assertions.assertTrue(passwordEncoder.matches("12345678@a", byEmail.getPassword()));
+    }
+
+
 }

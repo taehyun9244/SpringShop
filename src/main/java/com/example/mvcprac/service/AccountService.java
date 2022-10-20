@@ -32,7 +32,7 @@ public class AccountService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public Account createUser(SignUpForm signUpForm) {
+    public Account createUser(SignUpForm signUpForm)  {
         Account newAccount = saveNewUser(signUpForm);
         newAccount.generateEmailCheckToke();
         sendSignUpConfirmEmail(newAccount);
@@ -92,6 +92,11 @@ public class AccountService implements UserDetailsService {
         account.setOccupation(profile.getOccupation());
         account.setLocation(profile.getLocation());
         account.setProfileImage(profile.getProfileImage());
+        accountRepository.save(account);
+    }
+
+    public void updatePassword(Account account, String newPassword) {
+        account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
     }
 }

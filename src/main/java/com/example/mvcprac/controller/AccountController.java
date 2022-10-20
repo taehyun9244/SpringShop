@@ -5,6 +5,7 @@ import com.example.mvcprac.model.Account;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.service.AccountService;
 import com.example.mvcprac.validation.CurrentUser;
+import com.example.mvcprac.validation.SignUpFormValidator;
 import com.example.mvcprac.validation.UserAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -24,8 +23,14 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AccountController {
 
+    private final SignUpFormValidator signUpFormValidator;
     private final AccountService accountService;
     private final AccountRepository accountRepository;
+
+    @InitBinder("signUpForm")
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(signUpFormValidator);
+    }
 
     @GetMapping("/signup")
     public String createUser(Model model){
@@ -34,15 +39,13 @@ public class AccountController {
     }
 
     @PostMapping("/signup")
-    public String createUser(@Valid @ModelAttribute SignUpForm dto, BindingResult bindingResult){
-        //검증실패시
+    public String createUser(@Valid @ModelAttribute SignUpForm signUpForm, BindingResult bindingResult)  {
         if (bindingResult.hasErrors()) {
             log.info("errors={} ", bindingResult);
             return "user/signup";
         }
 
-        //검증 성공시
-        Account account = accountService.createUser(dto);
+        Account account = accountService.createUser(signUpForm);
         accountService.login(account);
         return "redirect:/";
     }
