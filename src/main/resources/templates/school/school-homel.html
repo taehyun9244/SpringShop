@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<head>
+    <meta charset="UTF-8">
+    <title>학교정보 공유 Page</title>
+</head>
+<body layout:fragment="content">
+
+    <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
+        <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
+             <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + ' 검색 결과'"></p>
+         </div>
+
+    <div class="alert alert-warning" role="alert" th:if="${account != null && !account.emailVerified}">
+    외국인 상품거래 서비스를 가입 완료를 하기 위해서는 <a href="#" th:href="@{/check-email}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
+    </div>
+
+
+
+
+    <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">
+                <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}"
+                   aria-label='Previous' class="page-link">
+                    <span aria-hidden='true'>Previous</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
+                th:classappend="${items.number eq page -1}?'active':''">
+                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page -1}}"
+                   th:inline="text" class="page-link">[[${page}]]</a>
+            </li>
+
+            <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">
+                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number +1}}"
+                   aria-label='Next' class="page-link">
+                    <span aria-hidden='true'>Next</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+</body>
+</html>

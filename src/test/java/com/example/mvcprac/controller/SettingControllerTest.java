@@ -53,7 +53,7 @@ class SettingControllerTest {
         accountRepository.deleteAll();
     }
 
-    @WithUserDetails(value = "시모키타자와", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
     @Test
     @DisplayName("프로필 수정하기 view")
     void updateProfileView() throws Exception{
@@ -63,7 +63,7 @@ class SettingControllerTest {
                 .andExpect(model().attributeExists("profile"));
     }
 
-    @WithUserDetails(value = "시모키타자와", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
     @Test
     @DisplayName("프로필 수정하기 - 입력값 정상")
     void updateProfile() throws Exception{
@@ -79,7 +79,7 @@ class SettingControllerTest {
         assertThat(bio).isEqualTo(taehyun.getBio());
     }
 
-    @WithUserDetails(value = "시모키타자와", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
     @Test
     @DisplayName("프로필 수정하기 - 입력값 에러")
     void updateProfile_error() throws Exception{
@@ -97,7 +97,7 @@ class SettingControllerTest {
         Assertions.assertNull(taehyun.getBio());
     }
 
-    @WithUserDetails(value = "시모키타자와", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
     @Test
     @DisplayName("password 수정하기 view")
     void updatePassword_view() throws Exception {
@@ -106,7 +106,8 @@ class SettingControllerTest {
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("passwordForm"));
     }
-    @WithUserDetails(value = "시모키타자와", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
     @Test
     @DisplayName("password 수정하기 - 입력값 에러 - 불일치")
     void updatePassword_fail() throws Exception {
@@ -121,7 +122,7 @@ class SettingControllerTest {
                 .andExpect(model().attributeExists("account"));
     }
 
-    @WithUserDetails(value = "시모키타자와", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
     @Test
     @DisplayName("password 수정하기 - 입력값 정상")
     void updatePassword_success() throws Exception {

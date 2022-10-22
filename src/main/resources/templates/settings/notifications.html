@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<body class="bg-light">
+<div class="container" layout:fragment="content">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: settings-menu(currentMenu='notifications')"></div>
+        </div>
+        <div class="col-8">
+            <div th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                <span th:text="${message}">완료</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="row">
+                <h2 class="col-12">알림 설정</h2>
+            </div>
+            <div class="row mt-3" th:fragment="profile-form">
+                <form class="col-12" action="#" th:action="@{/settings/notifications}" th:object="${notifications}"
+                      method="post" novalidate>
+                    <div class="alert alert-light" role="alert">
+                        <strong><a href="#" th:href="@{/settings/locations}">주요 활동 지역</a>에
+                            <a href="#" th:href="@{/settings/keywords}">관심있는 상품</a>의 게시글이 생겼을때</strong> 알림을 받을 방법을
+                        설정하세요.
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch custom-control-inline">
+                            <input type="checkbox" th:field="*{shopCreatedByEmail}" class="custom-control-input"
+                                   id="studyCreatedByEmail">
+                            <label class="custom-control-label" for="studyCreatedByEmail">이메일로 받기</label>
+                        </div>
+                        <div class="custom-control custom-switch custom-control-inline">
+                            <input type="checkbox" th:field="*{shopCreatedByWeb}" class="custom-control-input"
+                                   id="studyCreatedByWeb">
+                            <label class="custom-control-label" for="studyCreatedByWeb">웹으로 받기</label>
+                        </div>
+                    </div>
+                    <div class="alert alert-light" role="alert">
+                        <strong>관심 상품 채팅 신청</strong> 결과 알림을 받을 방법을 설정하세요.
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch custom-control-inline">
+                            <input type="checkbox" th:field="*{shopEnrollmentResultByEmail}"
+                                   class="custom-control-input" id="studyEnrollmentResultByEmil">
+                            <label class="custom-control-label" for="studyEnrollmentResultByEmil">이메일로 받기</label>
+                        </div>
+                        <div class="custom-control custom-switch custom-control-inline">
+                            <input type="checkbox" th:field="*{shopEnrollmentResultByWeb}" class="custom-control-input"
+                                   id="studyEnrollmentResultByWeb">
+                            <label class="custom-control-label" for="studyEnrollmentResultByWeb">웹으로 받기</label>
+                        </div>
+                    </div>
+                    <div class="alert alert-light" role="alert">
+                        <strong>채팅중인 상품</strong>에 대한 알림을 받을 방법을 설정하세요.
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch custom-control-inline">
+                            <input type="checkbox" th:field="*{shopUpdatedByEmail}" class="custom-control-input"
+                                   id="studyWatchByEmail">
+                            <label class="custom-control-label" for="studyWatchByEmail">이메일로 받기</label>
+                        </div>
+                        <div class="custom-control custom-switch custom-control-inline">
+                            <input type="checkbox" th:field="*{shopUpdatedByWeb}" class="custom-control-input"
+                                   id="studyWatchByWeb">
+                            <label class="custom-control-label" for="studyWatchByWeb">웹으로 받기</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp">저장하기
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+</body>
+</html>

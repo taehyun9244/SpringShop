@@ -28,7 +28,7 @@ public class ItemController {
 
 
     /**
-     * create Item Form
+     * Item view
      */
     @GetMapping("/add")
     public String addItem(@ModelAttribute(name = "form") ItemForm form) {

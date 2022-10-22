@@ -1,6 +1,7 @@
 package com.example.mvcprac.controller;
 
 import com.example.mvcprac.dto.account.PasswordForm;
+import com.example.mvcprac.dto.profile.Notifications;
 import com.example.mvcprac.dto.profile.Profile;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.service.AccountService;
@@ -31,6 +32,8 @@ public class SettingController {
     static final String SETTINGS_PROFILE_URL = "/settings/profile";
     static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
     static final String SETTINGS_PASSWORD_URL = "/settings/password";
+    static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
+    static final String SETTINGS_NOTIFICATIONS_URL = "/settings/notifications";
 
     private final AccountService accountService;
 
@@ -74,5 +77,25 @@ public class SettingController {
         accountService.updatePassword(account, passwordForm.getNewPassword());
         attributes.addFlashAttribute("message", "패스워드를 변경했습니다.");
         return "redirect:" + SETTINGS_PASSWORD_URL;
+    }
+
+    @GetMapping(SETTINGS_NOTIFICATIONS_URL)
+    public String updateNotificationsForm(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(new Notifications(account));
+        return SETTINGS_NOTIFICATIONS_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_NOTIFICATIONS_URL)
+    public String updateNotifications(@CurrentUser Account account, @Valid Notifications notifications, BindingResult bindingResult,
+                                      Model model, RedirectAttributes attributes) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute(account);
+            return SETTINGS_NOTIFICATIONS_VIEW_NAME;
+        }
+
+        accountService.updateNotifications(account, notifications);
+        attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
+        return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
     }
 }

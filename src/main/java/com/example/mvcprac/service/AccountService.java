@@ -1,12 +1,14 @@
 package com.example.mvcprac.service;
 
 import com.example.mvcprac.dto.account.SignUpForm;
+import com.example.mvcprac.dto.profile.Notifications;
 import com.example.mvcprac.dto.profile.Profile;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.validation.UserAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +32,7 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
 
     public Account createUser(SignUpForm signUpForm)  {
@@ -68,14 +71,15 @@ public class AccountService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     @Override
-    public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
-        Account account = accountRepository.findByEmail(emailOrNickname);
+    public UserDetails loadUserByUsername(String emailOrPhoneNumber) throws UsernameNotFoundException {
+        Account account = accountRepository.findByEmail(emailOrPhoneNumber);
         if (account == null) {
-            account = accountRepository.findByNickname(emailOrNickname);
+            account = accountRepository.findByPhoneNumber(emailOrPhoneNumber);
+//            account = accountRepository.findByNickname(emailOrPhoneNumber);
         }
 
         if (account == null) {
-            throw new UsernameNotFoundException(emailOrNickname);
+            throw new UsernameNotFoundException(emailOrPhoneNumber);
         }
 
         return new UserAccount(account);
@@ -87,16 +91,28 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateProfile(Account account, Profile profile) {
-        account.setBio(profile.getBio());
-        account.setUrl(profile.getUrl());
-        account.setOccupation(profile.getOccupation());
-        account.setLocation(profile.getLocation());
-        account.setProfileImage(profile.getProfileImage());
+//        account.setBio(profile.getBio());
+//        account.setUrl(profile.getUrl());
+//        account.setOccupation(profile.getOccupation());
+//        account.setLocation(profile.getLocation());
+//        account.setProfileImage(profile.getProfileImage());
+        modelMapper.map(profile, account);
         accountRepository.save(account);
     }
 
     public void updatePassword(Account account, String newPassword) {
         account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+    }
+
+    public void updateNotifications(Account account, Notifications notifications) {
+//        account.setShopCreatedByWeb(notifications.isShopCreatedByWeb());
+//        account.setShopCreatedByEmail(notifications.isShopCreatedByEmail());
+//        account.setShopUpdatedByWeb(notifications.isShopUpdatedByWeb());
+//        account.setShopUpdatedByEmail(notifications.isShopUpdatedByEmail());
+//        account.setShopEnrollmentResultByEmail(notifications.isShopEnrollmentResultByEmail());
+//        account.setShopEnrollmentResultByWeb(notifications.isShopEnrollmentResultByWeb());
+        modelMapper.map(notifications, account);
         accountRepository.save(account);
     }
 }

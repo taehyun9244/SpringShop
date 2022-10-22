@@ -50,7 +50,7 @@ class HomeControllerTest {
     }
 
     @Test
-    @DisplayName("이메일 로그인 성공")
+    @DisplayName("이메일 로그인 성공 - email")
     void login_with_email() throws Exception {
 
         mockMvc.perform(post("/login")
@@ -64,11 +64,11 @@ class HomeControllerTest {
     }
 
     @Test
-    @DisplayName("이메일 로그인 성공")
-    void login_with_nickname() throws Exception {
+    @DisplayName("이메일 로그인 성공 - phoneNumber")
+    void login_with_phoneNumber() throws Exception {
 
         mockMvc.perform(post("/login")
-                        .param("username", "시모키타자와")
+                        .param("username", "01012345678")
                         .param("password", "12341234!a")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
