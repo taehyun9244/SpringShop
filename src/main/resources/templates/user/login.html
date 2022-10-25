@@ -12,7 +12,7 @@
     </div>
     <div class="row justify-content-center">
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
-            <p>이메일(또는 닉네임)과 패스워드가 정확하지 않습니다.</p>
+            <p>이메일(또는 전화번호)과 패스워드가 정확하지 않습니다.</p>
             <p>또는 확인되지 않은 이메일을 사용했습니다. 이메일을 확인해 주세요.</p>
             <p>
                 확인 후 다시 입력하시거나, <a href="#" th:href="@{/find-passsword}">패스워드 찾기</a>를 이용하세요.
@@ -25,7 +25,7 @@
                 <input id="username" type="text" name="username" class="form-control"
                        placeholder="your@email.com" aria-describedby="emailHelp" required>
                 <small id="emailHelp" class="form-text text-muted">
-                    가입할 때 사용한 이메일 또는 닉네임을 입력하세요.
+                    가입할 때 사용한 이메일 또는 전화번호를 입력하세요.
                 </small>
                 <small class="invalid-feedback">이메일을 입력하세요.</small>
             </div>

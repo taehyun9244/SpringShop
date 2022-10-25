@@ -14,6 +14,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -138,5 +139,42 @@ class SettingControllerTest {
         Assertions.assertTrue(passwordEncoder.matches("12345678@a", byEmail.getPassword()));
     }
 
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @Test
+    @DisplayName("nickname 수정하기 view")
+    void updateNickname_view() throws Exception {
+        mockMvc.perform(get(SettingController.SETTINGS_ACCOUNT_URL))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("nicknameForm"));
+    }
+
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @Test
+    @DisplayName("nickname 수정하기 - 입력값 에러 - 불일치")
+    void updateNickname_fail() throws Exception {
+        mockMvc.perform(post(SettingController.SETTINGS_ACCOUNT_URL)
+                        .param("nickname", "이것은 엄청길게 쓴 것 입니다 30자가넘으면 안되는데 그냥 넘기고 에러를 읽으킨다")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingController.SETTINGS_ACCOUNT_VIEW_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("nicknameForm"))
+                .andExpect(model().attributeExists("account"));
+    }
+
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @Test
+    @DisplayName("nickname 수정하기 - 입력값 정상")
+    void updateNickname_success() throws Exception {
+        mockMvc.perform(post(SettingController.SETTINGS_ACCOUNT_URL)
+                        .param("nickname", "시모키타자와44")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(SettingController.SETTINGS_ACCOUNT_URL))
+                .andExpect(flash().attributeExists("message"));
+
+        assertNotNull(accountRepository.findByNickname("시모키타자와44"));
+    }
 
 }
