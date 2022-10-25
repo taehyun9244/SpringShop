@@ -91,11 +91,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateProfile(Account account, Profile profile) {
-//        account.setBio(profile.getBio());
-//        account.setUrl(profile.getUrl());
-//        account.setOccupation(profile.getOccupation());
-//        account.setLocation(profile.getLocation());
-//        account.setProfileImage(profile.getProfileImage());
+
         modelMapper.map(profile, account);
         accountRepository.save(account);
     }
@@ -106,13 +102,14 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateNotifications(Account account, Notifications notifications) {
-//        account.setShopCreatedByWeb(notifications.isShopCreatedByWeb());
-//        account.setShopCreatedByEmail(notifications.isShopCreatedByEmail());
-//        account.setShopUpdatedByWeb(notifications.isShopUpdatedByWeb());
-//        account.setShopUpdatedByEmail(notifications.isShopUpdatedByEmail());
-//        account.setShopEnrollmentResultByEmail(notifications.isShopEnrollmentResultByEmail());
-//        account.setShopEnrollmentResultByWeb(notifications.isShopEnrollmentResultByWeb());
+
         modelMapper.map(notifications, account);
         accountRepository.save(account);
+    }
+
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        login(account);
     }
 }
