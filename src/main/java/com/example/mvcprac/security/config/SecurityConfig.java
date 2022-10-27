@@ -46,9 +46,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                     .authorizeRequests()
-                    .antMatchers("/", "/login", "/signup", "/check-email-token", "/email-login",
-                        "/check-email-login", "/login-link", "/h2-console/**").permitAll()
-                    .antMatchers(HttpMethod.GET, "/items", "/profile/*").permitAll()
+                    .antMatchers("/", "/login", "/signup", "/check-email-token", "/email-login", "/login-by-email", "/h2-console/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/items", "/profile/*", "/store", "/visa", "/school").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .csrf().disable()

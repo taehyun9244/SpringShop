@@ -58,7 +58,7 @@ class AccountControllerTest {
         Account account = new Account(1L, "남태현", "시모키타자와", "12345678!a",
                 "email@email.com", "서울서초", "01012345678", "1992.04.04");
         Account newAccount = accountRepository.save(account);
-        newAccount.generateEmailCheckToke();
+        newAccount.generateEmailCheckToken();
 
         mockMvc.perform(get("/check-email-token")
                         .param("token", newAccount.getEmailCheckToken())

@@ -1,13 +1,11 @@
 package com.example.mvcprac.model;
 
 import com.example.mvcprac.dto.account.SignUpForm;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +13,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@EqualsAndHashCode(of = "id")
 public class Account {
 
     @Id
@@ -75,6 +73,9 @@ public class Account {
 
     private LocalDateTime joinedAt;
 
+    @ManyToMany
+    private Set<Tag> tags;
+
     /**
      * test create account
      */
@@ -106,7 +107,7 @@ public class Account {
     }
 
 
-    public void generateEmailCheckToke() {
+    public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
         this.emailCheckTokenGeneratedAt = LocalDateTime.now();
     }
@@ -118,5 +119,9 @@ public class Account {
 
     public boolean canSendConfirmEmail() {
         return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
+    }
+
+    public boolean isValidToken(String token) {
+        return this.emailCheckToken.equals(token);
     }
 }

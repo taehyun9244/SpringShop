@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<body class="bg-light">
+<div class="container" layout:fragment="content">
+    <div class="py-5 text-center" th:if="${error}">
+        <p class="lead">외국인 상품거래 이메일 로그인</p>
+        <div class="alert alert-danger" role="alert">
+            이메일이 정확하지 않거나 가입하지 않은 이메일 입니다.
+        </div>
+        <p class="lead" th:text="${email}">your@email.com</p>
+    </div>
+
+    <div class="py-5 text-center" th:if="${error == null}">
+        <p class="lead">외국인 상품거래 이메일 로그인</p>
+
+        <h2>이메일을 확인하세요. 로그인 링크를 보냈습니다.</h2>
+        <p class="lead" th:text="${email}">your@email.com</p>
+        <small class="text-info">이메일을 확인해야 로그인 할 수 있습니다.</small>
+    </div>
+</div>
+</body>
+</html>

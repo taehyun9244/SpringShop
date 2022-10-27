@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-public class StoreController {
+public class BoardController {
 
     /**
      * store view

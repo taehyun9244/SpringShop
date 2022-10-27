@@ -4,6 +4,7 @@ import com.example.mvcprac.dto.account.SignUpForm;
 import com.example.mvcprac.dto.profile.Notifications;
 import com.example.mvcprac.dto.profile.Profile;
 import com.example.mvcprac.model.Account;
+import com.example.mvcprac.model.Tag;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.validation.UserAccount;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +40,7 @@ public class AccountService implements UserDetailsService {
 
     public Account createUser(SignUpForm signUpForm)  {
         Account newAccount = saveNewUser(signUpForm);
-        newAccount.generateEmailCheckToke();
+        newAccount.generateEmailCheckToken();
         sendSignUpConfirmEmail(newAccount);
         return newAccount;
     }
@@ -75,7 +78,6 @@ public class AccountService implements UserDetailsService {
         Account account = accountRepository.findByEmail(emailOrPhoneNumber);
         if (account == null) {
             account = accountRepository.findByPhoneNumber(emailOrPhoneNumber);
-//            account = accountRepository.findByNickname(emailOrPhoneNumber);
         }
 
         if (account == null) {
@@ -111,5 +113,25 @@ public class AccountService implements UserDetailsService {
         account.setNickname(nickname);
         accountRepository.save(account);
         login(account);
+    }
+
+    public void sendLoginLink(Account account) {
+        account.generateEmailCheckToken();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(account.getEmail());
+        mailMessage.setSubject("스터디올래, 로그인 링크");
+        mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken() +
+                "&email=" + account.getEmail());
+        javaMailSender.send(mailMessage);
+    }
+
+    public void addTag(Account account, Tag tagTitle) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTags().add(tagTitle));
+    }
+
+    public Set<Tag> getTags(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getTags();
     }
 }
