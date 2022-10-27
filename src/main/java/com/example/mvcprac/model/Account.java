@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -48,15 +49,15 @@ public class Account {
     
     private boolean shopCreatedByEmail;
 
-    private boolean shopCreatedByWeb;
+    private boolean shopCreatedByWeb = true;
 
     private boolean shopEnrollmentResultByEmail;
 
-    private boolean shopEnrollmentResultByWeb;
+    private boolean shopEnrollmentResultByWeb = true;
 
     private boolean shopUpdatedByEmail;
 
-    private boolean shopUpdatedByWeb;
+    private boolean shopUpdatedByWeb = true;
 
     private LocalDateTime emailCheckTokenGeneratedAt;
 
@@ -74,7 +75,7 @@ public class Account {
     private LocalDateTime joinedAt;
 
     @ManyToMany
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
     /**
      * test create account

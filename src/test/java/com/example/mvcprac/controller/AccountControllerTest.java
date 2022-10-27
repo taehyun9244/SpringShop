@@ -86,7 +86,7 @@ class AccountControllerTest {
     @DisplayName("회원가입 처리 입력값 오류")
     void signUpSubmit_with_wrong_input() throws Exception {
         mockMvc.perform(post("/signup")
-                        .param("name", "남태현")
+                        .param("username", "남태현")
                         .param("nickname", "시모키타자와")
                         .param("password", "123456789!")
                         .param("birthday", "920404")
@@ -103,10 +103,10 @@ class AccountControllerTest {
     @DisplayName("회원가입 처리 입력값 정상")
     void signUpSubmit_with_correct_input() throws Exception {
         mockMvc.perform(post("/signup")
-                        .param("name", "남태현")
+                        .param("username", "남태현")
                         .param("nickname", "시모키타자와")
                         .param("password", "a123456789!")
-                        .param("birthday", "1992.04.04")
+                        .param("birthday", "19920404")
                         .param("address", "명달로99길99")
                         .param("email", "email@email.com")
                         .param("phoneNumber", "01012345678")
@@ -115,9 +115,9 @@ class AccountControllerTest {
                 .andExpect(view().name("redirect:/"))
                 .andExpect(authenticated().withUsername("시모키타자와"));
 
-        Account account = accountRepository.findByEmail("taehyun@email.com");
+        Account account = accountRepository.findByEmail("email@email.com");
         assertNotNull(account);
-        assertNotEquals(account.getPassword(), "123456789");
+        assertNotEquals(account.getPassword(), "a123456789!");
         assertNotNull(account.getEmailCheckToken());
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
     }

@@ -1,25 +1,32 @@
 package com.example.mvcprac.controller;
 
+import com.example.mvcprac.dto.Tag.TagForm;
 import com.example.mvcprac.dto.account.SignUpForm;
 import com.example.mvcprac.model.Account;
+import com.example.mvcprac.model.Tag;
 import com.example.mvcprac.repository.AccountRepository;
+import com.example.mvcprac.repository.TagRepository;
 import com.example.mvcprac.service.AccountService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 class SettingControllerTest {
@@ -36,10 +43,16 @@ class SettingControllerTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Autowired
+    TagRepository tagRepository;
+
     @BeforeEach
     void beforeEach() {
         SignUpForm signUpForm = new SignUpForm(
-                "남태값",
+                "남태현",
                 "12341234!a",
                 "19920404",
                 "시모키타자와",
@@ -177,4 +190,58 @@ class SettingControllerTest {
         assertNotNull(accountRepository.findByNickname("시모키타자와44"));
     }
 
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @Test
+    @DisplayName("계정의 Tag 수정 form")
+    void updateTags_view() throws Exception {
+        mockMvc.perform(get(SettingController.SETTINGS_TAGS_URL))
+                .andExpect(view().name(SettingController.SETTINGS_TAGS_VIEW_NAME))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("whitelist"))
+                .andExpect(model().attributeExists("tags"));
+    }
+
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @Test
+    @DisplayName("계정의 Tag add")
+    void addTag() throws Exception {
+
+        TagForm tagForm = new TagForm();
+        tagForm.setTagTitle("newTagTitle");
+
+        mockMvc.perform(post(SettingController.SETTINGS_TAGS_URL + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tagForm))
+                .with(csrf()))
+                .andExpect(status().isOk());
+
+        Tag newTagTitle = tagRepository.findByTitle("newTagTitle");
+        assertNotNull(newTagTitle);
+        assertTrue(accountRepository.findByPhoneNumber("01012345678").getTags().contains(newTagTitle));
+    }
+
+    @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
+    @Test
+    @DisplayName("계정의 Tag remove")
+    void removeTag() throws Exception {
+
+        Account simokitazawa = accountRepository.findByPhoneNumber("01012345678");
+
+        TagForm tagForm = new TagForm();
+        tagForm.setTagTitle("newTagTitle");
+        Tag saveTag = new Tag(tagForm.getTagTitle());
+        Tag newTag = tagRepository.save(saveTag);
+
+        accountService.addTag(simokitazawa, newTag);
+
+        assertTrue(simokitazawa.getTags().contains(newTag));
+
+        mockMvc.perform(post(SettingController.SETTINGS_TAGS_URL + "/remove")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tagForm))
+                .with(csrf()))
+                .andExpect(status().isOk());
+
+        assertFalse(simokitazawa.getTags().contains(newTag));
+    }
 }

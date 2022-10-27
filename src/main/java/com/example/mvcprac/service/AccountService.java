@@ -40,15 +40,15 @@ public class AccountService implements UserDetailsService {
 
     public Account createUser(SignUpForm signUpForm)  {
         Account newAccount = saveNewUser(signUpForm);
-        newAccount.generateEmailCheckToken();
         sendSignUpConfirmEmail(newAccount);
         return newAccount;
     }
 
     private Account saveNewUser(SignUpForm signUpForm) {
-        String password = signUpForm.getPassword();
-        String encodePassword = passwordEncoder.encode(password);
-        Account account = new Account(signUpForm, encodePassword, true, true, true);
+        
+        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        Account account = modelMapper.map(signUpForm, Account.class);
+        account.generateEmailCheckToken();
         Account newAccount = accountRepository.save(account);
         return newAccount;
     }
