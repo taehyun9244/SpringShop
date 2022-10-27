@@ -5,7 +5,7 @@ import com.example.mvcprac.dto.item.ItemSearchDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.service.ItemService;
 import com.example.mvcprac.service.file.FileStore;
-import com.example.mvcprac.validation.CurrentUser;
+import com.example.mvcprac.validation.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -31,7 +31,7 @@ public class HomeController {
     private final FileStore fileStore;
 
     @GetMapping("/")
-    public String home(@CurrentUser Account account, ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
+    public String home(@CurrentAccount Account account, ItemSearchDto itemSearchDto, Optional<Integer> page, Model model) {
 
         if (account != null) {
             model.addAttribute(account);

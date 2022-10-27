@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+
+<th:block layout:fragment="css">
+    <style>
+        .tagify--outside {
+            border: 0;
+        }
+
+        .tagify--outside .tagify__input {
+            order: -1;
+            flex: 100%;
+            border: 1px solid var(--tags-border-color);
+            margin-bottom: 1em;
+            transition: .1s;
+        }
+
+        .tagify--outside .tagify__input:hover {
+            border-color: var(--tags-hover-border-color);
+        }
+
+        .tagify--outside.tagify--focus .tagify__input {
+            transition: 0s;
+            border-color: var(--tags-focus-border-color);
+        }
+    </style>
+</th:block>
+
+<body class="bg-light">
+<div class="container" layout:fragment="content">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: settings-menu(currentMenu='zones')"></div>
+        </div>
+        <div class="col-8">
+            <div class="row">
+                <h2 class="col-12">주요 활동 지역</h2>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-info" role="alert">
+                        주로 다니거나 관심있는 지역을 등록하세요. 해당 지역에 게시글이 생기면 알림을 받을 수 있습니다.<br/>
+                        시스템에 등록된 지역만 선택할 수 있습니다.
+                    </div>
+                    <div id="whitelist" th:text="${whitelist}" hidden></div>
+
+                    <input id="tags" type="text" name="tags" th:value="${#strings.listJoin(zones, ',')}"
+                           class="tagify-outside" aria-describedby="tagHelp"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="application/javascript">
+        $(function () {
+            function tagRequest(url, zoneName) {
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "/settings/zones" + url,
+                    data: JSON.stringify({'zoneName': zoneName})
+                }).done(function (data, status) {
+                    console.log("${data} and status is ${status}");
+                });
+            }
+
+            function onAdd(e) {
+                tagRequest("/add", e.detail.data.value);
+            }
+
+            function onRemove(e) {
+                tagRequest("/remove", e.detail.data.value);
+            }
+
+            var tagInput = document.querySelector("#tags");
+
+            var tagify = new Tagify(tagInput, {
+                enforceWhitelist: true,
+                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+                dropdown: {
+                    enabled: 1, // suggest tags after a single character input
+                } // map tags
+            });
+
+            tagify.on("add", onAdd);
+            tagify.on("remove", onRemove);
+        });
+    </script>
+</div>
+
+<script type="application/javascript" th:inline="javascript">
+    $(function () {
+        var csrfToken = /*[[${_csrf.token}]]*/ null;
+        var csrfHeader = /*[[${_csrf.headerName}]]*/ null;
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+    });
+</script>
+</body>
+</html>

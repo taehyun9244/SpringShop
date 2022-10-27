@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -76,6 +76,9 @@ public class Account {
 
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
+
+    @ManyToMany
+    private Set<Zone> zones = new HashSet<>();
 
     /**
      * test create account

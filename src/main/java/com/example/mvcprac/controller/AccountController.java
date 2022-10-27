@@ -4,7 +4,7 @@ import com.example.mvcprac.dto.account.SignUpForm;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.service.AccountService;
-import com.example.mvcprac.validation.CurrentUser;
+import com.example.mvcprac.validation.CurrentAccount;
 import com.example.mvcprac.validation.SignUpFormValidator;
 import com.example.mvcprac.validation.UserAccount;
 import lombok.RequiredArgsConstructor;
@@ -72,13 +72,13 @@ public class AccountController {
     }
 
     @GetMapping("/check-email")
-    public String checkEmail(@CurrentUser Account account, Model model) {
+    public String checkEmail(@CurrentAccount Account account, Model model) {
         model.addAttribute("email", account.getEmail());
         return "user/check-email";
     }
 
     @GetMapping("/resend-confirm-email")
-    public String resendConfirmEmail(@CurrentUser Account account, Model model) {
+    public String resendConfirmEmail(@CurrentAccount Account account, Model model) {
         if (!account.canSendConfirmEmail()) {
             model.addAttribute("error", "인증 이메일은 1시간에 한번만 전송할 수 있습니다.");
             model.addAttribute("email", account.getEmail());

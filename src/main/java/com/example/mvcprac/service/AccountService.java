@@ -5,6 +5,7 @@ import com.example.mvcprac.dto.profile.Notifications;
 import com.example.mvcprac.dto.profile.Profile;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Tag;
+import com.example.mvcprac.model.Zone;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.validation.UserAccount;
 import lombok.RequiredArgsConstructor;
@@ -125,18 +126,34 @@ public class AccountService implements UserDetailsService {
         javaMailSender.send(mailMessage);
     }
 
-    public void addTag(Account account, Tag tagTitle) {
-        Optional<Account> byId = accountRepository.findById(account.getId());
-        byId.ifPresent(a -> a.getTags().add(tagTitle));
-    }
 
     public Set<Tag> getTags(Account account) {
         Optional<Account> byId = accountRepository.findById(account.getId());
         return byId.orElseThrow().getTags();
     }
 
+    public void addTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTags().add(tag));
+    }
+
     public void removeTag(Account account, Tag tag) {
         Optional<Account> byId = accountRepository.findById(account.getId());
         byId.ifPresent(a -> a.getTags().remove(tag));
+    }
+
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
+    }
+
+    public void addZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().add(zone));
+    }
+
+    public void removeZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().remove(zone));
     }
 }

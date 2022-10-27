@@ -1,4 +1,4 @@
-package com.example.mvcprac.dto.Tag;
+package com.example.mvcprac.dto.tag;
 
 import lombok.Data;
 
