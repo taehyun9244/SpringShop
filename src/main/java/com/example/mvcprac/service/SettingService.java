@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -25,5 +28,17 @@ public class SettingService {
             tag = tagRepository.save(saveTag);
         }
         return tag;
+    }
+
+    public Tag removeTag(TagForm tagForm) {
+        String tagTitle = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(tagTitle);
+
+        return tag;
+    }
+
+    public List<String> findAllTagTitle() {
+        List<String> findAllTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
+        return findAllTags;
     }
 }

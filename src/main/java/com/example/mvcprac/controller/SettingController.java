@@ -12,6 +12,8 @@ import com.example.mvcprac.service.SettingService;
 import com.example.mvcprac.validation.CurrentUser;
 import com.example.mvcprac.validation.NicknameValidator;
 import com.example.mvcprac.validation.PasswordFormValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,8 +51,10 @@ public class SettingController {
 
     private final AccountService accountService;
     private final ModelMapper modelMapper;
+
     private final NicknameValidator nicknameValidator;
     private final SettingService settingService;
+    private final ObjectMapper objectMapper;
 
     @InitBinder("passwordForm")
         public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -60,6 +65,10 @@ public class SettingController {
     public void nicknameFormInitBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(nicknameValidator);
     }
+
+    /**
+     * update Profile
+     */
 
     @GetMapping(SETTINGS_PROFILE_URL)
     public String profileUpdateForm(@CurrentUser Account account, Model model) {
@@ -83,6 +92,10 @@ public class SettingController {
         return "redirect:" + SETTINGS_PROFILE_URL;
     }
 
+    /**
+     * Change Password
+     */
+
     @GetMapping(SETTINGS_PASSWORD_URL)
     public String updatePasswordForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
@@ -102,6 +115,10 @@ public class SettingController {
         attributes.addFlashAttribute("message", "패스워드를 변경했습니다.");
         return "redirect:" + SETTINGS_PASSWORD_URL;
     }
+
+    /**
+     * update Notifications
+     */
 
     @GetMapping(SETTINGS_NOTIFICATIONS_URL)
     public String updateNotificationsForm(@CurrentUser Account account, Model model) {
@@ -123,6 +140,9 @@ public class SettingController {
         return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
     }
 
+    /**
+     * Change Nickname
+     */
     @GetMapping(SETTINGS_ACCOUNT_URL)
     public String updateAccountForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
@@ -143,20 +163,41 @@ public class SettingController {
         return "redirect:" + SETTINGS_ACCOUNT_URL;
     }
 
+
+    /**
+     * Tags
+     */
     @GetMapping(SETTINGS_TAGS_URL)
-    public String updateTags(@CurrentUser Account account, Model model) {
+    public String updateTags(@CurrentUser Account account, Model model) throws JsonProcessingException {
         model.addAttribute(account);
         Set<Tag> tags = accountService.getTags(account);
         model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+
+        List<String> allTags = settingService.findAllTagTitle();
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(allTags));
+
         return SETTINGS_TAGS_VIEW_NAME;
     }
-    @PostMapping("/settings/tags/add")
+
+    @PostMapping(SETTINGS_TAGS_URL + "/add")
     @ResponseBody
     public ResponseEntity updateTags(@CurrentUser Account account, @RequestBody TagForm tagForm) {
-
         Tag tagTitle = settingService.findTagTitle(tagForm);
         accountService.addTag(account, tagTitle);
 
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping(SETTINGS_TAGS_URL + "/remove")
+    @ResponseBody
+    public ResponseEntity removeTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        Tag tag = settingService.removeTag(tagForm);
+        if (tag == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.removeTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
+
 }
