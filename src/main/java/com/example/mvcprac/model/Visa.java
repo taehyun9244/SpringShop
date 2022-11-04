@@ -1,5 +1,6 @@
 package com.example.mvcprac.model;
 
+import com.example.mvcprac.dto.visa.VisaForm;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,4 +30,12 @@ public class Visa {
 
     @ManyToOne
     private Account account;
+
+    public Visa(VisaForm visaForm, Account account) {
+        this.title = visaForm.getTitle();
+        this.body = visaForm.getBody();
+        this.country = visaForm.getCountry();
+        this.createdAt = LocalDateTime.now();
+        this.account = account;
+    }
 }

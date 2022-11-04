@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments.html :: head"></head>
-<div th:replace="fragments.html :: main-nav"></div>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
 <title>VISA 페이지</title>
 
-<body class="bg-light">
+<body class="bg-light" layout:fragment="content">
 
 
     <!--    <input type="hidden" name="searchQuery" th:value="${visaSearchDto.searchQuery}">-->
@@ -18,7 +17,7 @@
     </div>
 
 
-        <div class=" m-5 table-responsive clearfix">
+        <div class=" m-5 table-responsive clearfix" style="width: 1600px">
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -38,9 +37,8 @@
                 </tr>
                 </tbody>
             </table>
-
-            <div class="btn_wrap text-right">
-                <a th:href="@{/visa/add}" class="btn btn-primary waves-effect waves-light">등록</a>
+            <div class="btn_wrap text-right" style="width: 1600px" >
+                <a href="/visa/add" class="btn btn-primary waves-effect waves-light">등록</a>
             </div>
 
 <!--            <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})">-->
