@@ -38,7 +38,7 @@
                 </tbody>
             </table>
             <div class="btn_wrap text-right" style="width: 1600px" >
-                <a href="/visa/add" class="btn btn-primary waves-effect waves-light">등록</a>
+                <a th:href="@{/post}" role="button" class="btn btn-primary waves-effect waves-light">글쓰기</a>
             </div>
 
 <!--            <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})">-->

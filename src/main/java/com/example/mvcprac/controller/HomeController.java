@@ -2,8 +2,10 @@ package com.example.mvcprac.controller;
 
 import com.example.mvcprac.dto.item.ItemListDto;
 import com.example.mvcprac.dto.item.ItemSearchDto;
+import com.example.mvcprac.dto.visa.VisaListDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.service.ItemService;
+import com.example.mvcprac.service.VisaService;
 import com.example.mvcprac.service.file.FileStore;
 import com.example.mvcprac.validation.CurrentAccount;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.MalformedURLException;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -28,6 +31,7 @@ import java.util.Optional;
 public class HomeController {
 
     private final ItemService itemService;
+    private final VisaService visaService;
     private final FileStore fileStore;
 
     @GetMapping("/")
@@ -44,6 +48,17 @@ public class HomeController {
         model.addAttribute("itemSearchDto", itemSearchDto);
         model.addAttribute("maxPage", 5);
         return "home";
+    }
+
+    @GetMapping("/visas")
+    public String visaHomeView(@CurrentAccount Account account, Model model) {
+        if (account != null) {
+            model.addAttribute(account);
+        }
+
+        List<VisaListDto> visaList = visaService.findVisaList();
+        model.addAttribute("visaList", visaList);
+        return "visa/visa-home";
     }
 
     @ResponseBody

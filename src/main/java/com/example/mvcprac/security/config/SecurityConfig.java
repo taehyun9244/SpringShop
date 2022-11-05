@@ -47,7 +47,7 @@ public class SecurityConfig {
         return http
                     .authorizeRequests()
                     .antMatchers("/", "/login", "/signup", "/check-email-token", "/email-login", "/login-by-email", "/h2-console/**").permitAll()
-                    .antMatchers(HttpMethod.GET, "/items", "/profile/*", "/store", "/visa", "/school").permitAll()
+                    .antMatchers(HttpMethod.GET, "/items", "/profile/*", "/stores", "/visas", "/schools").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .csrf().disable()

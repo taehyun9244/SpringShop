@@ -2,7 +2,6 @@ package com.example.mvcprac.controller;
 
 import com.example.mvcprac.dto.visa.VisaDetailDto;
 import com.example.mvcprac.dto.visa.VisaForm;
-import com.example.mvcprac.dto.visa.VisaListDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.service.VisaService;
 import com.example.mvcprac.validation.CurrentAccount;
@@ -15,8 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -24,25 +21,21 @@ public class VisaController {
 
     private final VisaService visaService;
 
-    @GetMapping("/visa")
-    public String visaHomeView(@CurrentAccount Account account, Model model) {
-        if (account != null) {
-            model.addAttribute(account);
-        }
-
-        List<VisaListDto> visaList = visaService.findVisaList();
-        model.addAttribute("visaList", visaList);
-        return "visa/visa-home";
-    }
-
-    @GetMapping("/visa/{id}")
+    @GetMapping("/post/{id}")
     public String findVisaIdView(@PathVariable Long id, Model model) {
         VisaDetailDto visaDetailDto = visaService.findOneVisa(id);
         model.addAttribute("visaDetailDto", visaDetailDto);
         return "visa/visaForm";
     }
 
-    @PostMapping("/visa/add")
+    @GetMapping("/post")
+    public String createVisaView(@ModelAttribute(name = "visaForm") VisaForm visaForm, @CurrentAccount Account account,
+                                 Model model) {
+        model.addAttribute("account", account);
+        return "visa/visaForm";
+    }
+
+    @PostMapping("/post")
     public String writeVisa(@Validated @ModelAttribute(name = "visaForm") VisaForm visaForm, @CurrentAccount Account account,
                             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -56,7 +49,7 @@ public class VisaController {
         return "redirect:/visa/{visaId}";
     }
 
-    @DeleteMapping("/visa/{id}")
+    @DeleteMapping("/visas/{id}")
     public String deleteVisa(@CurrentAccount Account account, @PathVariable Long id) {
         visaService.deleteVisa(account, id);
         return "visa/visa-home";

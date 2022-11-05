@@ -1,11 +1,15 @@
 package com.example.mvcprac.dto.visa;
 
 import com.example.mvcprac.model.Visa;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class VisaListDto {
 
     private Long id;
