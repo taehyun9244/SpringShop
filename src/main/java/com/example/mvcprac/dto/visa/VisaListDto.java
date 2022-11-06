@@ -14,13 +14,15 @@ public class VisaListDto {
 
     private Long id;
     private String title;
-    private String writer;
+    private String nickname;
+    private String country;
     private LocalDateTime createdAt;
 
     public VisaListDto(Visa visa) {
         this.id = visa.getId();
-        this.title = visa.getTitle();;
-        this.writer = visa.getAccount().getNickname();
+        this.title = visa.getTitle();
+        this.nickname = visa.getAccount().getNickname();
+        this.country = visa.getCountry();
         this.createdAt = visa.getCreatedAt();
     }
 

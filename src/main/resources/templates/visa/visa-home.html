@@ -30,8 +30,9 @@
                 </thead>
                 <tbody>
                 <tr th:if="${not #lists.isEmpty( visaList )}" th:each="visa, status: ${visaList}">
-                    <td class="text-left"><a th:href="'/visa/' +${visa.id}" th:text="${visa.title}"></a></td>
+                    <td class="text-left"><a th:href="'/visa/' +${visa.id}" th:text="${visa.id}"></a></td>
                     <td>[[${visa.title}]]</td>
+                    <td>[[${visa.nickname}]]</td>
                     <td>[[${visa.country}]]</td>
                     <td th:text="${#temporals.format( visa.createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></td>
                 </tr>
