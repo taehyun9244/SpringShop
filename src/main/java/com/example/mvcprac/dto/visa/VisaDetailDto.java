@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VisaDetailDto {
-
+    private Long id;
     private String title;
     private String body;
     private String country;

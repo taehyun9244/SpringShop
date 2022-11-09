@@ -4,7 +4,6 @@
       layout:decorate="~{layouts/layout1}">
 <title>VISA 페이지</title>
 
-<body class="bg-light" layout:fragment="content">
 
 
     <!--    <input type="hidden" name="searchQuery" th:value="${visaSearchDto.searchQuery}">-->
@@ -12,12 +11,15 @@
     <!--        <p class="h3 font-weight-bold" th:text="${visaSearchDto.searchQuery} + ' 검색 결과'"></p>-->
     <!--    </div>-->
 
+<div layout:fragment="content" style="min-width: 700px; max-width: 900px; margin: 50px auto 100px auto;">
+
     <div class="alert alert-warning" role="alert" th:if="${account != null && !account.emailVerified}">
         외국인 상품거래 서비스를 가입 완료를 하기 위해서는 <a href="#" th:href="@{/check-email}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
     </div>
 
 
-        <div class=" m-5 table-responsive clearfix" style="width: 1600px">
+
+        <div class=" m-5 table-responsive clearfix">
             <table class="table table-hover">
                 <thead>
                 <tr>
@@ -38,7 +40,7 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="btn_wrap text-right" style="width: 1600px" >
+            <div class="btn_wrap text-right">
                 <a th:href="@{/post}" role="button" class="btn btn-primary waves-effect waves-light">글쓰기</a>
             </div>
 
@@ -69,6 +71,5 @@
 <!--            </div>-->
         </div>
     </th:block>
-</body>
 </div>
 </html>

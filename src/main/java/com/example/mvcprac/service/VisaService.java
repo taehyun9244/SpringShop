@@ -36,7 +36,7 @@ public class VisaService {
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
         VisaDetailDto visaDetailDto =
-                new VisaDetailDto(visa.getTitle(), visa.getBody(), visa.getCountry(),
+                new VisaDetailDto(visa.getId(), visa.getTitle(), visa.getBody(), visa.getCountry(),
                         visa.getAccount().getNickname(), visa.getCreatedAt());
         return visaDetailDto;
     }

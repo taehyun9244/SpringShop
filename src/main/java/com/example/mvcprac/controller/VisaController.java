@@ -21,11 +21,11 @@ public class VisaController {
 
     private final VisaService visaService;
 
-    @GetMapping("/post/{id}")
+    @GetMapping("/visas/{id}")
     public String findVisaIdView(@PathVariable Long id, Model model) {
         VisaDetailDto visaDetailDto = visaService.findOneVisa(id);
         model.addAttribute("visaDetailDto", visaDetailDto);
-        return "visa/visaForm";
+        return "visa/visaDetail";
     }
 
     @GetMapping("/post")
@@ -46,7 +46,7 @@ public class VisaController {
         log.info("itemId = {}", visaId);
 
         redirectAttributes.addAttribute("visaId", visaId);
-        return "redirect:/visa/{visaId}";
+        return "redirect:/visas/{visaId}";
     }
 
     @DeleteMapping("/visas/{id}")
