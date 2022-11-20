@@ -1,5 +1,7 @@
 package com.example.mvcprac.controller;
 
+import com.example.mvcprac.mail.EmailMessage;
+import com.example.mvcprac.mail.EmailService;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +37,7 @@ class AccountControllerTest {
     @Autowired
     private AccountRepository accountRepository;
     @MockBean
-    private JavaMailSender javaMailSender;
+    private EmailService emailService;
 
     @Test
     @DisplayName("인증메일 확인 - 입력값 오류")
@@ -119,7 +119,7 @@ class AccountControllerTest {
         assertNotNull(account);
         assertNotEquals(account.getPassword(), "a123456789!");
         assertNotNull(account.getEmailCheckToken());
-        then(javaMailSender).should().send(any(SimpleMailMessage.class));
+        then(emailService).should().sendEmail(any(EmailMessage.class));
     }
 
 }
