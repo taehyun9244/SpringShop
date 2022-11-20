@@ -2,18 +2,17 @@ package com.example.mvcprac.model;
 
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Table(name = "persistent_logins")
-@Entity
+
 @Getter
+@Entity
+@Table(name = "persistent_logins")
 public class PersistentLogins {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(length = 64)
     private String series;
 

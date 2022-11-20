@@ -2,9 +2,11 @@ package com.example.mvcprac.controller;
 
 import com.example.mvcprac.dto.item.ItemListDto;
 import com.example.mvcprac.dto.item.ItemSearchDto;
+import com.example.mvcprac.dto.school.SchoolListDto;
 import com.example.mvcprac.dto.visa.VisaListDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.service.ItemService;
+import com.example.mvcprac.service.SchoolService;
 import com.example.mvcprac.service.VisaService;
 import com.example.mvcprac.service.file.FileStore;
 import com.example.mvcprac.validation.CurrentAccount;
@@ -32,6 +34,7 @@ public class HomeController {
 
     private final ItemService itemService;
     private final VisaService visaService;
+    private final SchoolService schoolService;
     private final FileStore fileStore;
 
     @GetMapping("/")
@@ -59,6 +62,17 @@ public class HomeController {
         List<VisaListDto> visaList = visaService.findVisaList();
         model.addAttribute("visaList", visaList);
         return "visa/visa-home";
+    }
+
+    @GetMapping("/schools")
+    public String schoolHomeView(@CurrentAccount Account account, Model model) {
+        if (account != null) {
+            model.addAttribute(account);
+        }
+
+        List<SchoolListDto> schoolListDtos = schoolService.findListSchool();
+        model.addAttribute("schoolListDtos", schoolListDtos);
+        return "school/school-home";
     }
 
     @ResponseBody

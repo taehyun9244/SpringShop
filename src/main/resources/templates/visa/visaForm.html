@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments.html :: head"></head>
-<body class="bg-light">
-<div th:replace="fragments.html :: main-nav"></div>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<body class="bg-light" layout:fragment="content">
 
 <title>VISA 페이지</title>
 

@@ -45,13 +45,11 @@ public class ItemController {
 
         log.info("itemForm = {}", form);
 
-        //validation 실패하면
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "item/itemForm";
         }
 
-        //validation 성공하면
         Long itemId = itemServiceImpl.createItem(form);
         log.info("itemId = {}", itemId);
 

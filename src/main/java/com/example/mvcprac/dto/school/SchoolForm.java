@@ -1,4 +1,4 @@
-package com.example.mvcprac.dto.visa;
+package com.example.mvcprac.dto.school;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,14 +7,12 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class VisaDetailDto {
-    private Long id;
+@NoArgsConstructor
+public class SchoolForm {
+
     private String title;
     private String body;
-    private String country;
-    private String nickName;
+    private String schoolName;
     private LocalDateTime createAt;
-
 }

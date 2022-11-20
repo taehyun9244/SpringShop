@@ -42,7 +42,7 @@ public class SecurityConfig {
         return jdbcTokenRepository;
     }
 
-    @Bean //TODO item 등록 막아놓기
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                     .authorizeRequests()
