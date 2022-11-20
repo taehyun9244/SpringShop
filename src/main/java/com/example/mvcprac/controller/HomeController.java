@@ -71,7 +71,7 @@ public class HomeController {
         }
 
         List<SchoolListDto> schoolListDtos = schoolService.findListSchool();
-        model.addAttribute("schoolListDtos", schoolListDtos);
+        model.addAttribute("schoolList", schoolListDtos);
         return "school/school-home";
     }
 

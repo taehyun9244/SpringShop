@@ -2,49 +2,74 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
-<head>
-    <meta charset="UTF-8">
-    <title>학교정보 공유 Page</title>
-</head>
-<body layout:fragment="content">
+<title>VISA 페이지</title>
 
-    <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
-        <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
-             <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + ' 검색 결과'"></p>
-         </div>
+
+
+<!--    <input type="hidden" name="searchQuery" th:value="${visaSearchDto.searchQuery}">-->
+<!--    <div th:if="${not #strings.isEmpty(visaSearchDto.searchQuery)}" class="center">-->
+<!--        <p class="h3 font-weight-bold" th:text="${visaSearchDto.searchQuery} + ' 검색 결과'"></p>-->
+<!--    </div>-->
+
+<div layout:fragment="content" style="min-width: 700px; max-width: 900px; margin: 50px auto 100px auto;">
 
     <div class="alert alert-warning" role="alert" th:if="${account != null && !account.emailVerified}">
-    외국인 상품거래 서비스를 가입 완료를 하기 위해서는 <a href="#" th:href="@{/check-email}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
+        외국인 상품거래 서비스를 가입 완료를 하기 위해서는 <a href="#" th:href="@{/check-email}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
     </div>
 
 
 
+    <div class=" m-5 table-responsive clearfix">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>학교</th>
+                <th>등록일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${not #lists.isEmpty(schoolList)}" th:each="school, status: ${schoolList}">
+                <td class="text-left"><a th:href="'/visa/' +${school.id}" th:text="${school.id}"></a></td>
+                <td>[[${school.title}]]</td>
+                <td>[[${school.nickname}]]</td>
+                <td>[[${school.schoolName}]]</td>
+                <td th:text="${#temporals.format( school .createdAt, 'yyyy-MM-dd HH:mm:ss' )}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="btn_wrap text-right">
+            <a th:href="@{/post}" role="button" class="btn btn-primary waves-effect waves-light">글쓰기</a>
+        </div>
 
-    <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})">
-        <ul class="pagination justify-content-center">
+        <!--            <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})">-->
+        <!--                <ul class="pagination justify-content-center">-->
 
-            <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">
-                <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}"
-                   aria-label='Previous' class="page-link">
-                    <span aria-hidden='true'>Previous</span>
-                </a>
-            </li>
+        <!--                    <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">-->
+        <!--                        <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}"-->
+        <!--                           aria-label='Previous' class="page-link">-->
+        <!--                            <span aria-hidden='true'>Previous</span>-->
+        <!--                        </a>-->
+        <!--                    </li>-->
 
-            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"
-                th:classappend="${items.number eq page -1}?'active':''">
-                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page -1}}"
-                   th:inline="text" class="page-link">[[${page}]]</a>
-            </li>
+        <!--                    <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}"-->
+        <!--                        th:classappend="${items.number eq page -1}?'active':''">-->
+        <!--                        <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page -1}}"-->
+        <!--                           th:inline="text" class="page-link">[[${page}]]</a>-->
+        <!--                    </li>-->
 
-            <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">
-                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number +1}}"
-                   aria-label='Next' class="page-link">
-                    <span aria-hidden='true'>Next</span>
-                </a>
-            </li>
+        <!--                    <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">-->
+        <!--                        <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number +1}}"-->
+        <!--                           aria-label='Next' class="page-link">-->
+        <!--                            <span aria-hidden='true'>Next</span>-->
+        <!--                        </a>-->
+        <!--                    </li>-->
 
-        </ul>
+        <!--                </ul>-->
+        <!--            </div>-->
     </div>
-
-</body>
+    </th:block>
+</div>
 </html>
