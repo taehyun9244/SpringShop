@@ -6,6 +6,7 @@ import com.example.mvcprac.dto.school.SchoolListDto;
 import com.example.mvcprac.dto.visa.VisaListDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.service.ItemService;
+import com.example.mvcprac.service.MeetingService;
 import com.example.mvcprac.service.SchoolService;
 import com.example.mvcprac.service.VisaService;
 import com.example.mvcprac.service.file.FileStore;
@@ -35,6 +36,7 @@ public class HomeController {
     private final ItemService itemService;
     private final VisaService visaService;
     private final SchoolService schoolService;
+    private final MeetingService meetingService;
     private final FileStore fileStore;
 
     @GetMapping("/")
@@ -74,6 +76,9 @@ public class HomeController {
         model.addAttribute("schoolList", schoolListDtos);
         return "school/school-home";
     }
+
+//    @GetMapping("/meetings")
+//    public String
 
     @ResponseBody
     @GetMapping("/images/{fileName}")
