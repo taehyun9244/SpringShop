@@ -11,14 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -36,11 +33,12 @@ public class MeetingController {
         webDataBinder.addValidators(meetingFormValidator);
     }
 
-    @GetMapping("/meetings/{path}")
+    @GetMapping("/meeting/{path}")
     public String meetingHomeView(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        log.info("path", path);
         model.addAttribute(account);
         model.addAttribute(meetingService.findByPath(path));
-        return "meeting/meeting-home";
+        return "meeting/meetingView";
     }
 
     @GetMapping("/new-meeting")
@@ -51,12 +49,14 @@ public class MeetingController {
     }
 
     @PostMapping("/new-meeting")
-    public String newMeetingSubmit(@CurrentAccount Account account, @Valid MeetingForm meetingForm, Errors errors) {
-        if (errors.hasErrors()) {
+    public String newMeetingSubmit(@Validated @ModelAttribute(name = "meetingForm") MeetingForm meetingForm,
+                                   @CurrentAccount Account account, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
             return "meeting/meetingForm";
         }
-
-        Meeting newMeeting = meetingService.createNewMeeting(modelMapper.map(meetingForm, Meeting.class), account);
+        log.info("form.path", meetingForm.getPath());
+        Meeting newMeeting = meetingService.createNewMeeting(meetingForm, account);
         return "redirect:/meeting/" + URLEncoder.encode(newMeeting.getPath(), StandardCharsets.UTF_8);
     }
 }

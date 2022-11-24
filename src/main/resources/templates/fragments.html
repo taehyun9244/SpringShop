@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link th:href="@{/css/layout1.css}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
 
     <!-- JS, Popper.js, and jQuery -->
@@ -21,19 +23,24 @@
     <script src="https://cdn.jsdelivr.net/npm/jdenticon@3.2.0/dist/jdenticon.min.js" async
             integrity="sha384-yBhgDqxM50qJV5JPdayci8wCfooqvhFYbIKhv0hTtLvfeeyJMJCscRfFNKIxt43M" crossorigin="anonymous">
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/jdenticon@3.2.0/dist/jdenticon.min.js" async
+            integrity="sha384-yBhgDqxM50qJV5JPdayci8wCfooqvhFYbIKhv0hTtLvfeeyJMJCscRfFNKIxt43M" crossorigin="anonymous">
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 
     <style>
-    .container {
-    max-width: 100%;
-    }
+        .container {
+            max-width: 100%;
+        }
 
-    .tagify-outside{
-    border: 0;
-    padding: 0;
-    margin: 0;
-    }
+        .tagify-outside {
+            border: 0;
+            padding: 0;
+            margin: 0;
+        }
     </style>
 
 </head>
@@ -51,8 +58,11 @@
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
-                    <svg data-jdenticon-value="user127" width="24" height="24"
-                         th:data-jdenticon-value="${#authentication.name}" class="rounded border bg-light"></svg>
+                    <svg th:if="${#strings.isEmpty(account?.profileImage)}"
+                         th:data-jdenticon-value="${#authentication.name}"
+                         width="24" height="24" class="rounded border bg-light"></svg>
+                    <img th:if="${!#strings.isEmpty(account?.profileImage)}" th:src="${account.profileImage}"
+                         width="24" height="24" class="rounded border"/>
                 </a>
                 <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="userDropdown">
                     <h6 class="dropdown-header">
@@ -87,7 +97,10 @@
                 <a class="nav-link" href="/school">학교정보</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/signup" sec:authorize="!isAuthenticated()">회원가입</a>
+            <li class="nav-item">
+                <a class="nav-link" href="/meetings">교류회</a>
+            </li>
+            <a class="nav-link" href="/signup" sec:authorize="!isAuthenticated()">회원가입</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/login" sec:authorize="!isAuthenticated()">로그인</a>
@@ -101,49 +114,148 @@
     </div>
 </nav>
 
-<footer th:fragment="footer"class="page-footer font-small cyan darken-3">
-        <div class="footer-copyright text-center py-3">
-            Spring Boot Shopping Mall
-        </div>
+<footer th:fragment="footer" class="page-footer font-small cyan darken-3">
+    <div class="footer-copyright text-center py-3">
+        Spring Boot Shopping Mall
+    </div>
 </footer>
 
-    <div th:fragment="settings-menu (currentMenu)" class="list-group">
-        <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'}? active" href="#"
-           th:href="@{/settings/profile}">프로필</a>
-        <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'}? active" href="#"
-           th:href="@{/settings/password}">패스워드</a>
-        <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'notifications'}? active"
-           href="#" th:href="@{/settings/notifications}">알림</a>
-        <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'}? active" href="#"
-           th:href="@{/settings/tags}">관심 주제</a>
-        <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'}? active" href="#"
-           th:href="@{/settings/zones}">활동 지역</a>
-        <a class="list-group-item list-group-item-action list-group-item-danger"
-           th:classappend="${currentMenu == 'account'}? active" href="#" th:href="@{/settings/account}">계정</a>
+<div th:fragment="settings-menu (currentMenu)" class="list-group">
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'profile'}? active" href="#"
+       th:href="@{/settings/profile}">프로필</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'password'}? active" href="#"
+       th:href="@{/settings/password}">패스워드</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'notifications'}? active"
+       href="#" th:href="@{/settings/notifications}">알림</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'}? active" href="#"
+       th:href="@{/settings/tags}">관심 주제</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'}? active" href="#"
+       th:href="@{/settings/zones}">활동 지역</a>
+    <a class="list-group-item list-group-item-action list-group-item-danger"
+       th:classappend="${currentMenu == 'account'}? active" href="#" th:href="@{/settings/account}">계정</a>
+</div>
+
+
+<script type="application/javascript" th:fragment="form-validation">
+    (function () {
+        'use strict';
+
+        window.addEventListener('load', function () {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+
+            // Loop over them and prevent submission
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }, false)
+    }())
+</script>
+
+<div th:fragment="meeting-banner" th:if="${meeting.useBanner}" class="row" id="meeting-logo">
+    <img th:src="${meeting.image}"/>
+</div>
+
+<div th:fragment="meeting-info">
+    <div class="row pt-4 text-left justify-content-center bg-light">
+        <div class="col-6">
+            <a href="#" class="text-decoration-none" th:href="@{'/meeting/' + ${meeting.path}}">
+                <span class="h2" th:text="${meeting.title}">meeting 이름</span>
+            </a>
+        </div>
+        <div class="col-4 text-right justify-content-end">
+                <span th:if="${!meeting.published}"
+                      class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom"
+                      title="meeting 공개 준비중">
+                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button"
+                            disabled>DRAFT</button>
+                </span>
+            <span th:if="${meeting.closed}"
+                  class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="meeting 종료함">
+                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button"
+                            disabled>CLOSED</button>
+                </span>
+            <span th:if="${!meeting.recruiting}"
+                  class="d-inline-block ml-1" tabindex="0" data-toggle="tooltip" data-placement="bottom"
+                  title="meeting 모집중 아님">
+                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button"
+                            disabled>OFF</button>
+                </span>
+            <span sec:authorize="isAuthenticated()" th:if="${meeting.isJoinable(#authentication.principal)}"
+                  class="btn-group" role="group" aria-label="Basic example">
+                    <a class="btn btn-primary" th:href="@{'/meeting/' + ${meeting.path} + '/join'}">
+                        meeting 가입
+                    </a>
+                    <a class="btn btn-outline-primary" th:href="@{'/meeting/' + ${meeting.path} + '/members'}"
+                       th:text="${meeting.members.size()}">1</a>
+                </span>
+            <span sec:authorize="isAuthenticated()"
+                  th:if="${!meeting.closed && meeting.isMember(#authentication.principal)}" class="btn-group" role="group">
+                    <a class="btn btn-outline-warning" th:href="@{'/meeting/' + ${meeting.path} + '/leave'}">
+                        meeting 탈퇴
+                    </a>
+                    <a class="btn btn-outline-primary" th:href="@{'/meeting/' + ${meeting.path} + '/members'}"
+                       th:text="${meeting.members.size()}">1</a>
+                </span>
+            <span sec:authorize="isAuthenticated()"
+                  th:if="${meeting.published && !meeting.closed && meeting.isManager(#authentication.principal)}">
+                    <a class="btn btn-outline-primary" th:href="@{'/meeting/' + ${meeting.path} + '/new-event'}">
+                        <i class="fa fa-plus"></i> 모임 만들기
+                    </a>
+                </span>
+        </div>
     </div>
+    <div class="row justify-content-center bg-light">
+        <div class="col-10">
+            <p class="lead" th:text="${meeting.shortDescription}"></p>
+        </div>
+    </div>
+    <div class="row justify-content-center bg-light">
+        <div class="col-10">
+            <p>
+                <span th:each="tag: ${meeting.tags}"
+                      class="font-weight-light text-monospace badge badge-pill badge-info mr-3">
+                    <a th:href="@{'/search/tag/' + ${tag.title}}" class="text-decoration-none text-white">
+                        <i class="fa fa-tag"></i> <span th:text="${tag.title}">Tag</span>
+                    </a>
+                </span>
+                <span th:each="zone: ${meeting.zones}" class="font-weight-light text-monospace badge badge-primary mr-3">
+                    <a th:href="@{'/search/zone/' + ${zone.id}}" class="text-decoration-none text-white">
+                        <i class="fa fa-globe"></i> <span th:text="${zone.localNameOfCity}">City</span>
+                    </a>
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
 
-
-    <script type="application/javascript" th:fragment="form-validation">
-        (function () {
-            'use strict';
-
-            window.addEventListener('load', function () {
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                var forms = document.getElementsByClassName('needs-validation');
-
-                // Loop over them and prevent submission
-                Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-            }, false)
-        }())
-    </script>
+<div th:fragment="meeting-menu (meetingMenu)" class="row px-3 justify-content-center bg-light">
+    <nav class="col-10 nav nav-tabs">
+        <a class="nav-item nav-link" href="#" th:classappend="${meetingMenu == 'info'}? active"
+           th:href="@{'/meeting/' + ${meeting.path}}">
+            <i class="fa fa-info-circle"></i> 소개
+        </a>
+        <a class="nav-item nav-link" href="#" th:classappend="${meetingMenu == 'members'}? active"
+           th:href="@{'/meeting/' + ${meeting.path} + '/members'}">
+            <i class="fa fa-user"></i> 구성원
+        </a>
+        <a class="nav-item nav-link" th:classappend="${meetingMenu == 'events'}? active" href="#"
+           th:href="@{'/meeting/' + ${meeting.path} + '/events'}">
+            <i class="fa fa-calendar"></i> 모임
+        </a>
+        <a sec:authorize="isAuthenticated()" th:if="${meeting.isManager(#authentication.principal)}"
+           class="nav-item nav-link" th:classappend="${meetingMenu == 'settings'}? active" href="#"
+           th:href="@{'/meeting/' + ${meeting.path} + '/settings/description'}">
+            <i class="fa fa-cog"></i> 설정
+        </a>
+    </nav>
+</div>
 
 
 </html>
