@@ -1,4 +1,4 @@
-package com.example.mvcprac.repository;
+package com.example.mvcprac.repository.query;
 
 import com.example.mvcprac.dto.item.ItemDetailDto;
 import com.example.mvcprac.dto.item.ItemImageDto;
@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -23,6 +24,7 @@ import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
 @Repository
+@Transactional(readOnly = true)
 public class ItemQueryRepository {
 
     private final JPAQueryFactory queryFactory;

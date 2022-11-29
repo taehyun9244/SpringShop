@@ -31,6 +31,7 @@
                             <span sec:authentication="name">Username</span>
                         </h6>
                         <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
+                        <a class="dropdown-item" th:href="@{'/new-meeting'}">교류회 개설</a>
                         <a class="dropdown-item">장바구니</a>
                         <a class="dropdown-item">상품관리</a>
                         <a class="dropdown-item">내가 쓴 글</a>
@@ -50,9 +51,6 @@
                     <a class="nav-link" href="/items" sec:authorize="isAuthenticated()">주문 상품</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/stores">맛집정보</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="/visas">VISA정보</a>
                 </li>
                 <li class="nav-item">
@@ -60,6 +58,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/meetings">교류회</a>
+                </li>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/signup" sec:authorize="!isAuthenticated()">회원가입</a>

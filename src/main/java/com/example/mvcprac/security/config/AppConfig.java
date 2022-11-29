@@ -24,4 +24,9 @@ public class AppConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+//    @Bean
+//    public HiddenHttpMethodFilter hiddenHttpMethodFilter(){
+//        return new HiddenHttpMethodFilter();
+//    }
+
 }

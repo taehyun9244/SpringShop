@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
+<div th:replace="fragments.html :: meeting-banner"></div>
+<div class="container">
+  <div th:replace="fragments.html :: meeting-info"></div>
+  <div th:replace="fragments.html :: meeting-menu(meetingMenu='info')"></div>
+
+  <div th:replace="fragments.html :: member-list(members=${meeting.managers},isManager=${true})"></div>
+  <div th:replace="fragments.html :: member-list(members=${meeting.members},isManager=${false})"></div>
+
+  <div class="row px-3 justify-content-center">
+    <div class="col-10 pt-3" th:utext="${meeting.fullDescription}"></div>
+  </div>
+
+  <div th:replace="fragments.html :: footer"></div>
+</div>
+<script type="application/javascript">
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+</body>
+</html>

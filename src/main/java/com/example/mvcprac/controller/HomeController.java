@@ -77,8 +77,13 @@ public class HomeController {
         return "school/school-home";
     }
 
-//    @GetMapping("/meetings")
-//    public String
+    @GetMapping("/meetings")
+    public String meetingHomeView(@CurrentAccount Account account, Model model) {
+        if (account != null) {
+            model.addAttribute(account);
+        }
+        return "meeting/meeting-home";
+    }
 
     @ResponseBody
     @GetMapping("/images/{fileName}")

@@ -17,6 +17,8 @@ public class ItemDetailDto {
     private String deliveryChoice;
     private int price;
     private List<ItemImageDto> itemImageDto;
+    private String nickname;
+
 
     public ItemDetailDto(Item item, List<ItemImageDto> imageDtoList) {
         this.id = item.getId();
@@ -26,5 +28,6 @@ public class ItemDetailDto {
         this.deliveryChoice = item.getDeliveryChoice();
         this.price = item.getPrice();
         this.itemImageDto = imageDtoList;
+        this.nickname = item.getAccount().getNickname();
     }
 }

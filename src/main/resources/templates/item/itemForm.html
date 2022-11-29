@@ -3,6 +3,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
 
+<script src="https://cdn.jsdelivr.net/npm/jdenticon@3.2.0/dist/jdenticon.min.js" async
+        integrity="sha384-yBhgDqxM50qJV5JPdayci8wCfooqvhFYbIKhv0hTtLvfeeyJMJCscRfFNKIxt43M" crossorigin="anonymous">
+</script>
+
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function () {
@@ -28,6 +32,9 @@
         .field-error {
             border-color: #dc3545;
             color: #dc3545;
+        }
+        .btn btn-primary {
+            display: inline-block;
         }
 
     </style>
@@ -89,6 +96,9 @@
 
         <div style="text-align: center">
             <button type="submit" class="btn btn-primary">저장</button>
+        </div>
+        <div style="text-align: center">
+            <button type="submit" class="btn btn-primary">취소</button>
         </div>
     </form>
 </div>

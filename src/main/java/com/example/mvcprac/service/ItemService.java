@@ -1,10 +1,11 @@
 package com.example.mvcprac.service;
 
 import com.example.mvcprac.dto.item.*;
+import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Image;
 import com.example.mvcprac.model.Item;
 import com.example.mvcprac.repository.ImageRepository;
-import com.example.mvcprac.repository.ItemQueryRepository;
+import com.example.mvcprac.repository.query.ItemQueryRepository;
 import com.example.mvcprac.repository.ItemRepository;
 import com.example.mvcprac.service.file.FileStore;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ItemService {
 
     private final ItemRepository itemRepository;
@@ -33,7 +35,6 @@ public class ItemService {
     /**
      * find all item
      */
-    @Transactional(readOnly = true)
     public Page<ItemListDto> findAllItem(ItemSearchDto itemSearchDto, Pageable pageable) {
         return queryRepository.findAllItem(itemSearchDto, pageable);
         //TODO 대표 image 내려주기
@@ -42,7 +43,6 @@ public class ItemService {
     /**
      * findById item
      */
-    @Transactional(readOnly = true)
     public ItemDetailDto findById(Long id) {
 
         List<Image> findImageByItemId = imageRepository.findAllByItemIdOrderByCreatedAtAsc(id);
@@ -62,10 +62,10 @@ public class ItemService {
     /**
      * create item
      */
-    @Transactional
-    public Long createItem(ItemForm form) throws IOException {
 
-        Item item = new Item(form);
+    public Long createItem(ItemForm form, Account account) throws IOException {
+
+        Item item = new Item(form, account);
         Item saveItem = itemRepository.save(item);
 
         List<MultipartFile> imageFiles = form.getImageFiles();
@@ -74,21 +74,17 @@ public class ItemService {
         return saveItem.getId();
     }
 
-
     /**
      *  editItem
      */
-//    @Transactional
-//    public Long edit(ItemForm form, Long id) {
-//        Item item = itemRepository.findById(id).orElseThrow(
-//                () -> new IllegalArgumentException("존재하지 않는 게시글입니다")
-//        );
-//    }
+    public Long editItem(ItemForm form, Account account) {
+        return null;
+    }
+
 
     /**
      * deleteItem
      */
-    @Transactional
     public void deleteItem(Long id) {
 
         Item item = itemRepository.findById(id).orElseThrow(

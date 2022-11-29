@@ -52,7 +52,7 @@
 
 <div layout:fragment="content" style="min-width: 700px; max-width: 900px; margin: 50px auto 100px auto;">
 
-    <input type="hidden" name="searchQuery" th:value="${itemSearchDto.searchQuery}">
+    <input type="hidden" name="searchQuery" th:value="${itemSearchDto?.searchQuery}">
     <div th:if="${not #strings.isEmpty(itemSearchDto.searchQuery)}" class="center">
         <p class="h3 font-weight-bold" th:text="${itemSearchDto.searchQuery} + ' 검색 결과'"></p>
     </div>
@@ -72,7 +72,7 @@
                             <h4 class="card-title">[[${item.itemName}]]</h4>
                             <h6 class="card-text">[[${item.itemSellStatus}]]</h6>
                             <h6 class="card-text">[[${item.deliveryChoice}]]</h6>
-                            <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                            <h3 class="card-title text-danger" data-th-text="${#numbers.formatInteger(item.price, 3, 'COMMA') + '원'}"></h3>
                         </a>
                     </div>
                 </div>

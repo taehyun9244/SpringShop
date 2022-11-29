@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/layout1}">
 
 <th:block layout:fragment="css">
@@ -32,6 +33,10 @@
             height: auto;
             width: 50%;
         }
+
+        .button center {
+            display: inline-block;
+        }
     </style>
 </th:block>
 
@@ -41,33 +46,31 @@
 
     <div class="d-flex">
         <div class="repImgDiv">
-            <img th:src="|/images/${itemDetailDto.itemImageDto[0].storeFileName}|" class="rounded repImg" th:alt="${itemDetailDto.itemName}">
+            <img th:src="|/images/${itemDetailDto.itemImageDto[0].storeFileName}|" class="rounded repImg"
+                 th:alt="${itemDetailDto.itemName}">
         </div>
         <div class="wd50">
       <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL }"
-            class="badge badge-primary mgb-15">
-        판매중
-      </span>
+            class="badge badge-primary mgb-15">판매중</span>
             <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL}"
-                  class="badge btn-danger mgb-15">
-        품절
-      </span>
+                  class="badge btn-danger mgb-15">품절</span>
             <span th:if="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).POST }"
-                  class="badge badge-primary mgb-15">
-        우체국
-      </span>
-            <span th:unless="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).LOTTE}"
-                  class="badge btn-danger mgb-15">
-        롯데
-      </span>
-
+                  class="badge badge-primary mgb-15">우체국</span>
+            <span th:unless="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).POST}"
+                  class="badge btn-danger mgb-15">롯데</span>
             <div class="h4" th:value="${itemDetailDto.itemName}"></div>
             <hr class="my-4">
 
             <div class="text-right">
                 <div class="h4 text-danger text-left">
                     <input type="hidden" th:value="${itemDetailDto.price}" id="price" name="price">
-                    <span th:text="${itemDetailDto.price}"></span>원
+                    <span data-th-text="${#numbers.formatInteger(itemDetailDto.price, 3, 'COMMA') + '원'}"></span>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="h4 text-danger text-left" style="color: dodgerblue">
+                    <input type="hidden" th:value="${itemDetailDto.nickname}" id="nickname" name="nickname">
+                    판매자 : <span th:text="${itemDetailDto.nickname}"></span>
                 </div>
             </div>
             <hr class="my-4">
@@ -82,16 +85,38 @@
         </div>
     </div>
     <div th:each="imageFile : ${itemDetailDto.itemImageDto}" class="text-center">
-        <img th:if="${not #strings.isEmpty(imageFile.getStoreFileName())}" th:src="|/images/${imageFile.getStoreFileName()}|" class="rounded mgb-15"
+        <img th:if="${not #strings.isEmpty(imageFile.getStoreFileName())}"
+             th:src="|/images/${imageFile.getStoreFileName()}|" class="rounded mgb-15"
              width="800">
     </div>
 
-    <div style="text-align: center">
-        <button th:href="@{'/items/edit' + ${itemDetailDto.id}}" type="submit" class="btn btn-primary">수정
-        </button>
+
+    <div style="text-align: center" class="button center">
+<!--        <button sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname == #authentication.getName()}"-->
+<!--                th:href="@{'/items/edit/' + ${itemDetailDto.id}}" type="submit" class="btn btn-primary">수정-->
+<!--        </button>-->
+<!--        <button sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname == #authentication.getName()}"-->
+<!--                th:href="@{'/items/delete/' + ${itemDetailDto.id}}" class="btn btn-primary">삭제-->
+<!--        </button>-->
+        <form class="col-sm-12">
+            <div class="form-group" action="#" th:action="@{'/items/edit/' + ${itemDetailDto.id}}" method="post" novalidate
+                 sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname == #authentication.getName()}">
+                <button class="btn btn-primary"  type="submit" aria-describedby="submitHelp">수정</button>
+            </div>
+
+            <div class="form-group"  action="#" th:action="@{'/items/delete/' + ${itemDetailDto.id}}" method="post" novalidate
+                 sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname == #authentication.getName()}">
+                <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">삭제</button>
+            </div>
+        </form>
     </div>
+
     <div style="text-align: center">
-        <button th:href="@{/items/delete(id=${itemDetailDto.id})}" th:method="delete" type="submit" class="btn btn-primary">삭제
+        <button sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname != #authentication.getName()}"
+                th:href="@{'/order/' + ${itemDetailDto.id}}" type="submit" class="btn btn-primary">구매하기
+        </button>
+        <button sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname != #authentication.getName()}"
+                th:href="@{'/cart/' + ${itemDetailDto.id}}" type="submit" class="btn btn-primary">장바구니 추가
         </button>
     </div>
 </div>

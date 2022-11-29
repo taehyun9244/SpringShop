@@ -1,11 +1,14 @@
 package com.example.mvcprac.service;
 
+import com.example.mvcprac.dto.meeting.MeetingDescriptionForm;
 import com.example.mvcprac.dto.meeting.MeetingForm;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.repository.MeetingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MeetingService {
 
     private final MeetingRepository meetingRepository;
+    private final ModelMapper modelMapper;
 
 
     public Meeting createNewMeeting(MeetingForm meetingForm, Account account) {
@@ -29,4 +33,25 @@ public class MeetingService {
         Meeting meetingByPath = meetingRepository.findByPath(path);
         return meetingByPath;
     }
-}
+
+    public Meeting getMeetingToUpdate(Account account, String path) {
+        Meeting meeting = this.getMeeting(path);
+        if (!account.isManagerOf(meeting)) {
+            throw new AccessDeniedException("해당 기능을 사용할 수 없습니다.");
+        }
+
+        return meeting;
+    }
+
+    public Meeting getMeeting(String path) {
+        Meeting meeting = this.meetingRepository.findByPath(path);
+        if (meeting == null) {
+            throw new IllegalArgumentException(path + "에 해당하는 교류회가 없습니다.");
+        }
+
+        return meeting;
+    }
+
+    public void updateMeetingDescription(Meeting meeting, MeetingDescriptionForm meetingDescriptionForm) {
+        modelMapper.map(meetingDescriptionForm, meeting);
+    }}
