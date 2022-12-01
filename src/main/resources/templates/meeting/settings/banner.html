@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body>
+<nav th:replace="fragments.html :: main-nav"></nav>
+<div th:replace="fragments.html :: meeting-banner"></div>
+<div class="container">
+    <div th:replace="fragments.html :: meeting-info"></div>
+    <div th:replace="fragments.html :: meeting-menu(meetingMenu='settings')"></div>
+    <div class="row mt-3 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: meeting-settings-menu (currentMenu = 'image')"></div>
+        </div>
+        <div class="col-8">
+            <div th:replace="fragments.html :: message"></div>
+            <div class="row">
+                <h2 class="col-sm-12">배너 이미지 사용</h2>
+            </div>
+            <form th:if="${!meeting.useBanner}" action="#"
+                  th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/banner/enable'}" method="post"
+                  novalidate>
+                <div class="alert alert-primary" role="alert">
+                    교류회 메뉴에서 교류회 배너 이미지를 사용합니다. 교류회 배너 이미지를 아직 설정하지 않았다면, 기본 배너 이미지를 사용합니다.
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-outline-primary btn-block" type="submit" aria-describedby="submitHelp">배너 이미지
+                        사용하기
+                    </button>
+                </div>
+            </form>
+            <form th:if="${meeting.useBanner}" action="#"
+                  th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/banner/disable'}" method="post"
+                  novalidate>
+                <div class="alert alert-info" role="alert">
+                    교류회 메뉴에서 교류회 배너 이미지를 사용하지 않습니다. 교류회 목록에서는 배너 이미지를 사용합니다.
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-outline-primary btn-block" type="submit" aria-describedby="submitHelp">배너 이미지
+                        사용하지 않기
+                    </button>
+                </div>
+            </form>
+            <hr/>
+            <div class="row">
+                <h2 class="col-sm-12">배너 이미지 변경</h2>
+            </div>
+            <form id="imageForm" action="#" th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/banner'}"
+                  method="post" novalidate>
+                <div class="form-group">
+                    <input id="meetingImage" type="hidden" name="image" class="form-control"/>
+                </div>
+            </form>
+            <div class="card text-center">
+                <div id="current-meeting-image" class="mt-3">
+                    <img class="rounded" th:src="${meeting.image}" width="640" alt="name" th:alt="${meeting.title}"/>
+                </div>
+                <div id="new-meeting-image" class="mt-3"></div>
+                <div class="card-body">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="meeting-image-file">
+                        <label class="custom-file-label" for="meeting-image-file">교류회 이미지 변경</label>
+                    </div>
+                    <div id="new-meeting-image-control" class="mt-3">
+                        <button class="btn btn-outline-primary btn-block" id="cut-button">자르기</button>
+                        <button class="btn btn-outline-success btn-block" id="confirm-button">확인</button>
+                        <button class="btn btn-primary btn-block" id="save-button">저장</button>
+                        <button class="btn btn-outline-warning btn-block" id="reset-button">취소</button>
+                    </div>
+                    <div id="cropped-new-meeting-image" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+<script th:replace="fragments.html :: form-validation"></script>
+<script th:replace="fragments.html :: tooltip"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.css"
+      integrity="sha512-+VDbDxc9zesADd49pfvz7CgsOl2xREI/7gnzcdyA9XjuTxLXrdpuz21VVIqc5HPfZji2CypSbxx1lgD7BgBK5g=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"
+        integrity="sha512-ooSWpxJsiXe6t4+PPjCgYmVfr1NS5QXJACcR/FPpsdm6kqG1FmQ2SVyg2RXeVuCRBLr0lWHnWJP6Zs1Efvxzww=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cropper/1.0.1/jquery-cropper.min.js"
+        integrity="sha512-V8cSoC5qfk40d43a+VhrTEPf8G9dfWlEJgvLSiq2T2BmgGRmZzB8dGe7XAABQrWj3sEfrR5xjYICTY4eJr76QQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script type="application/javascript">
+    $(function () {
+        cropper = '';
+        let $confirmBtn = $("#confirm-button");
+        let $resetBtn = $("#reset-button");
+        let $cutBtn = $("#cut-button");
+        let $saveBtn = $("#save-button");
+        let $newMeetingImage = $("#new-meeting-image");
+        let $currentMeetingImage = $("#current-meeting-image");
+        let $resultImage = $("#cropped-new-meeting-image");
+        let $meetingImage = $("#meetingImage");
+
+        $newMeetingImage.hide();
+        $cutBtn.hide();
+        $resetBtn.hide();
+        $confirmBtn.hide();
+        $saveBtn.hide();
+
+        $("#meeting-image-file").change(function (e) {
+            if (e.target.files.length === 1) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    if (e.target.result) {
+                        if (!e.target.result.startsWith("data:image")) {
+                            alert("이미지 파일을 선택하세요.");
+                            return;
+                        }
+
+                        let img = document.createElement("img");
+                        img.id = 'new-meeting';
+                        img.src = e.target.result;
+                        img.setAttribute('width', '100%');
+
+                        $newMeetingImage.html(img);
+                        $newMeetingImage.show();
+                        $currentMeetingImage.hide();
+
+                        let $newImage = $(img);
+                        $newImage.cropper({aspectRatio: 13 / 2});
+                        cropper = $newImage.data('cropper');
+
+                        $cutBtn.show();
+                        $confirmBtn.hide();
+                        $resetBtn.show();
+                    }
+                };
+
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        $resetBtn.click(function () {
+            $currentMeetingImage.show();
+            $newMeetingImage.hide();
+            $resultImage.hide();
+            $resetBtn.hide();
+            $cutBtn.hide();
+            $confirmBtn.hide();
+            $saveBtn.hide();
+            $meetingImage.val('');
+        });
+
+        $cutBtn.click(function () {
+            let dataUrl = cropper.getCroppedCanvas().toDataURL();
+
+            if (dataUrl.length > 1000 * 1024) {
+                alert("이미지 파일이 너무 큽니다. 1024000 보다 작은 파일을 사용하세요. 현재 이미지 사이즈 " + dataUrl.length);
+                return;
+            }
+
+            let newImage = document.createElement("img");
+            newImage.id = "cropped-new-meeting-image";
+            newImage.src = dataUrl;
+            newImage.width = 640;
+            $resultImage.html(newImage);
+            $resultImage.show();
+            $confirmBtn.show();
+
+            $confirmBtn.click(function () {
+                $newMeetingImage.html(newImage);
+                $cutBtn.hide();
+                $confirmBtn.hide();
+                $meetingImage.val(dataUrl);
+                $saveBtn.show();
+            });
+        });
+
+        $saveBtn.click(function () {
+            $("#imageForm").submit();
+        })
+    });
+</script>
+</body>
+</html>

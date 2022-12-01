@@ -10,7 +10,7 @@ public class ItemImageDto {
 
     private Long id;
     private String storeFileName;
-
+    private String uploadFileName;
 
     /**
      * findByItemId -> Image
@@ -18,5 +18,6 @@ public class ItemImageDto {
     public ItemImageDto(Image image) {
         this.id = image.getId();
         this.storeFileName = image.getStoreFileName();
+        this.uploadFileName = image.getUploadFileName();
     }
 }

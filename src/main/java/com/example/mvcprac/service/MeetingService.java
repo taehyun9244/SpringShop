@@ -54,4 +54,18 @@ public class MeetingService {
 
     public void updateMeetingDescription(Meeting meeting, MeetingDescriptionForm meetingDescriptionForm) {
         modelMapper.map(meetingDescriptionForm, meeting);
-    }}
+    }
+
+    public void updateMeetingImage(Meeting meeting, String image) {
+        meeting.setImage(image);
+    }
+
+
+    public void enableMeetingBanner(Meeting meeting) {
+        meeting.setUseBanner(true);
+    }
+
+    public void disableMeetingBanner(Meeting meeting) {
+        meeting.setUseBanner(false);
+    }
+}

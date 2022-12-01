@@ -2,10 +2,7 @@ package com.example.mvcprac.model;
 
 import com.example.mvcprac.dto.meeting.MeetingForm;
 import com.example.mvcprac.validation.UserAccount;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +17,7 @@ import java.util.Set;
         @NamedAttributeNode("members")})
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")

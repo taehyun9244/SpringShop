@@ -37,7 +37,6 @@ public class ItemService {
      */
     public Page<ItemListDto> findAllItem(ItemSearchDto itemSearchDto, Pageable pageable) {
         return queryRepository.findAllItem(itemSearchDto, pageable);
-        //TODO 대표 image 내려주기
     }
 
     /**

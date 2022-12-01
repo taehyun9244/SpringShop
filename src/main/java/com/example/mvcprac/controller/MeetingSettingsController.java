@@ -54,8 +54,40 @@ public class MeetingSettingsController {
         return "redirect:/meeting/" + getPath(path) + "/settings/description";
     }
 
+    @GetMapping("/banner")
+    public String meetingBannerForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        model.addAttribute(account);
+        model.addAttribute(meeting);
+        model.addAttribute(modelMapper.map(meeting, MeetingDescriptionForm.class));
+        return "meeting/settings/banner";
+    }
+
+    @PostMapping("/banner")
+    public String meetingBannerSubmit(@CurrentAccount Account account, @PathVariable String path,
+                                   String image, RedirectAttributes attributes) {
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        meetingService.updateMeetingImage(meeting, image);
+        attributes.addFlashAttribute("message", "교류회 이미지를 수정했습니다.");
+        return "redirect:/meeting/" + getPath(path) + "/settings/banner";
+    }
+
     private String getPath(String path) {
         return URLEncoder.encode(path, StandardCharsets.UTF_8);
+    }
+
+    @PostMapping("/banner/enable")
+    public String enableMeetingBanner(@CurrentAccount Account account, @PathVariable String path) {
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        meetingService.enableMeetingBanner(meeting);
+        return "redirect:/meeting/" + getPath(path) + "/settings/banner";
+    }
+
+    @PostMapping("/banner/disable")
+    public String disableStudyBanner(@CurrentAccount Account account, @PathVariable String path) {
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        meetingService.disableMeetingBanner(meeting);
+        return "redirect:/meeting/" + getPath(path) + "/settings/banner";
     }
 
 }

@@ -55,17 +55,12 @@ public class ItemController {
     @PostMapping("/add")
     public String addItem(@Validated @ModelAttribute(name = "form") ItemForm form, @CurrentAccount Account account,
                           BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
-
-        log.info("itemForm = {}", form);
-
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "item/itemForm";
         }
 
         Long itemId = itemServiceImpl.createItem(form, account);
-        log.info("itemId = {}", itemId);
-
         redirectAttributes.addAttribute("itemId", itemId);
         return "redirect:/items/{itemId}";
     }
@@ -73,8 +68,9 @@ public class ItemController {
     //TODO 아이템 수정
     @GetMapping("/edit/{id}")
     public String editItemView(@PathVariable Long id, Model model) {
-        model.addAttribute("form", itemServiceImpl.findById(id));
-        return "item/itemForm";
+        ItemDetailDto findItemById = itemServiceImpl.findById(id);
+        model.addAttribute("form", findItemById);
+        return "item/itemEdit";
     }
 
     @PostMapping("/edit")
@@ -86,8 +82,6 @@ public class ItemController {
         }
 
         Long itemId = itemServiceImpl.editItem(form, account);
-        log.info("itemId = {}", itemId);
-
         redirectAttributes.addAttribute("itemId", itemId);
         return "redirect:/items/{itemId}";
     }
