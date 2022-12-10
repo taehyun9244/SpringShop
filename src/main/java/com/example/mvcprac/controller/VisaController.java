@@ -17,11 +17,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/visas")
 public class VisaController {
 
     private final VisaService visaService;
 
-    @GetMapping("/visas/{id}")
+    @GetMapping("/{id}")
     public String findVisaIdView(@PathVariable Long id, Model model) {
         VisaDetailDto visaDetailDto = visaService.findOneVisa(id);
         model.addAttribute("visaDetailDto", visaDetailDto);
@@ -36,7 +37,7 @@ public class VisaController {
     }
 
     @PostMapping("/post")
-    public String writeVisa(@Validated @ModelAttribute(name = "visaForm") VisaForm visaForm, @CurrentAccount Account account,
+    public String createVisa(@Validated @ModelAttribute(name = "visaForm") VisaForm visaForm, @CurrentAccount Account account,
                             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
@@ -49,7 +50,18 @@ public class VisaController {
         return "redirect:/visas/{visaId}";
     }
 
-    @DeleteMapping("/visas/{id}")
+   /* @GetMapping("/edit/{id}")
+    public String editVisaView(@CurrentAccount Account account, @PathVariable Long id, Model model) {
+
+        return "visa/";
+    }
+    @PostMapping("edit/{id}")
+    public String editVisa(@CurrentAccount Account account, @PathVariable String path,
+                           @Validated VisaForm visaForm, BindingResult bindingResult,
+                           Model model, RedirectAttributes attributes) {
+
+    }*/
+    @PostMapping("/delete/{id}")
     public String deleteVisa(@CurrentAccount Account account, @PathVariable Long id) {
         visaService.deleteVisa(account, id);
         return "visa/visa-home";

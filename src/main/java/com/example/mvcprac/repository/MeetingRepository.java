@@ -9,6 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     boolean existsByPath(String path);
 
-    @EntityGraph(value = "Study.withAll", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(value = "Meeting.withAll", type = EntityGraph.EntityGraphType.LOAD)
      Meeting findByPath(String path);
+    @EntityGraph(value = "Meeting.withTagsAndManagers", type = EntityGraph.EntityGraphType.FETCH)
+    Meeting findMeetingWithTagsByPath(String path);
+    @EntityGraph(value = "Meeting.withZonesAndManagers", type = EntityGraph.EntityGraphType.FETCH)
+    Meeting findMeetingWithZonesByPath(String path);
+    @EntityGraph(value = "Meeting.withManagers", type = EntityGraph.EntityGraphType.FETCH)
+    Meeting findMeetingWithManagersByPath(String path);
+    @EntityGraph(value = "Meeting.withMembers", type = EntityGraph.EntityGraphType.FETCH)
+    Meeting findMeetingWithMembersByPath(String path);
 }

@@ -1,30 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
-<body class="bg-light" layout:fragment="content">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
 
 <title>VISA 페이지</title>
 
 
 <form class="needs-validation" th:action role="form" method="post" th:object="${visaForm}">
 
-    <div class="form-group" style="width: 500px; padding-top: 100px; padding-right: 200px; padding-left: 200px">
-        <label>작성자</label>
-        <p sec:authentication="name">Username</p>
-    </div>
-
-    <div class="col-md-6" style="padding-left: 200px; padding-right: 200px">
-        <label for="inputPassword4" class="form-label" th:for="country">국가</label>
-        <input type="text" th:field="*{country}" class="form-control" id="inputPassword4"
+    <div class="form-group" style="padding-left: 200px; padding-right: 200px; padding-top: 100px">
+        <label th:for="country">국가</label>
+        <input type="text" th:field="*{country}" class="form-control" th:errorclass="field-error"
                placeholder="비자정보를 제공할 국가를 입력해주세요"
                aria-describedby="countryHelp" required>
+        <small class="invalid-feedback">비자정보 국가를 입력하세요.</small>
         <small id="countryHelp" class="form-text text-muted">
             국가를 입력해주세요
         </small>
-        <p th:errors="*{country}" class="field-error">Incorrect data</p>
+        <p th:errors="*{title}" class="field-error">Incorrect data</p>
     </div>
-
 
     <div class="form-group" style="padding-left: 200px; padding-right: 200px">
         <label th:for="title">제목</label>
@@ -56,5 +51,6 @@
     </div>
     </div>
 </form>
+<script th:replace="fragments.html :: form-validation"></script>
 </body>
 </html>

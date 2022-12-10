@@ -14,7 +14,7 @@ public class VisaDetailDto {
     private String title;
     private String body;
     private String country;
-    private String nickName;
+    private String nickname;
     private LocalDateTime createAt;
 
 }

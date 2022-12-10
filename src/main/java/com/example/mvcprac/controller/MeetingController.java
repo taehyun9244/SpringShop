@@ -45,8 +45,6 @@ public class MeetingController {
             model.addAttribute(account);
             return "meeting/meetingForm";
         }
-
-        log.info("form.path", meetingForm.getPath());
         Meeting newMeeting = meetingService.createNewMeeting(meetingForm, account);
         return "redirect:/meeting/" + URLEncoder.encode(newMeeting.getPath(), StandardCharsets.UTF_8);
     }
@@ -67,5 +65,17 @@ public class MeetingController {
         return "meeting/meetingMember";
     }
 
+    @GetMapping("/meeting/{path}/join")
+    public String joinMeeting(@CurrentAccount Account account, @PathVariable String path) {
+        Meeting meeting = meetingService.findMeetingWithMembersByPath(path);
+        meetingService.addMember(meeting, account);
+        return "redirect:/meeting/" + meeting.getEncodedPath() + "/members";
+    }
 
+    @GetMapping("/meeting/{path}/leave")
+    public String leaveMeeting(@CurrentAccount Account account, @PathVariable String path) {
+        Meeting meeting = meetingService.findMeetingWithMembersByPath(path);
+        meetingService.removeMember(meeting, account);
+        return "redirect:/meeting/" + meeting.getEncodedPath() + "/members";
+    }
 }

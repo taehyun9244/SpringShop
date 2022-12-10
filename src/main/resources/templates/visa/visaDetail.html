@@ -1,45 +1,42 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/layout1}">
-<body class="bg-light" layout:fragment="content">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body class="bg-light">
+<div th:replace="fragments.html :: main-nav"></div>
 
-<title>VISA 상세페이지</title>
 
 <input type="hidden" id="itemId" th:value="${visaDetailDto.id}">
 
-<div class="container">
-    <h2>비자게시글 상세 화면</h2>
-    <table class="board_detail">
-        <caption>게시글 상세내용</caption>
-        <tbody>
-        <tr>
-            <th scope="row">글 번호</th>
-            <td th:text="${visaDetailDto.id}"></td>
-            <th scope="row">국기</th>
-            <td th:text="${visaDetailDto.country}"></td>
-        </tr>
-        <tr>
-            <th scope="row">작성자</th>
-            <td th:text="${visaDetailDto.nickName}"></td>
-            <th scope="row">작성일</th>
-            <td th:text="${#temporals.format(visaDetailDto.createAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-        </tr>
-        <tr>
-            <th scope="row">제목</th>
-            <td colspan="3">
-                <input type="text" id="title" name="title"
-                       th:value="${visaDetailDto.title }"/>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4" class="view_text">
-                <textarea title="내용" id="contents" name="contents" th:text="${visaDetailDto.body }"></textarea>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+    <div class="content">
+        <section>
+            <table class="tb tb_row">
+                <colgroup>
+                    <col style="width:10%;" /><col style="width:23%;" /><col style="width:10%;" /><col style="width:23%;" />
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row">제목</th>
+                    <td>[[${visaDetailDto.title}]]</td>
 
+                    <th scope="row">국가</th>
+                    <td colspan="3">[[${visaDetailDto.country}]]</td>
+                </tr>
+                <tr>
+                    <th scope="row">이름</th>
+                    <td colspan="3">[[${visaDetailDto.nickname}]]</td>
+                </tr>
+                <tr>
+                    <th scope="row">내용</th>
+                    <td colspan="3">[[${visaDetailDto.body}]]</td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="btn_set">
+                <a th:href="@{'/visa/' + ${visaDetailDto.id}}" class="btns btn_bdr4 btn_mid">수정</a>
+                <button type="button" class="btns btn_bdr3 btn_mid">삭제</button>
+                <a th:href="@{/visas}" class="btns btn_bdr3 btn_mid">목록으로</a>
+            </p>
+        </section>
+    </div> <!--/* .content */-->
 </body>
 </html>

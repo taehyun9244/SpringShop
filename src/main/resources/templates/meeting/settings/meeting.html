@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<body>
+<nav th:replace="fragments.html :: main-nav"></nav>
+<div th:replace="fragments.html :: meeting-banner"></div>
+<div class="container">
+    <div th:replace="fragments.html :: meeting-info"></div>
+    <div th:replace="fragments.html :: meeting-menu(meetingMenu='settings')"></div>
+    <div class="row mt-3 justify-content-center">
+        <div class="col-2">
+            <div th:replace="fragments.html :: meeting-settings-menu(currentMenu='meeting')"></div>
+        </div>
+        <div class="col-8">
+            <div th:replace="fragments.html :: message"></div>
+            <div class="row">
+                <h5 class="col-sm-12">스터디 공개 및 종료</h5>
+                <form th:if="${!meeting.published && !meeting.closed}" class="col-sm-12" action="#"
+                      th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/meeting/publish'}" method="post"
+                      novalidate>
+                    <div class="alert alert-info" role="alert">
+                        교류회를 다른 사용자에게 공개할 준비가 되었다면 버튼을 클릭하세요.<br/>
+                        소개, 배너 이미지, 교류회 주제 및 활동 지역을 등록했는지 확인하세요.<br/>
+                        교류회를 공개하면 주요 활동 지역과 교류회 주제에 관심있는 다른 사용자에게 알림을 전송합니다.
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp">교류회 공개
+                        </button>
+                    </div>
+                </form>
+                <form th:if="${meeting.published && !meeting.closed}" class="col-sm-12" action="#"
+                      th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/meeting/close'}" method="post"
+                      novalidate>
+                    <div class="alert alert-warning" role="alert">
+                        교류회 활동을 마쳤다면 교류회를 종료하세요.<br/>
+                        교류회를 종료하면 더이상 팀원을 모집하거나 모임을 만들 수 없으며, 교류회 경로와 이름을 수정할 수 없습니다.<br/>
+                        교류회 모임과 참여한 팀원의 기록은 그대로 보관합니다.
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-warning" type="submit" aria-describedby="submitHelp">교류회 종료
+                        </button>
+                    </div>
+                </form>
+                <div th:if="${meeting.closed}" class="col-sm-12 alert alert-info">
+                    이 교류회는 <span class="date-time" th:text="${meeting.closedDateTime}"></span>에 종료됐습니다.<br/>
+                    다시 교류회를 진행하고 싶다면 새로운 교류회를 만드세요.<br/>
+                </div>
+            </div>
+
+            <hr th:if="${!meeting.closed && !meeting.recruiting && meeting.published}"/>
+            <div class="row" th:if="${!meeting.closed && !meeting.recruiting && meeting.published}">
+                <h5 class="col-sm-12">팀원 모집</h5>
+                <form class="col-sm-12" action="#"
+                      th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/recruit/start'}" method="post"
+                      novalidate>
+                    <div class="alert alert-info" role="alert">
+                        팀원을 모집합니다.<br/>
+                        충분한 교류회 팀원을 모집했다면 모집을 멈출 수 있습니다.<br/>
+                        팀원 모집 정보는 1시간에 한번만 바꿀 수 있습니다.
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp">팀원 모집 시작
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <hr th:if="${!meeting.closed && meeting.recruiting && meeting.published}"/>
+            <div class="row" th:if="${!meeting.closed && meeting.recruiting && meeting.published}">
+                <h5 class="col-sm-12">팀원 모집</h5>
+                <form class="col-sm-12" action="#"
+                      th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/recruit/stop'}" method="post"
+                      novalidate>
+                    <div class="alert alert-primary" role="alert">
+                        팀원 모집을 중답합니다.<br/>
+                        팀원 충원이 필요할 때 다시 팀원 모집을 시작할 수 있습니다.<br/>
+                        팀원 모집 정보는 1시간에 한번만 바꿀 수 있습니다.
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp">팀원 모집 중단
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <hr th:if="${!meeting.closed}"/>
+            <div class="row" th:if="${!meeting.closed}">
+                <h5 class="col-sm-12">교류회 경로</h5>
+                <form class="col-sm-12 needs-validation"
+                      th:action="@{'/meeting/' + ${meeting.path} + '/settings/meeting/path'}"
+                      method="post" novalidate>
+                    <div class="alert alert-warning" role="alert">
+                        교류회 경로를 수정하면 이전에 사용하던 경로로 교류회에 접근할 수 없으니 주의하세요. <br/>
+                    </div>
+                    <div class="form-group">
+                        <input id="path" type="text" name="newPath" th:value="${meeting.path}" class="form-control"
+                               placeholder="예) study-path" aria-describedby="pathHelp" required>
+                        <small id="pathHelp" class="form-text text-muted">
+                            공백없이 문자, 숫자, 대시(-)와 언더바(_)만 3자 이상 20자 이내로 입력하세요. 교류회 홈 주소에 사용합니다. 예)
+                            /meeting/<b>meeting-path</b>
+                        </small>
+                        <small class="invalid-feedback">교류회 경로를 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${meetingPathError}" th:text="${meetingPathError}">Path
+                            Error</small>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-warning" type="submit" aria-describedby="submitHelp">경로 수정
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <hr th:if="${!meeting.closed}"/>
+            <div class="row" th:if="${!meeting.closed}">
+                <h5 class="col-12">교류회 이름</h5>
+                <form class="needs-validation col-12" action="#"
+                      th:action="@{'/meeting/' + ${meeting.path} + '/settings/meeting/title'}" method="post" novalidate>
+                    <div class="alert alert-warning" role="alert">
+                        교류회 이름을 수정합니다.<br/>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">교류회 이름</label>
+                        <input id="title" type="text" name="newTitle" th:value="${meeting.title}" class="form-control"
+                               placeholder="스터디 이름" aria-describedby="titleHelp" required maxlength="50">
+                        <small id="titleHelp" class="form-text text-muted">
+                            교류회 이름을 50자 이내로 입력하세요.
+                        </small>
+                        <small class="invalid-feedback">교류회 이름을 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${meetingTitleError}"
+                               th:text="${meetingTitleError}">Title
+                            Error</small>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-outline-warning" type="submit" aria-describedby="submitHelp">교류회 이름 수정
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <hr/>
+                <div class="row" th:if="${meeting.isRemovable()}">
+                <h5 class="col-sm-12 text-danger">교류회 삭제</h5>
+                <form class="col-sm-12" action="#"
+                      th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/meeting/remove'}" method="post"
+                      novalidate>
+                    <div class="alert alert-danger" role="alert">
+                        <div class="row" th:if="${!meeting.isRemovable()}">
+                            <h5 class="col-sm-12 text-danger">스터디 삭제</h5>
+                            <form class="col-sm-12" action="#"
+                                  th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/meeting/remove'}" method="post"
+                                  novalidate>
+                                <div class="alert alert-danger" role="alert">
+                                    공개 중이고 모임을 했던 교류회는 삭제할 수 없습니다.
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-outline-danger" type="submit" aria-describedby="submitHelp"
+                                            disabled>교류회 삭제
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+<script th:replace="fragments.html :: tooltip"></script>
+<script th:replace="fragments.html :: form-validation"></script>
+</body>
+</html>
