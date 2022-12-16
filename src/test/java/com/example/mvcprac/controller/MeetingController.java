@@ -33,15 +33,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MeetingController {
 
     @Autowired
-    MockMvc mockMvc;
+    protected MockMvc mockMvc;
     @Autowired
-    AccountService accountService;
+    protected AccountService accountService;
     @Autowired
-    AccountRepository accountRepository;
+    protected AccountRepository accountRepository;
     @Autowired
-    MeetingService meetingService;
+    protected MeetingService meetingService;
     @Autowired
-    MeetingRepository meetingRepository;
+    protected MeetingRepository meetingRepository;
 
     @BeforeEach
     void beforeEach() {
@@ -137,5 +137,43 @@ public class MeetingController {
         meetingService.createNewMeeting(meetingForm, simokitazawa);
         mockMvc.perform(get("/meeting/fail-path"))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithUserDetails(value = "email@email.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("Meeting 참가")
+    void joinMeeting() throws Exception {
+        Account sibuya = createAccount("sibuya");
+        Meeting createMeeting = createMeeting("sibuya-path", sibuya);
+
+        mockMvc.perform(get("/meeting/" + createMeeting.getPath() + "/join"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/meeting/" + createMeeting.getPath() + "/members"));
+
+        Account testNickname = accountRepository.findByNickname("테스트닉네임");
+        assertTrue(createMeeting.getMembers().contains(testNickname));
+    }
+
+
+    protected Account createAccount(String nickname) {
+        SignUpForm signUpForm = new SignUpForm(
+                "테스트",
+                "12341234!a",
+                "19920404",
+                "테스트닉네임100",
+                "email10000@email.com",
+                "서울",
+                "01099999999");
+        Account simokitazawa = accountService.createUser(signUpForm);
+        accountRepository.save(simokitazawa);
+        return simokitazawa;
+    }
+
+    protected Meeting createMeeting(String path, Account manager) {
+        MeetingForm meeting = new MeetingForm(
+                path, "testTile", "TestShortDescription", "TestFullDescription"
+        );
+        Meeting newMeeting = meetingService.createNewMeeting(meeting, manager);
+        return newMeeting;
     }
 }
