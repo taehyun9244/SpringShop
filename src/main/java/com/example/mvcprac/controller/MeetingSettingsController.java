@@ -264,7 +264,7 @@ public class MeetingSettingsController {
     }
 
     @PostMapping("/meeting/remove")
-    public String removeMeeting(@CurrentAccount Account account, @PathVariable String path, Model model) {
+    public String removeMeeting(@CurrentAccount Account account, @PathVariable String path) {
         Meeting meeting = meetingService.getMeetingToUpdateStatus(account, path);
         meetingService.remove(meeting);
         return "redirect:/";
