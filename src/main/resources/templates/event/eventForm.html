@@ -30,7 +30,7 @@
         <small id="eventTypeHelp" class="form-text text-muted">
           두가지 모집 방법이 있습니다.<br/>
           <strong>선착순</strong>으로 모집하는 경우, 모집 인원 이내의 접수는 자동으로 확정되며, 제한 인원을 넘는 신청은 대기 신청이 되며 이후에 확정된 신청 중에 취소가 발생하면 선착순으로 대기 신청자를 확정 신청자도 변경합니다. 단, 등록 마감일 이후에는 취소해도 확정 여부가 바뀌지 않습니다.<br/>
-          <strong>확인</strong>으로 모집하는 경우, 모임 및 스터디 관리자가 모임 신청 목록을 조회하고 직접 확정 여부를 정할 수 있습니다. 등록 마감일 이후에는 변경할 수 없습니다.
+          <strong>확인</strong>으로 모집하는 경우, 모임 및 교류회 관리자가 모임 신청 목록을 조회하고 직접 확정 여부를 정할 수 있습니다. 등록 마감일 이후에는 변경할 수 없습니다.
         </small>
       </div>
       <div class="form-row">
@@ -49,7 +49,7 @@
           <input id="endEnrollmentDateTime" type="datetime-local" th:field="*{endEnrollmentDateTime}" class="form-control"
                  aria-describedby="endEnrollmentDateTimeHelp" required>
           <small id="endEnrollmentDateTimeHelp" class="form-text text-muted">
-            등록 마감 이전에만 스터디 모임 참가 신청을 할 수 있습니다.
+            등록 마감 이전에만 교로회 참가 신청을 할 수 있습니다.
           </small>
           <small class="invalid-feedback">모임 신청 마감 일시를 입력하세요.</small>
           <small class="form-text text-danger" th:if="${#fields.hasErrors('endEnrollmentDateTime')}" th:errors="*{endEnrollmentDateTime}">Error</small>
