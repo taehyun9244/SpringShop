@@ -40,18 +40,11 @@ public class ItemController {
         return "item/itemDetail";
     }
 
-    /**
-     * Item view
-     */
     @GetMapping("/add")
     public String addItem(@ModelAttribute(name = "form") ItemForm form) {
         return "item/itemForm";
     }
 
-
-    /**
-     * create Item
-     */
     @PostMapping("/add")
     public String addItem(@Validated @ModelAttribute(name = "form") ItemForm form, @CurrentAccount Account account,
                           BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
