@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -30,5 +31,10 @@ public class EventService {
                 () -> new IllegalArgumentException("can not find id")
         );
         return event;
+    }
+
+    public List<Event> findByMeetingOrderByStartDateTime(Meeting meeting) {
+        List<Event> events = eventRepository.findByMeetingOrderByStartDateTime(meeting);
+        return events;
     }
 }

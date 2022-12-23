@@ -17,6 +17,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/meeting/{path}")
@@ -60,8 +64,32 @@ public class EventController {
                            Model model) {
         model.addAttribute(account);
         model.addAttribute(eventService.findById(id));
-        model.addAttribute(meetingService.getMeeting(path));
+        model.addAttribute(meetingService.findMeetingWithMembersByPath(path));
         return "event/eventView";
     }
+
+    @GetMapping("/events")
+    public String viewStudyEvents(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Meeting meeting = meetingService.getMeeting(path);
+        model.addAttribute(account);
+        model.addAttribute(meeting);
+
+        List<Event> events = eventService.findByMeetingOrderByStartDateTime(meeting);
+        List<Event> newEvents = new ArrayList<>();
+        List<Event> oldEvents = new ArrayList<>();
+        events.forEach(e -> {
+            if (e.getEndDateTime().isBefore(LocalDateTime.now())) {
+                oldEvents.add(e);
+            } else {
+                newEvents.add(e);
+            }
+        });
+
+        model.addAttribute("newEvents", newEvents);
+        model.addAttribute("oldEvents", oldEvents);
+
+        return "meeting/events";
+    }
+
 
 }
