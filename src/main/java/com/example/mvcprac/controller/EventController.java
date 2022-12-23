@@ -7,16 +7,15 @@ import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.service.EventService;
 import com.example.mvcprac.service.MeetingService;
 import com.example.mvcprac.validation.CurrentAccount;
+import com.example.mvcprac.validation.EventValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +25,12 @@ public class EventController {
     private final MeetingService meetingService;
     private final EventService eventService;
     private final ModelMapper modelMapper;
+    private final EventValidator eventValidator;
+
+    @InitBinder("eventForm")
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(eventValidator);
+    }
 
     @GetMapping("/new-event")
     public String newEventForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
@@ -48,6 +53,15 @@ public class EventController {
 
         Event event = eventService.createEvent(modelMapper.map(eventForm, Event.class), meeting, account);
         return "redirect:/meeting/" + meeting.getEncodedPath() + "/events/" + event.getId();
+    }
+
+    @GetMapping("/events/{id}")
+    public String getEvent(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id,
+                           Model model) {
+        model.addAttribute(account);
+        model.addAttribute(eventService.findById(id));
+        model.addAttribute(meetingService.getMeeting(path));
+        return "event/eventView";
     }
 
 }

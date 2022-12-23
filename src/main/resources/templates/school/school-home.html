@@ -4,13 +4,6 @@
       layout:decorate="~{layouts/layout1}">
 <title>VISA 페이지</title>
 
-
-
-<!--    <input type="hidden" name="searchQuery" th:value="${visaSearchDto.searchQuery}">-->
-<!--    <div th:if="${not #strings.isEmpty(visaSearchDto.searchQuery)}" class="center">-->
-<!--        <p class="h3 font-weight-bold" th:text="${visaSearchDto.searchQuery} + ' 검색 결과'"></p>-->
-<!--    </div>-->
-
 <div layout:fragment="content" style="min-width: 700px; max-width: 900px; margin: 50px auto 100px auto;">
 
     <div class="alert alert-warning" role="alert" th:if="${account != null && !account.emailVerified}">

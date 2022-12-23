@@ -19,9 +19,16 @@ public class EventService {
 
 
     public Event createEvent(Event event, Meeting meeting, Account account) {
-        event.setCreateBy(account);
+        event.setCreatedBy(account);
         event.setCreatedDateTime(LocalDateTime.now());
         event.setMeeting(meeting);
         return eventRepository.save(event);
+    }
+
+    public Event findById(Long id) {
+        Event event = eventRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("can not find id")
+        );
+        return event;
     }
 }
