@@ -10,6 +10,7 @@ import com.example.mvcprac.repository.ItemRepository;
 import com.example.mvcprac.service.file.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,18 +31,14 @@ public class ItemService {
     private final ItemQueryRepository queryRepository;
     private final ImageRepository imageRepository;
     private final FileStore fileStore;
+    private final ModelMapper modelMapper;
 
 
-    /**
-     * find all item
-     */
+
     public Page<ItemListDto> findAllItem(ItemSearchDto itemSearchDto, Pageable pageable) {
         return queryRepository.findAllItem(itemSearchDto, pageable);
     }
 
-    /**
-     * findById item
-     */
     public ItemDetailDto findById(Long id) {
 
         List<Image> findImageByItemId = imageRepository.findAllByItemIdOrderByCreatedAtAsc(id);
@@ -49,18 +46,10 @@ public class ItemService {
                 .map(image -> new ItemImageDto(image))
                 .collect(Collectors.toList());
 
-        Item item = itemRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 게시글입니다")
-        );
-
+        Item item = getItemId(id);
         ItemDetailDto itemDetailDto = new ItemDetailDto(item, imageDtoList);
         return itemDetailDto;
     }
-
-
-    /**
-     * create item
-     */
 
     public Long createItem(ItemForm form, Account account) throws IOException {
 
@@ -73,22 +62,22 @@ public class ItemService {
         return saveItem.getId();
     }
 
-    /**
-     *  editItem
-     */
-    public Long editItem(ItemForm form, Account account) {
-        return null;
+
+    public Item editItem(Item findItem, ItemForm itemForm, Account account) {
+        Item item = new Item(findItem.getId(), itemForm, account);
+        Item editItem = itemRepository.save(item);
+        return editItem;
     }
 
-
-    /**
-     * deleteItem
-     */
     public void deleteItem(Long id) {
+        Item item = getItemId(id);
+        itemRepository.delete(item);
+    }
 
+    public Item getItemId(Long id) {
         Item item = itemRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시글입니다")
         );
-        itemRepository.delete(item);
+        return item;
     }
 }

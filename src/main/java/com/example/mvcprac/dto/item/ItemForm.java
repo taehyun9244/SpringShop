@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 public class ItemForm {
 
+    private Long id;
     @NotBlank(message = "상품의 이름을 입력해 주세요")
     private String itemName;
 
@@ -19,7 +20,9 @@ public class ItemForm {
     @NotNull(message = "상품의 가격을 입력해 주세요")
     private int price;
 
+    @NotNull
     private String itemSellStatus;
+    @NotNull
     private String deliveryChoice;
     private List<MultipartFile> imageFiles;
 }

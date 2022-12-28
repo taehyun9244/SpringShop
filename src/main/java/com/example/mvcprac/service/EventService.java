@@ -1,10 +1,12 @@
 package com.example.mvcprac.service;
 
+import com.example.mvcprac.dto.Event.EventForm;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Event;
 import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final ModelMapper modelMapper;
 
 
     public Event createEvent(Event event, Meeting meeting, Account account) {
@@ -36,5 +39,13 @@ public class EventService {
     public List<Event> findByMeetingOrderByStartDateTime(Meeting meeting) {
         List<Event> events = eventRepository.findByMeetingOrderByStartDateTime(meeting);
         return events;
+    }
+
+    public void updateEvent(Event event, EventForm eventForm) {
+        modelMapper.map(eventForm, event);
+    }
+
+    public void deleteEvent(Event event) {
+        eventRepository.delete(event);
     }
 }

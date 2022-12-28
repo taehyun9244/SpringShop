@@ -46,8 +46,8 @@ public class EventController {
     }
 
     @PostMapping("/new-event")
-    public String newEventSubmit(@CurrentAccount Account account, @PathVariable String path,
-                                 @Validated EventForm eventForm, BindingResult bindingResult, Model model) {
+    public String newEventSubmit(@CurrentAccount Account account, @PathVariable String path, @Validated EventForm eventForm,
+                                 BindingResult bindingResult, Model model) {
         Meeting meeting = meetingService.getMeetingToUpdateStatus(account, path);
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);
@@ -60,8 +60,7 @@ public class EventController {
     }
 
     @GetMapping("/events/{id}")
-    public String getEvent(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id,
-                           Model model) {
+    public String getEvent(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id, Model model) {
         model.addAttribute(account);
         model.addAttribute(eventService.findById(id));
         model.addAttribute(meetingService.findMeetingWithMembersByPath(path));
@@ -91,5 +90,41 @@ public class EventController {
         return "meeting/events";
     }
 
+    @GetMapping("/events/{id}/edit")
+    public String updateEventForm(@CurrentAccount Account account, @PathVariable Long id, @PathVariable String path, Model model) {
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        Event event = eventService.findById(id);
+        model.addAttribute(meeting);
+        model.addAttribute(account);
+        model.addAttribute(event);
+        model.addAttribute(modelMapper.map(event, EventForm.class));
+        return "event/eventEdit";
+    }
 
+    @PostMapping("/events/{id}/edit")
+    public String updateEventSubmit(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id,
+                                    @Validated EventForm eventForm, BindingResult bindingResult, Model model) {
+
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        Event event = eventService.findById(id);
+        eventForm.setEventType(event.getEventType());
+        eventValidator.validateUpdateForm(eventForm, event, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute(account);
+            model.addAttribute(meeting);
+            model.addAttribute(event);
+            return "event/eventForm";
+        }
+
+        eventService.updateEvent(event, eventForm);
+        return "redirect:/meeting/" + meeting.getEncodedPath() +  "/events/" + event.getId();
+    }
+
+    @PostMapping("/events/{id}/delete")
+    public String cancelEvent(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id) {
+        Meeting meeting  = meetingService.getMeetingToUpdateStatus(account, path);
+        eventService.deleteEvent(eventService.findById(id));
+        return "redirect:/meeting/" + meeting.getEncodedPath() + "/events/";
+    }
 }

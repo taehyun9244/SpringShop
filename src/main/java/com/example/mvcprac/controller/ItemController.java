@@ -3,11 +3,13 @@ package com.example.mvcprac.controller;
 import com.example.mvcprac.dto.item.ItemDetailDto;
 import com.example.mvcprac.dto.item.ItemForm;
 import com.example.mvcprac.model.Account;
+import com.example.mvcprac.model.Item;
 import com.example.mvcprac.service.ItemService;
 import com.example.mvcprac.service.file.FileStore;
 import com.example.mvcprac.validation.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -25,72 +27,73 @@ import java.net.MalformedURLException;
 @RequiredArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
-    private final ItemService itemServiceImpl;
+    private final ItemService itemService;
     private final FileStore fileStore;
+    private final ModelMapper modelMapper;
 
-    /**
-     * findById item
-     */
+
     @GetMapping("/{id}")
-    public String findItem(@PathVariable Long id, Model model) {
+    public String itemView(@PathVariable Long id, Model model) {
 
-        ItemDetailDto itemDetailDto = itemServiceImpl.findById(id);
+        ItemDetailDto itemDetailDto = itemService.findById(id);
         model.addAttribute("itemDetailDto", itemDetailDto);
 
-        return "item/itemDetail";
+        return "/item/itemView";
     }
 
     @GetMapping("/add")
-    public String addItem(@ModelAttribute(name = "form") ItemForm form) {
+    public String itemFormView(@ModelAttribute(name = "form") ItemForm form) {
         return "item/itemForm";
     }
 
     @PostMapping("/add")
-    public String addItem(@Validated @ModelAttribute(name = "form") ItemForm form, @CurrentAccount Account account,
-                          BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
+    public String itemFormSubmit(@Validated @ModelAttribute(name = "form") ItemForm form, @CurrentAccount Account account,
+                                 BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "item/itemForm";
         }
 
-        Long itemId = itemServiceImpl.createItem(form, account);
+        Long itemId = itemService.createItem(form, account);
         redirectAttributes.addAttribute("itemId", itemId);
         return "redirect:/items/{itemId}";
     }
 
-    //TODO 아이템 수정
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{id}/edit")
     public String editItemView(@PathVariable Long id, Model model) {
-        ItemDetailDto findItemById = itemServiceImpl.findById(id);
-        model.addAttribute("form", findItemById);
+        Item item = itemService.getItemId(id);
+        model.addAttribute(modelMapper.map(item, ItemForm.class));
         return "item/itemEdit";
     }
 
-    @PostMapping("/edit")
-    public String editItem(@Validated @ModelAttribute(name = "form") ItemForm form, @CurrentAccount Account account,
-                          BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
+    @PostMapping("/{id}/edit")
+    public String editItemSubmit(@Validated @ModelAttribute ItemForm itemForm, @PathVariable Long id, @CurrentAccount Account account,
+                                 BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) throws IOException {
+
+        Item item = itemService.getItemId(id);
         if (bindingResult.hasErrors()) {
-            log.info("errors={}", bindingResult);
-            return "item/itemForm";
+            log.info("errors = {}", bindingResult);
+            model.addAttribute(item);
+            model.addAttribute(account);
+            return "item/itemEdit";
         }
 
-        Long itemId = itemServiceImpl.editItem(form, account);
-        redirectAttributes.addAttribute("itemId", itemId);
+        Item editItem = itemService.editItem(item, itemForm, account);
+        log.info("editItemId = {}", editItem.getId());
+        redirectAttributes.addAttribute("itemId", editItem.getId());
+
         return "redirect:/items/{itemId}";
     }
 
-
-    @ResponseBody
-    @GetMapping("/images/{fileName}")
-    public Resource downloadImage(@PathVariable String fileName) throws MalformedURLException {
-        return new UrlResource("file:"+ fileStore.getFullPath(fileName));
-    }
-
-    //TODO 아이템 삭제
-    @PostMapping("/delete/{id}")
+    @PostMapping("/{id}/delete")
     public String deleteItem(@PathVariable Long id) {
-        itemServiceImpl.deleteItem(id);
+        itemService.deleteItem(id);
         return "home";
     }
 
+    @ResponseBody
+    @GetMapping("/images/{fileName}")
+    public Resource imagesUpload(@PathVariable String fileName) throws MalformedURLException {
+        return new UrlResource("file:" + fileStore.getFullPath(fileName));
+    }
 }

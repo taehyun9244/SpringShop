@@ -54,12 +54,13 @@ public class Item extends Timestamped {
         this.account = account;
     }
 
-    public Item(Item item, ItemForm form) {
-        this.id = item.id;
+    public Item(Long id, ItemForm form, Account account) {
+        this.id = id;
         this.itemName = form.getItemName();
         this.itemBody = form.getItemBody();
         this.price = form.getPrice();
         this.itemSellStatus = form.getItemSellStatus();
         this.deliveryChoice = form.getDeliveryChoice();
+        this.account = account;
     }
 }
