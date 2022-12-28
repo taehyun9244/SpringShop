@@ -5,12 +5,11 @@ import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Image;
 import com.example.mvcprac.model.Item;
 import com.example.mvcprac.repository.ImageRepository;
-import com.example.mvcprac.repository.query.ItemQueryRepository;
 import com.example.mvcprac.repository.ItemRepository;
+import com.example.mvcprac.repository.query.ItemQueryRepository;
 import com.example.mvcprac.service.file.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,6 @@ public class ItemService {
     private final ItemQueryRepository queryRepository;
     private final ImageRepository imageRepository;
     private final FileStore fileStore;
-    private final ModelMapper modelMapper;
 
 
 
@@ -63,10 +61,14 @@ public class ItemService {
     }
 
 
-    public Item editItem(Item findItem, ItemForm itemForm, Account account) {
+    public Long editItem(Item findItem, ItemForm itemForm, Account account) throws IOException {
         Item item = new Item(findItem.getId(), itemForm, account);
         Item editItem = itemRepository.save(item);
-        return editItem;
+
+        List<MultipartFile> imageFiles = itemForm.getImageFiles();
+        fileStore.saveImages(imageFiles, editItem);
+
+        return editItem.getId();
     }
 
     public void deleteItem(Long id) {
@@ -79,5 +81,10 @@ public class ItemService {
                 () -> new IllegalArgumentException("존재하지 않는 게시글입니다")
         );
         return item;
+    }
+
+    public void deleteImages(Item item) {
+        List<Image> findAllImages = imageRepository.findAllByItemIdOrderByCreatedAtAsc(item.getId());
+        imageRepository.deleteAll(findAllImages);
     }
 }

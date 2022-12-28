@@ -1,4 +1,4 @@
-package com.example.mvcprac.validation;
+package com.example.mvcprac.validation.validator;
 
 import com.example.mvcprac.dto.meeting.MeetingForm;
 import com.example.mvcprac.repository.MeetingRepository;

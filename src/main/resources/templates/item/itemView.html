@@ -50,13 +50,13 @@
                  th:alt="${itemDetailDto.itemName}">
         </div>
         <div class="wd50">
-      <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL }"
-            class="badge badge-primary mgb-15">판매중</span>
-            <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL}"
+             <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL}"
+                   class="badge badge-primary mgb-15">판매중</span>
+            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SOLD}"
                   class="badge btn-danger mgb-15">품절</span>
             <span th:if="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).POST }"
                   class="badge badge-primary mgb-15">우체국</span>
-            <span th:if="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).POST}"
+            <span th:unless="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).LOTTE}"
                   class="badge btn-danger mgb-15">롯데</span>
             <div class="h4" th:value="${itemDetailDto.itemName}"></div>
             <hr class="my-4">
@@ -93,35 +93,59 @@
 
     <div style="text-align: center" class="button center">
         <a th:href="@{'/items/' + ${itemDetailDto.id} + '/edit'}">
-            <button type="btn btn-primary" class="btn btn-secondary"  aria-describedby="submitHelp">상품 수정</button>
+            <button sec:authorize="isAuthenticated()" type="btn btn-primary" class="btn btn-secondary"
+                    data-toggle="modal" data-target="#itemEdit"
+                    aria-describedby="submitHelp">상품 수정
+            </button>
         </a>
         <form th:action="@{'/items/' + ${itemDetailDto.id} + '/delete'}" th:method="post">
-            <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">상품 삭제</button>
+            <button sec:authorize="isAuthenticated()" class="btn btn-primary" type="submit"
+                    aria-describedby="submitHelp">상품 삭제
+            </button>
         </form>
     </div>
 </div>
+
+<div class="modal fade" id="itemEdit" tabindex="-1" role="dialog" aria-labelledby="itemName"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="itemName" th:text="${itemDetailDto.itemName}"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>모임에 참석하시겠습니까? 일정을 캘린더에 등록해 두시면 좋습니다.</p>
+                <p><strong>확인</strong> 버튼을 클릭하면 모임 참가 신청을 합니다.</p>
+                <p>감사합니다.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <form th:action="@{'/items/' + ${itemDetailDto.id}}"
+                      method="post">
+                    <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!--        <form class="col-sm-12">-->
-<!--            <div class="form-group" action="#" th:herf="@{'/items/' + ${itemDetailDto.id} + '/edit'}" method="get" novalidate-->
-<!--                 sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname == #authentication.getName()}">-->
-<!--                <button class="btn btn-primary"  type="submit" aria-describedby="submitHelp">수정</button>-->
-<!--            </div>-->
+<div style="text-align: center" class="button center">
+    <form sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname != #authentication.getName()}"
+          th:action="@{'/order/' + ${itemDetailDto.id}}" th:method="post">
+        <button th:if="${itemDetailDto.nickname != #authentication.getName()}"
+                type="submit" class="btn btn-primary">구매하기
+        </button>
+    </form>
 
-<!--            <div class="form-group"  action="#" th:action="@{'/items/' + ${itemDetailDto.id} + '/delete'}" method="post" novalidate-->
-<!--                 sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname == #authentication.getName()}">-->
-<!--                <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">삭제</button>-->
-<!--            </div>-->
-<!--        </form>-->
-</div>
-
-<div style="text-align: center">
-    <button sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname != #authentication.getName()}"
-            th:href="@{'/order/' + ${itemDetailDto.id}}" type="submit" class="btn btn-primary">구매하기
-    </button>
-    <button sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname != #authentication.getName()}"
-            th:href="@{'/cart/' + ${itemDetailDto.id}}" type="submit" class="btn btn-primary">장바구니 추가
-    </button>
+    <form sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname !=#authentication.getName()}"
+          th:action="@{'/cart/' + ${itemDetailDto.id}}" th:method="post">
+        <button th:if="${itemDetailDto.nickname != #authentication.getName()}"
+                type="submit" class="btn btn-primary">장바구니 추가
+        </button>
+    </form>
 </div>
 </div>
 </body>

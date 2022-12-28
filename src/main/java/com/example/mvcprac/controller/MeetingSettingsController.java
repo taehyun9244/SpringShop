@@ -11,7 +11,7 @@ import com.example.mvcprac.repository.TagRepository;
 import com.example.mvcprac.repository.ZoneRepository;
 import com.example.mvcprac.service.MeetingService;
 import com.example.mvcprac.service.TagService;
-import com.example.mvcprac.validation.CurrentAccount;
+import com.example.mvcprac.validation.customize.CurrentAccount;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

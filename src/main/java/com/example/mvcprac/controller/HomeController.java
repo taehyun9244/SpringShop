@@ -10,7 +10,7 @@ import com.example.mvcprac.service.MeetingService;
 import com.example.mvcprac.service.SchoolService;
 import com.example.mvcprac.service.VisaService;
 import com.example.mvcprac.service.file.FileStore;
-import com.example.mvcprac.validation.CurrentAccount;
+import com.example.mvcprac.validation.customize.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;

@@ -6,7 +6,7 @@ import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Item;
 import com.example.mvcprac.service.ItemService;
 import com.example.mvcprac.service.file.FileStore;
-import com.example.mvcprac.validation.CurrentAccount;
+import com.example.mvcprac.validation.customize.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -62,6 +62,7 @@ public class ItemController {
     @GetMapping("/{id}/edit")
     public String editItemView(@PathVariable Long id, Model model) {
         Item item = itemService.getItemId(id);
+        itemService.deleteImages(item);
         model.addAttribute(modelMapper.map(item, ItemForm.class));
         return "item/itemEdit";
     }
@@ -78,9 +79,9 @@ public class ItemController {
             return "item/itemEdit";
         }
 
-        Item editItem = itemService.editItem(item, itemForm, account);
-        log.info("editItemId = {}", editItem.getId());
-        redirectAttributes.addAttribute("itemId", editItem.getId());
+        Long editItemId = itemService.editItem(item, itemForm, account);
+        log.info("editItemId = {}", editItemId);
+        redirectAttributes.addAttribute("itemId", editItemId);
 
         return "redirect:/items/{itemId}";
     }

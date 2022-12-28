@@ -65,14 +65,18 @@
         <th:block th:each="item, status: ${items}">
             <div class="col-md-4 margin">
                 <div class="card">
-                    <img th:src="|/images/${item.storeFileName}|" class="card-img-top" th:alt="${item.itemName}"
+                    <img th:if="${item.storeFileName.isEmpty()}" src="/images/noimage.png" class="card-img-top"
+                         th:alt="${item.itemName}"
                          height="300">
+                    <img th:src="|/images/${item.storeFileName}|"
+                         class="card-img-top" th:alt="${item.itemName}" height="300">
                     <div class="card-body">
                         <a th:href="'/items/' +${item.id}" class="text-dark">
                             <h4 class="card-title">[[${item.itemName}]]</h4>
                             <h6 class="card-text">[[${item.itemSellStatus}]]</h6>
                             <h6 class="card-text">[[${item.deliveryChoice}]]</h6>
-                            <h3 class="card-title text-danger" data-th-text="${#numbers.formatInteger(item.price, 3, 'COMMA') + '원'}"></h3>
+                            <h3 class="card-title text-danger"
+                                data-th-text="${#numbers.formatInteger(item.price, 3, 'COMMA') + '원'}"></h3>
                         </a>
                     </div>
                 </div>

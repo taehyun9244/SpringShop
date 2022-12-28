@@ -2,7 +2,7 @@ package com.example.mvcprac.model;
 
 
 import com.example.mvcprac.util.status.EventType;
-import com.example.mvcprac.validation.UserAccount;
+import com.example.mvcprac.validation.validator.UserAccount;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.example.mvcprac.validation;//package com.example.websocket.validation;
+package com.example.mvcprac.validation.validator;//package com.example.websocket.validation;
 //
 //import java.util.regex.Matcher;
 //import java.util.regex.Pattern;

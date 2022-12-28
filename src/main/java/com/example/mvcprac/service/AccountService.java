@@ -10,7 +10,7 @@ import com.example.mvcprac.model.Tag;
 import com.example.mvcprac.model.Zone;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.security.config.AppProperties;
-import com.example.mvcprac.validation.UserAccount;
+import com.example.mvcprac.validation.validator.UserAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

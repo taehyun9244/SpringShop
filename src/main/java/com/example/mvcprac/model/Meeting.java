@@ -1,7 +1,7 @@
 package com.example.mvcprac.model;
 
 import com.example.mvcprac.dto.meeting.MeetingForm;
-import com.example.mvcprac.validation.UserAccount;
+import com.example.mvcprac.validation.validator.UserAccount;
 import lombok.*;
 
 import javax.persistence.*;

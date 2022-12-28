@@ -60,9 +60,6 @@
             <input type="text" th:field="*{username}" class="form-control" th:errorclass="field-error"
                    aria-describedby="nameHelp" required>
             <small class="invalid-feedback">이름을 입력하세요.</small>
-            <small id="nameHelp" class="form-text text-muted">
-                공백없이 한글로만 입력해 주세요
-            </small>
             <p th:errors="*{username}" class="field-error">Incorrect data</p>
         </div>
 

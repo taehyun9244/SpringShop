@@ -1,4 +1,4 @@
-package com.example.mvcprac.validation;
+package com.example.mvcprac.validation.validator;
 
 import com.example.mvcprac.dto.Event.EventForm;
 import com.example.mvcprac.model.Event;

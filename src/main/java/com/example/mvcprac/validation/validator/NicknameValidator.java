@@ -1,4 +1,4 @@
-package com.example.mvcprac.validation;
+package com.example.mvcprac.validation.validator;
 
 import com.example.mvcprac.dto.account.NicknameForm;
 import com.example.mvcprac.model.Account;

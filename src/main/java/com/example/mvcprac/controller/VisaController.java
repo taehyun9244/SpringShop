@@ -4,7 +4,7 @@ import com.example.mvcprac.dto.visa.VisaDetailDto;
 import com.example.mvcprac.dto.visa.VisaForm;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.service.VisaService;
-import com.example.mvcprac.validation.CurrentAccount;
+import com.example.mvcprac.validation.customize.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

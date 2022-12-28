@@ -1,6 +1,6 @@
 package com.example.mvcprac.dto.account;
 
-import com.example.mvcprac.validation.Password;
+import com.example.mvcprac.validation.customize.Password;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

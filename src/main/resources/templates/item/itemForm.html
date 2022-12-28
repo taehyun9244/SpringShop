@@ -10,8 +10,45 @@
             if (errorMessage != null) {
                 alert(errorMessage);
             }
+            bindDomEvent();
         });
 
+        function bindDomEvent() {
+            $(".custom-file-input").on("change", function () {
+                var fileName = $(this).val().split("\\").pop();  //이미지 파일명
+                var fileExt = fileName.substring(fileName.lastIndexOf(".") + 1); // 확장자 추출
+                fileExt = fileExt.toLowerCase(); //소문자 변환
+
+                if (fileExt != "jpg" && fileExt != "jpeg" && fileExt != "gif"
+                    && fileExt != "png" && fileExt != "bmp") {
+                    alert("이미지 파일만 등록이 가능합니다.");
+                    return;
+                }
+
+                $(this).siblings(".custom-file-label").html(fileName);
+            });
+        }
+    </script>
+
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
     </script>
 </th:block>
 
@@ -29,15 +66,22 @@
             border-color: #dc3545;
             color: #dc3545;
         }
+
         .btn btn-primary {
             display: inline-block;
+        }
+
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
         }
 
     </style>
 </th:block>
 
 <div layout:fragment="content">
-    <form th:action role="form" method="post" enctype="multipart/form-data" th:object="${form}">
+    <form class="needs-validation" th:action="@{/items/add}" role="form" method="post" enctype="multipart/form-data"
+          th:object="${form}" novalidate>
 
         <p class="h2">
             상품 등록
@@ -63,31 +107,45 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">상품명</span>
             </div>
-            <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력해주세요">
+            <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력해주세요"
+                   th:errorclass="field-error" aria-describedby="nameHelp" required>
+            <small class="invalid-feedback">상품명 입력하세요.</small>
+            <p th:errors="*{itemName}" class="field-error">Incorrect data</p>
         </div>
-        <p th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}" class="field-error">Incorrect data</p>
+
 
         <div class="input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">가격</span>
             </div>
-            <input type="number" th:field="*{price}" class="form-control" placeholder="상품의 가격을 입력해주세요">
+            <input th:errorclass="field-error" aria-describedby="priceHelp" required type="number" th:field="*{price}"
+                   class="form-control" placeholder="상품의 가격을 입력해주세요">
+            <small class="invalid-feedback">가격을 입력하세요.</small>
+            <p th:errors="*{price}" class="field-error">Incorrect data</p>
         </div>
-        <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="field-error">Incorrect data</p>
 
         <div class="input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text">상품 상세 내용</span>
             </div>
-            <textarea class="form-control" aria-label="With textarea" th:field="*{itemBody}"></textarea>
+            <textarea class="form-control" aria-label="With textarea" th:field="*{itemBody}"
+                      th:errorclass="field-error" aria-describedby="bodyHelp" required></textarea>
+            <small class="invalid-feedback">상품의 대한 내용을 입력하세요.</small>
+            <p th:errors="*{itemBody}" class="field-error">Incorrect data</p>
         </div>
-        <p th:if="${#fields.hasErrors('itemBody')}" th:errors="*{itemBody}" class="field-error">Incorrect data</p>
+
 
         <div class="form-group" th:each="num: ${#numbers.sequence(1,7)}">
             <div class="custom-file img-div">
-                <input type="file" class="custom-file-input" name="imageFiles">
+                <input type="file" class="custom-file-input" name="imageFiles"
+                       th:errorclass="field-error" aria-describedby="imageHelp" required>
                 <label class="custom-file-label" th:text="상품이미지 + ${num}"></label>
             </div>
+            <small id="imageHelp" class="form-text text-muted">
+                상품의 이미지를 최소 1장이상 등록해 주세요
+            </small>
+            <small class="invalid-feedback">이미지를 등록하세요.</small>
+            <p th:errors="*{imageFiles}" class="field-error">Incorrect data</p>
         </div>
 
         <div style="text-align: center">

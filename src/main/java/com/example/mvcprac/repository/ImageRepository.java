@@ -9,4 +9,5 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findAllByItemIdOrderByCreatedAtAsc(Long id);
+
 }
