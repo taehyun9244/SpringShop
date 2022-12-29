@@ -1,5 +1,7 @@
 package com.example.mvcprac.dto.item;
 
+import com.example.mvcprac.util.status.DeliveryStatus;
+import com.example.mvcprac.util.status.ItemSellStatus;
 import com.example.mvcprac.validation.customize.EnumNamePattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -19,19 +21,17 @@ public class ItemForm {
     @Length(max = 50)
     private String itemName;
 
-    @NotNull(message = "상품의 상세내용을 입력해 주세요")
+    @NotBlank(message = "상품의 상세내용을 입력해 주세요")
     private String itemBody;
 
     @NotNull(message = "상품의 가격을 입력해 주세요")
     @Range(min = 100)
     private int price;
 
-    @NotNull
-    @EnumNamePattern(regexp = "SELL|SOLD")
-    private String itemSellStatus;
-    @NotNull
-    @EnumNamePattern(regexp = "POST|LOTTE")
-    private String deliveryChoice;
+    @EnumNamePattern(regexp = "SELL|SOLD", message = "상품의 재고 상태를 알려주세요")
+    private ItemSellStatus itemSellStatus;
+    @EnumNamePattern(regexp = "LOTTE|POST", message = "배송업체 롯데 또는 우체국을 선택해 주세요")
+    private DeliveryStatus deliveryStatus;
     @NotNull(message = "최소한 1장의 이미지를 등록해 주세요")
     @Size(min = 1)
     private List<MultipartFile> imageFiles;

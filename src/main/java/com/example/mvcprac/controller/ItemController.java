@@ -82,7 +82,7 @@ public class ItemController {
         Long editItemId = itemService.editItem(item, itemForm, account);
         log.info("editItemId = {}", editItemId);
         redirectAttributes.addAttribute("itemId", editItemId);
-
+        //TODO 이미지 존재하지 않을때 기본이미지 넣어주기
         return "redirect:/items/{itemId}";
     }
 

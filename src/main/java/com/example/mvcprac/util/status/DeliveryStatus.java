@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum DeliveryEnum {
+public enum DeliveryStatus {
 
     LOTTE("LOTTE", "LOTTE", "롯데"),
     POST("POST", "Post office", "우체국");

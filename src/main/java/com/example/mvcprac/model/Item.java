@@ -2,6 +2,8 @@ package com.example.mvcprac.model;
 
 import com.example.mvcprac.dto.item.ItemForm;
 import com.example.mvcprac.util.Timestamped;
+import com.example.mvcprac.util.status.DeliveryStatus;
+import com.example.mvcprac.util.status.ItemSellStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +21,7 @@ import java.util.List;
 public class Item extends Timestamped {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(nullable = false)
@@ -31,11 +33,11 @@ public class Item extends Timestamped {
     @Column(nullable = false)
     private int price;
 
-    @Column(nullable = false)
-    private String itemSellStatus;
+    @Enumerated(EnumType.STRING)
+    private ItemSellStatus itemSellStatus;
 
-    @Column(nullable = false)
-    private String deliveryChoice;
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus deliveryChoice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
@@ -50,7 +52,7 @@ public class Item extends Timestamped {
         this.itemBody = form.getItemBody();
         this.price = form.getPrice();
         this.itemSellStatus = form.getItemSellStatus();
-        this.deliveryChoice = form.getDeliveryChoice();
+        this.deliveryChoice = form.getDeliveryStatus();
         this.account = account;
     }
 
@@ -60,7 +62,7 @@ public class Item extends Timestamped {
         this.itemBody = form.getItemBody();
         this.price = form.getPrice();
         this.itemSellStatus = form.getItemSellStatus();
-        this.deliveryChoice = form.getDeliveryChoice();
+        this.deliveryChoice = form.getDeliveryStatus();
         this.account = account;
     }
 }

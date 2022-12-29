@@ -52,11 +52,11 @@
         <div class="wd50">
              <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL}"
                    class="badge badge-primary mgb-15">판매중</span>
-            <span th:unless="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SOLD}"
+            <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SOLD}"
                   class="badge btn-danger mgb-15">품절</span>
-            <span th:if="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).POST }"
+            <span th:if="${itemDetailDto.deliveryStatus == T(com.example.mvcprac.util.status.DeliveryStatus).POST }"
                   class="badge badge-primary mgb-15">우체국</span>
-            <span th:unless="${itemDetailDto.deliveryChoice == T(com.example.mvcprac.util.status.DeliveryEnum).LOTTE}"
+            <span th:if="${itemDetailDto.deliveryStatus == T(com.example.mvcprac.util.status.DeliveryStatus).LOTTE}"
                   class="badge btn-danger mgb-15">롯데</span>
             <div class="h4" th:value="${itemDetailDto.itemName}"></div>
             <hr class="my-4">
@@ -91,61 +91,72 @@
     </div>
 
 
-    <div style="text-align: center" class="button center">
-        <a th:href="@{'/items/' + ${itemDetailDto.id} + '/edit'}">
-            <button sec:authorize="isAuthenticated()" type="btn btn-primary" class="btn btn-secondary"
-                    data-toggle="modal" data-target="#itemEdit"
-                    aria-describedby="submitHelp">상품 수정
+    <div style="text-align: center" class="button center" sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname == #authentication.getName()}">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#edit">
+                상품 수정
             </button>
-        </a>
         <form th:action="@{'/items/' + ${itemDetailDto.id} + '/delete'}" th:method="post">
-            <button sec:authorize="isAuthenticated()" class="btn btn-primary" type="submit"
-                    aria-describedby="submitHelp">상품 삭제
+            <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">
+                상품 삭제
             </button>
         </form>
     </div>
-</div>
 
-<div class="modal fade" id="itemEdit" tabindex="-1" role="dialog" aria-labelledby="itemName"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="itemName" th:text="${itemDetailDto.itemName}"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>모임에 참석하시겠습니까? 일정을 캘린더에 등록해 두시면 좋습니다.</p>
-                <p><strong>확인</strong> 버튼을 클릭하면 모임 참가 신청을 합니다.</p>
-                <p>감사합니다.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                <form th:action="@{'/items/' + ${itemDetailDto.id}}"
-                      method="post">
-                    <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
-                </form>
+    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="editItem"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editItem" th:text="${itemDetailDto.itemName}"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>등록된 상품을 수정하시겠습니까?</p>
+                    <p><strong>확인</strong>하시면 등록된 이미지는 삭제되기에 다시 등록해야됩니다.</p>
+                    <p>감사합니다.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    <a th:href="@{'/items/' + ${itemDetailDto.id} + '/edit/'}">
+                        <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div style="text-align: center" class="button center">
-    <form sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname != #authentication.getName()}"
-          th:action="@{'/order/' + ${itemDetailDto.id}}" th:method="post">
-        <button th:if="${itemDetailDto.nickname != #authentication.getName()}"
-                type="submit" class="btn btn-primary">구매하기
+    <div style="text-align: center" class="button center" sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname != #authentication.getName()}">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#buy">
+            구매하기
         </button>
-    </form>
+    </div>
 
-    <form sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname !=#authentication.getName()}"
-          th:action="@{'/cart/' + ${itemDetailDto.id}}" th:method="post">
-        <button th:if="${itemDetailDto.nickname != #authentication.getName()}"
-                type="submit" class="btn btn-primary">장바구니 추가
-        </button>
-    </form>
+    <div class="modal fade" id="buy" tabindex="-1" role="dialog" aria-labelledby="buyItem"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="buyItem" th:text="${itemDetailDto.itemName}"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>상품을 구매하시겠습니까?</p>
+                    <p><strong>확인</strong>하시면 상품이 구입됩니다.</p>
+                    <p>감사합니다.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    <form th:action="@{'/buy/' + ${itemDetailDto.id}}">
+                        <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
 </body>

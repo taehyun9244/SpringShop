@@ -1,6 +1,5 @@
 package com.example.mvcprac.validation.customize;
 
-import com.example.mvcprac.validation.customize.Password;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
