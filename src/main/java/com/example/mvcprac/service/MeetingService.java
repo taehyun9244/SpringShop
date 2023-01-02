@@ -172,4 +172,10 @@ public class MeetingService {
         Meeting meeting = meetingRepository.findMeetingWithMembersByPath(path);
         return meeting;
     }
+
+    public Meeting getMeetingToEnroll(String path) {
+        Meeting meeting = meetingRepository.findMeetingOnlyByPath(path);
+        checkIfExistingStudy(path, meeting);
+        return meeting;
+    }
 }

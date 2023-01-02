@@ -2,8 +2,10 @@ package com.example.mvcprac.service;
 
 import com.example.mvcprac.dto.Event.EventForm;
 import com.example.mvcprac.model.Account;
+import com.example.mvcprac.model.Enrollment;
 import com.example.mvcprac.model.Event;
 import com.example.mvcprac.model.Meeting;
+import com.example.mvcprac.repository.EnrollmentRepository;
 import com.example.mvcprac.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,6 +22,7 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final ModelMapper modelMapper;
+    private final EnrollmentRepository enrollmentRepository;
 
 
     public Event createEvent(Event event, Meeting meeting, Account account) {
@@ -43,9 +46,29 @@ public class EventService {
 
     public void updateEvent(Event event, EventForm eventForm) {
         modelMapper.map(eventForm, event);
+        event.acceptWaitingList();
     }
 
     public void deleteEvent(Event event) {
         eventRepository.delete(event);
+    }
+
+    public void newEnrollment(Event event, Account account) {
+
+        if (!enrollmentRepository.existsByEventAndAccount(event, account)) {
+            Enrollment enrollment = new Enrollment();
+            enrollment.setEnrolledAt(LocalDateTime.now());
+            enrollment.setAccepted(event.isAbleToAcceptWaitingEnrollment());
+            enrollment.setAccount(account);
+            event.addEnrollment(enrollment);
+            enrollmentRepository.save(enrollment);
+        }
+    }
+
+    public void cancelEnrollment(Event event, Account account) {
+        Enrollment enrollment = enrollmentRepository.findByEventAndAccount(event, account);
+        event.removeEnrollment(enrollment);
+        enrollmentRepository.delete(enrollment);
+        event.acceptNextWaitingEnrollment();
     }
 }
