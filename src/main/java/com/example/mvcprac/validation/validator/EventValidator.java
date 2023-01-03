@@ -1,6 +1,6 @@
 package com.example.mvcprac.validation.validator;
 
-import com.example.mvcprac.dto.Event.EventForm;
+import com.example.mvcprac.dto.event.EventForm;
 import com.example.mvcprac.model.Event;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;

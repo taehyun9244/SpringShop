@@ -5,7 +5,6 @@
 <body class="bg-light">
 <div th:replace="fragments.html :: main-nav"></div>
 
-
 <div class="container">
     <div class="py-5 text-center">
         <h2>교류회 개설</h2>
@@ -21,8 +20,9 @@
                     공백없이 문자, 숫자, 대시(-)와 언더바(_)만 2자 이상 20자 이내로 입력하세요. 교류회 홈 주소에 사용합니다. 예) /meeting/<b>meeting-path</b>
                 </small>
                 <small class="invalid-feedback">교류회 경로를 입력하세요.</small>
-                <small class="form-text text-danger" th:if="${#fields.hasErrors('path')}" th:errors="*{path}">Path
-                    Error</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('path')}" th:errors="*{path}">
+                    Path Error
+                </small>
             </div>
 
             <div class="form-group">

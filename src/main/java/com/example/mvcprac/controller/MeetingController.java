@@ -11,10 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -39,9 +39,10 @@ public class MeetingController {
     }
 
     @PostMapping("/new-meeting")
-    public String newMeetingSubmit(@Validated @ModelAttribute(name = "meetingForm") MeetingForm meetingForm,
-                                   @CurrentAccount Account account, BindingResult bindingResult, Model model) {
+    public String newMeetingSubmit(@Valid @ModelAttribute MeetingForm meetingForm, BindingResult bindingResult,
+                                   @CurrentAccount Account account, Model model) {
         if (bindingResult.hasErrors()) {
+            log.info("error ={}", bindingResult);
             model.addAttribute(account);
             return "meeting/meetingForm";
         }

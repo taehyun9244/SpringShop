@@ -1,4 +1,4 @@
-package com.example.mvcprac.dto.Event;
+package com.example.mvcprac.dto.event;
 
 import com.example.mvcprac.util.status.EventType;
 import lombok.Data;

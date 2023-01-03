@@ -1,6 +1,6 @@
 package com.example.mvcprac.service;
 
-import com.example.mvcprac.dto.Event.EventForm;
+import com.example.mvcprac.dto.event.EventForm;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Enrollment;
 import com.example.mvcprac.model.Event;

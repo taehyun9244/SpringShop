@@ -95,7 +95,7 @@ public class Account {
     /**
      * create account
      */
-    public Account(SignUpForm signupDto, String encodePassword, boolean b, boolean b1, boolean b2) {
+    public Account(SignUpForm signupDto, String encodePassword, boolean shopCreatedByWeb, boolean shopEnrollmentResultByWeb, boolean shopUpdatedByWeb) {
         this.username = signupDto.getUsername();
         this.nickname = signupDto.getNickname();
         this.password = encodePassword;
@@ -103,9 +103,9 @@ public class Account {
         this.email = signupDto.getEmail();
         this.address = signupDto.getAddress();
         this.phoneNumber = signupDto.getPhoneNumber();
-        this.shopCreatedByWeb = b;
-        this.shopEnrollmentResultByWeb = b1;
-        this.shopUpdatedByWeb = b2;
+        this.shopCreatedByWeb = shopCreatedByWeb;
+        this.shopEnrollmentResultByWeb = shopEnrollmentResultByWeb;
+        this.shopUpdatedByWeb = shopUpdatedByWeb;
     }
 
 

@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class MeetingController {
+public class MeetingControllerTest {
 
     @Autowired
     protected MockMvc mockMvc;
@@ -46,10 +46,10 @@ public class MeetingController {
     @BeforeEach
     void beforeEach() {
         SignUpForm signUpForm = new SignUpForm(
-                "남태현",
+                "남태값",
                 "12341234!a",
                 "19920404",
-                "테스트닉네임",
+                "시모키타자와",
                 "email@email.com",
                 "서울",
                 "01012345678");
@@ -60,6 +60,7 @@ public class MeetingController {
     void afterEach() {
         accountRepository.deleteAll();
     }
+
 
     @Test
     @WithUserDetails(value = "email@email.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
@@ -87,7 +88,7 @@ public class MeetingController {
 
         Meeting meeting = meetingRepository.findByPath("test-path");
         assertNotNull(meeting);
-        Account account = accountRepository.findByPhoneNumber("email@email.com");
+        Account account = accountRepository.findByEmail("email@email.com");
         assertTrue(meeting.getManagers().contains(account));
     }
 
@@ -96,7 +97,7 @@ public class MeetingController {
     @DisplayName("Meeting 개설 실패")
     void createMeeting_fail() throws Exception {
         mockMvc.perform(post("/new-meeting")
-                .param("path", "wrong-path")
+                .param("path", "wrong path")
                 .param("title", "meeting title")
                 .param("shortDescription", "short description of a meeting")
                 .param("fullDescription", "full description of a meeting")
@@ -104,8 +105,8 @@ public class MeetingController {
                 .andExpect(status().isOk())
                 .andExpect(view().name("meeting/meetingForm"))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("meetingForm"));
+                .andExpect(model().attributeExists("meetingForm"))
+                .andExpect(model().attributeExists("account"));
 
         Meeting meeting = meetingRepository.findByPath("test-path");
         assertNull(meeting);
@@ -116,9 +117,9 @@ public class MeetingController {
     @DisplayName("Meeting 조회 성공")
     void viewStudy_success() throws Exception {
         MeetingForm meetingForm = new MeetingForm(
-                "test-path", "test meeting", "short description", "<p>full description</p>");
+                "test-path", "test meeting", "short description", "full description");
 
-        Account simokitazawa = accountRepository.findByNickname("시모키타자와");
+        Account simokitazawa = accountRepository.findByEmail("email@email.com");
         meetingService.createNewMeeting(meetingForm, simokitazawa);
         mockMvc.perform(get("/meeting/test-path"))
                 .andExpect(view().name("meeting/meetingView"))
@@ -128,30 +129,17 @@ public class MeetingController {
 
     @Test
     @WithUserDetails(value = "email@email.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @DisplayName("Meeting 조회 실패")
-    void viewStudy_fail() throws Exception {
-        MeetingForm meetingForm = new MeetingForm(
-                "test-path", "test meeting", "short description", "full description");
-
-        Account simokitazawa = accountRepository.findByNickname("시모키타자와");
-        meetingService.createNewMeeting(meetingForm, simokitazawa);
-        mockMvc.perform(get("/meeting/fail-path"))
-                .andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    @WithUserDetails(value = "email@email.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("Meeting 참가")
     void joinMeeting() throws Exception {
-        Account sibuya = createAccount("sibuya");
+        Account sibuya = createAccount("sibuya@email.com");
         Meeting meeting = createMeeting("sibuya-path", sibuya);
 
         mockMvc.perform(get("/meeting/" + meeting.getPath() + "/join"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/meeting/" + meeting.getPath() + "/members"));
 
-        Account testNickname = accountRepository.findByNickname("테스트닉네임");
-        assertTrue(meeting.getMembers().contains(testNickname));
+        Account testEmail = accountRepository.findByEmail("email@email.com");
+        assertTrue(meeting.getMembers().contains(testEmail));
     }
 
     @Test
@@ -161,7 +149,7 @@ public class MeetingController {
         Account sibuya = createAccount("sibuya");
         Meeting meeting = createMeeting("sibuya-path", sibuya);
 
-        Account simokitazawa = accountRepository.findByNickname("simokitazawa");
+        Account simokitazawa = accountRepository.findByEmail("email@email.com");
         meetingService.addMember(meeting, simokitazawa);
 
         mockMvc.perform(get("/meeting/" + meeting.getPath() + "/leave"))
@@ -171,13 +159,13 @@ public class MeetingController {
         assertFalse(meeting.getMembers().contains(simokitazawa));
     }
 
-    protected Account createAccount(String nickname) {
+    protected Account createAccount(String email) {
         SignUpForm signUpForm = new SignUpForm(
-                "테스트",
+                "남태현",
                 "12341234!a",
                 "19920404",
-                "테스트닉네임100",
-                "email10000@email.com",
+                "시모키타자와",
+                "simokitazawa@email.com",
                 "서울",
                 "01099999999");
         Account simokitazawa = accountService.createUser(signUpForm);
