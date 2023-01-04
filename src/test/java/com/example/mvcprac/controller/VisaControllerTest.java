@@ -1,7 +1,8 @@
 package com.example.mvcprac.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.example.mvcprac.MockMvcTest;
 
+@MockMvcTest
 class VisaControllerTest {
 
 }

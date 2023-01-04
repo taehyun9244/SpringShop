@@ -1,7 +1,10 @@
 package com.example.mvcprac.controller;
 
+import com.example.mvcprac.MockMvcTest;
 import com.example.mvcprac.dto.account.SignUpForm;
 import com.example.mvcprac.dto.meeting.MeetingForm;
+import com.example.mvcprac.factory.AccountFactory;
+import com.example.mvcprac.factory.MeetingFactory;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.repository.AccountRepository;
@@ -13,12 +16,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -27,9 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
+@MockMvcTest
 public class MeetingControllerTest {
 
     @Autowired
@@ -42,6 +40,10 @@ public class MeetingControllerTest {
     protected MeetingService meetingService;
     @Autowired
     protected MeetingRepository meetingRepository;
+    @Autowired
+    AccountFactory accountFactory;
+    @Autowired
+    MeetingFactory meetingFactory;
 
     @BeforeEach
     void beforeEach() {
@@ -131,8 +133,8 @@ public class MeetingControllerTest {
     @WithUserDetails(value = "email@email.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("Meeting 참가")
     void joinMeeting() throws Exception {
-        Account sibuya = createAccount("sibuya@email.com");
-        Meeting meeting = createMeeting("sibuya-path", sibuya);
+        Account sibuya = accountFactory.createSibuya("sibuya@email.com");
+        Meeting meeting = meetingFactory.createMeeting("sibuya-path", sibuya);
 
         mockMvc.perform(get("/meeting/" + meeting.getPath() + "/join"))
                 .andExpect(status().is3xxRedirection())
@@ -146,8 +148,8 @@ public class MeetingControllerTest {
     @WithUserDetails(value = "email@email.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("Meeting 탈퇴")
     void leaveMeeting() throws Exception {
-        Account sibuya = createAccount("sibuya");
-        Meeting meeting = createMeeting("sibuya-path", sibuya);
+        Account sibuya = accountFactory.createSibuya("sibuya@email.com");
+        Meeting meeting = meetingFactory.createMeeting("sibuya-path", sibuya);
 
         Account simokitazawa = accountRepository.findByEmail("email@email.com");
         meetingService.addMember(meeting, simokitazawa);
@@ -157,27 +159,5 @@ public class MeetingControllerTest {
                 .andExpect(redirectedUrl("/meeting/" + meeting.getPath() + "/members"));
 
         assertFalse(meeting.getMembers().contains(simokitazawa));
-    }
-
-    protected Account createAccount(String email) {
-        SignUpForm signUpForm = new SignUpForm(
-                "남태현",
-                "12341234!a",
-                "19920404",
-                "시모키타자와",
-                "simokitazawa@email.com",
-                "서울",
-                "01099999999");
-        Account simokitazawa = accountService.createUser(signUpForm);
-        accountRepository.save(simokitazawa);
-        return simokitazawa;
-    }
-
-    protected Meeting createMeeting(String path, Account manager) {
-        MeetingForm meeting = new MeetingForm(
-                path, "testTile", "TestShortDescription", "TestFullDescription"
-        );
-        Meeting newMeeting = meetingService.createNewMeeting(meeting, manager);
-        return newMeeting;
     }
 }

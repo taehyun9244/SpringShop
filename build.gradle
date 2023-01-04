@@ -74,6 +74,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     runtimeOnly 'org.postgresql:postgresql'
 
+    // https://mvnrepository.com/artifact/com.tngtech.archunit/archunit-junit5
+    testImplementation group: 'com.tngtech.archunit', name: 'archunit-junit5', version: '0.13.1'
 
 
 

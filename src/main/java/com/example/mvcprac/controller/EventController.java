@@ -2,6 +2,7 @@ package com.example.mvcprac.controller;
 
 import com.example.mvcprac.dto.event.EventForm;
 import com.example.mvcprac.model.Account;
+import com.example.mvcprac.model.Enrollment;
 import com.example.mvcprac.model.Event;
 import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.service.EventService;
@@ -145,4 +146,37 @@ public class EventController {
         eventService.cancelEnrollment(event, account);
         return "redirect:/meeting/" + meeting.getEncodedPath() +  "/events/" + id;
     }
+
+    @GetMapping("events/{eventId}/enrollments/{enrollmentId}/accept")
+    public String acceptEnrollment(@CurrentAccount Account account, @PathVariable String path,
+                                   @PathVariable("eventId") Event event, @PathVariable("enrollmentId") Enrollment enrollment) {
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        eventService.acceptEnrollment(event, enrollment);
+        return "redirect:/meeting/" + meeting.getEncodedPath() + "/events/" + event.getId();
+    }
+
+    @GetMapping("/events/{eventId}/enrollments/{enrollmentId}/reject")
+    public String rejectEnrollment(@CurrentAccount Account account, @PathVariable String path,
+                                   @PathVariable("eventId") Event event, @PathVariable("enrollmentId") Enrollment enrollment) {
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        eventService.rejectEnrollment(event, enrollment);
+        return "redirect:/meeting/" + meeting.getEncodedPath() + "/events/" + event.getId();
+    }
+
+    @GetMapping("/events/{eventId}/enrollments/{enrollmentId}/checkin")
+    public String checkInEnrollment(@CurrentAccount Account account, @PathVariable String path,
+                                    @PathVariable("eventId") Event event, @PathVariable("enrollmentId") Enrollment enrollment) {
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        eventService.checkInEnrollment(enrollment);
+        return "redirect:/meeting/" + meeting.getEncodedPath() + "/events/" + event.getId();
+    }
+
+    @GetMapping("/events/{eventId}/enrollments/{enrollmentId}/cancel-checkin")
+    public String cancelCheckInEnrollment(@CurrentAccount Account account, @PathVariable String path,
+                                          @PathVariable("eventId") Event event, @PathVariable("enrollmentId") Enrollment enrollment) {
+        Meeting meeting = meetingService.getMeetingToUpdate(account, path);
+        eventService.cancelCheckInEnrollment(enrollment);
+        return "redirect:/meeting/" + meeting.getEncodedPath() + "/events/" + event.getId();
+    }
+
 }
