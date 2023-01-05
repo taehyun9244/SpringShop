@@ -127,7 +127,4 @@ public class Account {
         return this.emailCheckToken.equals(token);
     }
 
-    public boolean isManagerOf(Meeting meeting) {
-        return meeting.getManagers().contains(this);
-    }
 }

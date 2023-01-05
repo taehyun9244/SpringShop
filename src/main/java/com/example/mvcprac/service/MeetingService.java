@@ -2,6 +2,7 @@ package com.example.mvcprac.service;
 
 import com.example.mvcprac.dto.meeting.MeetingDescriptionForm;
 import com.example.mvcprac.dto.meeting.MeetingForm;
+import com.example.mvcprac.event.MeetingCreateEvent;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.model.Tag;
@@ -10,6 +11,7 @@ import com.example.mvcprac.repository.MeetingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +26,14 @@ public class MeetingService {
 
     private final MeetingRepository meetingRepository;
     private final ModelMapper modelMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
 
     public Meeting createNewMeeting(MeetingForm meetingForm, Account account) {
         Meeting newMeeting = new Meeting(meetingForm);
         Meeting saveMeeting = meetingRepository.save(newMeeting);
         newMeeting.addManager(account);
+        eventPublisher.publishEvent(new MeetingCreateEvent(newMeeting));
         return saveMeeting;
     }
 
@@ -98,7 +102,7 @@ public class MeetingService {
     }
 
     private void checkIfManager(Account account, Meeting meeting) {
-        if (!account.isManagerOf(meeting)) {
+        if (!meeting.isManagedBy(account)) {
             throw new AccessDeniedException("해당 기능을 사용할 수 없습니다.");
         }
     }

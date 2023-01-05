@@ -162,4 +162,8 @@ public class Meeting {
     public String getEncodedPath() {
         return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
     }
+
+    public boolean isManagedBy(Account account) {
+        return this.getManagers().contains(account);
+    }
 }
