@@ -127,7 +127,9 @@
         </div>
     </div>
 
-    <div style="text-align: center" class="button center" sec:authorize="isAuthenticated()" th:if="${itemDetailDto.nickname != #authentication.getName()}">
+    <div style="text-align: center" class="button center" sec:authorize="isAuthenticated()"
+         th:if="${itemDetailDto.nickname != #authentication.getName()
+         && itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL}">
         <button class="btn btn-primary" data-toggle="modal" data-target="#buy">
             구매하기
         </button>

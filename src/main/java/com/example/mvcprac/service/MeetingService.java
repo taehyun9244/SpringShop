@@ -33,7 +33,6 @@ public class MeetingService {
         Meeting newMeeting = new Meeting(meetingForm);
         Meeting saveMeeting = meetingRepository.save(newMeeting);
         newMeeting.addManager(account);
-        eventPublisher.publishEvent(new MeetingCreateEvent(newMeeting));
         return saveMeeting;
     }
 
@@ -122,6 +121,7 @@ public class MeetingService {
 
     public void publish(Meeting meeting) {
         meeting.publish();
+        this.eventPublisher.publishEvent(new MeetingCreateEvent(meeting));
     }
 
     public void close(Meeting meeting) {

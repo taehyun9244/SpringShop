@@ -111,8 +111,13 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/items/add" sec:authorize="isAuthenticated()">
-                    <i class="fa fa-bell-o" aria-hidden="true"></i>
+                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
                     상품 등록</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/meetings">
+                    <i class="fa fa-bell-o" aria-hidden="true"></i>
+                    교류회</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/items" sec:authorize="isAuthenticated()">주문 상품</a>
@@ -122,10 +127,6 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/schools">학교정보</a>
-            </li>
-            <li class="nav-item">
-            <li class="nav-item">
-                <a class="nav-link" href="/meetings">교류회</a>
             </li>
             <a class="nav-link" href="/signup" sec:authorize="!isAuthenticated()">회원가입</a>
             </li>
