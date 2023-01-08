@@ -483,7 +483,7 @@
     <div class="row justify-content-center">
         <form class="needs-validation col-sm-10"
               th:action="@{${action}}"
-              th:object="${eventForm}" method="post" novalidate>
+              th:object="${eventCreateDto}" method="post" novalidate>
             <div class="form-group">
                 <label for="title">교류회 이름</label>
                 <input id="title" type="text" th:field="*{title}" class="form-control"
@@ -495,8 +495,8 @@
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Error</small>
             </div>
             <div class="form-group" th:if="${mode == 'new'}">
-                <label for="eventType">모집 방법</label>
-                <select th:field="*{eventType}"  class="custom-select mr-sm-2" id="eventType" aria-describedby="eventTypeHelp">
+                <label for="eventEunm">모집 방법</label>
+                <select th:field="*{eventEunm}"  class="custom-select mr-sm-2" id="eventEunm" aria-describedby="eventTypeHelp">
                     <option th:value="FCFS">선착순</option>
                     <option th:value="CONFIRMATIVE">관리자 확인</option>
                 </select>

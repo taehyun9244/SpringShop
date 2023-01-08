@@ -1,11 +1,11 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.meeting.MeetingForm;
+import com.example.mvcprac.dto.meeting.MeetingCreateDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.service.MeetingService;
-import com.example.mvcprac.validation.customize.CurrentAccount;
-import com.example.mvcprac.validation.validator.MeetingFormValidator;
+import com.example.mvcprac.validation.annotation.CurrentAccount;
+import com.example.mvcprac.validation.validator.MeetingCreateDtoValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -24,29 +24,29 @@ import java.nio.charset.StandardCharsets;
 public class MeetingController {
 
     private final MeetingService meetingService;
-    private final MeetingFormValidator meetingFormValidator;
+    private final MeetingCreateDtoValidator meetingCreateDtoValidator;
 
-    @InitBinder("meetingForm")
+    @InitBinder("meetingCreateDto")
     public void meetingFormInitBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(meetingFormValidator);
+        webDataBinder.addValidators(meetingCreateDtoValidator);
     }
 
     @GetMapping("/new-meeting")
     public String meetingFormView(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new MeetingForm());
+        model.addAttribute(new MeetingCreateDto());
         return "meeting/meetingForm";
     }
 
     @PostMapping("/new-meeting")
-    public String newMeetingSubmit(@Valid @ModelAttribute MeetingForm meetingForm, BindingResult bindingResult,
+    public String newMeetingSubmit(@Valid @ModelAttribute MeetingCreateDto meetingCreateDto, BindingResult bindingResult,
                                    @CurrentAccount Account account, Model model) {
         if (bindingResult.hasErrors()) {
             log.info("error ={}", bindingResult);
             model.addAttribute(account);
             return "meeting/meetingForm";
         }
-        Meeting newMeeting = meetingService.createNewMeeting(meetingForm, account);
+        Meeting newMeeting = meetingService.createNewMeeting(meetingCreateDto, account);
         return "redirect:/meeting/" + URLEncoder.encode(newMeeting.getPath(), StandardCharsets.UTF_8);
     }
 

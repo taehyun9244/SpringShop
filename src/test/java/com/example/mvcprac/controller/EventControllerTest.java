@@ -9,7 +9,7 @@ import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.repository.EnrollmentRepository;
 import com.example.mvcprac.service.EventService;
-import com.example.mvcprac.util.status.EventType;
+import com.example.mvcprac.util.status.EventEunm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,7 +60,7 @@ class EventControllerTest {
     void newEnrollment_to_FCFS_event_accepted() throws Exception {
         Account sibuya = accountFactory.createSibuya("sibuya@email.com");
         Meeting meeting = meetingFactory.createMeeting("test-study", sibuya);
-        Event event = createEvent("test-event", EventType.FCFS, 2, meeting, sibuya);
+        Event event = createEvent("test-event", EventEunm.FCFS, 2, meeting, sibuya);
 
         mockMvc.perform(post("/meeting/" + meeting.getPath() + "/events/" + event.getId() + "/enroll")
                         .with(csrf()))
@@ -77,7 +77,7 @@ class EventControllerTest {
     void newEnrollment_to_FCFS_event_not_accepted() throws Exception {
         Account sibuya = accountFactory.createSibuya("sibuya@email.com");
         Meeting meeting = meetingFactory.createMeeting("test-study", sibuya);
-        Event event = createEvent("test-event", EventType.FCFS, 2, meeting, sibuya);
+        Event event = createEvent("test-event", EventEunm.FCFS, 2, meeting, sibuya);
 
         Account sinjuku = accountFactory.createSinjuku("sinjuku@email.com");
         Account simokitazawa = accountFactory.createSimokitazawa("simokitazawa@email.com");
@@ -101,7 +101,7 @@ class EventControllerTest {
         Account sibuya = accountFactory.createSibuya("sibuya@email.com");
         Account sinjuku = accountFactory.createSinjuku("sinjuku@email.com");
         Meeting meeting = meetingFactory.createMeeting("test-study", sibuya);
-        Event event = createEvent("test-event", EventType.FCFS, 2, meeting, sibuya);
+        Event event = createEvent("test-event", EventEunm.FCFS, 2, meeting, sibuya);
 
         eventService.newEnrollment(event, email);
         eventService.newEnrollment(event, sibuya);
@@ -130,7 +130,7 @@ class EventControllerTest {
         Account sibuya = accountFactory.createSibuya("sibuya@email.com");
         Account sinjuku = accountFactory.createSinjuku("sinjuku@email.com");
         Meeting meeting = meetingFactory.createMeeting("test-study", sibuya);
-        Event event = createEvent("test-event", EventType.FCFS, 2, meeting, sinjuku);
+        Event event = createEvent("test-event", EventEunm.FCFS, 2, meeting, sinjuku);
 
         eventService.newEnrollment(event, sinjuku);
         eventService.newEnrollment(event, sibuya);
@@ -156,7 +156,7 @@ class EventControllerTest {
     void newEnrollment_to_CONFIMATIVE_event_not_accepted() throws Exception {
         Account sibuya = accountFactory.createSibuya("sibuya@email.com");
         Meeting meeting = meetingFactory.createMeeting("test-study", sibuya);
-        Event event = createEvent("test-event", EventType.CONFIRMATIVE, 2, meeting, sibuya);
+        Event event = createEvent("test-event", EventEunm.CONFIRMATIVE, 2, meeting, sibuya);
 
         mockMvc.perform(post("/meeting/" + meeting.getPath() + "/events/" + event.getId() + "/enroll")
                         .with(csrf()))
@@ -175,9 +175,9 @@ class EventControllerTest {
         assertFalse(enrollmentRepository.findByEventAndAccount(event, email).isAccepted());
     }
 
-    private Event createEvent(String eventTitle, EventType eventType, int limit, Meeting meeting, Account account) {
+    private Event createEvent(String eventTitle, EventEunm eventEunm, int limit, Meeting meeting, Account account) {
         Event event = new Event();
-        event.setEventType(eventType);
+        event.setEventEunm(eventEunm);
         event.setLimitOfEnrollments(limit);
         event.setTitle(eventTitle);
         event.setCreatedDateTime(LocalDateTime.now());

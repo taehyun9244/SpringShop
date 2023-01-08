@@ -1,11 +1,13 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.dto.account.SignUpForm;
+import com.example.mvcprac.dto.account.SignUpDto;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -95,7 +97,7 @@ public class Account {
     /**
      * create account
      */
-    public Account(SignUpForm signupDto, String encodePassword, boolean shopCreatedByWeb, boolean shopEnrollmentResultByWeb, boolean shopUpdatedByWeb) {
+    public Account(SignUpDto signupDto, String encodePassword, boolean shopCreatedByWeb, boolean shopEnrollmentResultByWeb, boolean shopUpdatedByWeb) {
         this.username = signupDto.getUsername();
         this.nickname = signupDto.getNickname();
         this.password = encodePassword;

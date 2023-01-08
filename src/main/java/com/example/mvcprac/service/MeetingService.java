@@ -1,7 +1,7 @@
 package com.example.mvcprac.service;
 
-import com.example.mvcprac.dto.meeting.MeetingDescriptionForm;
-import com.example.mvcprac.dto.meeting.MeetingForm;
+import com.example.mvcprac.dto.meeting.MeetingCreateDto;
+import com.example.mvcprac.dto.meeting.MeetingDescriptionDto;
 import com.example.mvcprac.event.MeetingCreateEvent;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Meeting;
@@ -16,7 +16,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.example.mvcprac.dto.meeting.MeetingForm.VALID_PATH_PATTERN;
+import static com.example.mvcprac.dto.meeting.MeetingCreateDto.VALID_PATH_PATTERN;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +29,8 @@ public class MeetingService {
     private final ApplicationEventPublisher eventPublisher;
 
 
-    public Meeting createNewMeeting(MeetingForm meetingForm, Account account) {
-        Meeting newMeeting = new Meeting(meetingForm);
+    public Meeting createNewMeeting(MeetingCreateDto meetingCreateDto, Account account) {
+        Meeting newMeeting = new Meeting(meetingCreateDto);
         Meeting saveMeeting = meetingRepository.save(newMeeting);
         newMeeting.addManager(account);
         return saveMeeting;
@@ -53,7 +53,7 @@ public class MeetingService {
         return meeting;
     }
 
-    public void updateMeetingDescription(Meeting meeting, MeetingDescriptionForm meetingDescriptionForm) {
+    public void updateMeetingDescription(Meeting meeting, MeetingDescriptionDto meetingDescriptionForm) {
         modelMapper.map(meetingDescriptionForm, meeting);
     }
 

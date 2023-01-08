@@ -1,8 +1,8 @@
 package com.example.mvcprac.controller;
 
 import com.example.mvcprac.MockMvcTest;
-import com.example.mvcprac.dto.account.SignUpForm;
-import com.example.mvcprac.dto.meeting.MeetingForm;
+import com.example.mvcprac.dto.account.SignUpDto;
+import com.example.mvcprac.dto.meeting.MeetingCreateDto;
 import com.example.mvcprac.factory.AccountFactory;
 import com.example.mvcprac.factory.MeetingFactory;
 import com.example.mvcprac.model.Account;
@@ -47,7 +47,7 @@ public class MeetingControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        SignUpForm signUpForm = new SignUpForm(
+        SignUpDto signUpDto = new SignUpDto(
                 "남태값",
                 "12341234!a",
                 "19920404",
@@ -55,7 +55,7 @@ public class MeetingControllerTest {
                 "email@email.com",
                 "서울",
                 "01012345678");
-        accountService.createUser(signUpForm);
+        accountService.createUser(signUpDto);
     }
 
     @AfterEach
@@ -69,10 +69,10 @@ public class MeetingControllerTest {
     @DisplayName("Meeting 개설 form")
     void createMeetingForm() throws Exception {
         mockMvc.perform(get("/new-meeting"))
-//                .andExpect(status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(view().name("meeting/meetingForm"))
                 .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("meetingForm"));
+                .andExpect(model().attributeExists("meetingCreateDto"));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class MeetingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("meeting/meetingForm"))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeExists("meetingForm"))
+                .andExpect(model().attributeExists("meetingCreateDto"))
                 .andExpect(model().attributeExists("account"));
 
         Meeting meeting = meetingRepository.findByPath("test-path");
@@ -118,11 +118,11 @@ public class MeetingControllerTest {
     @WithUserDetails(value = "email@email.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("Meeting 조회 성공")
     void viewStudy_success() throws Exception {
-        MeetingForm meetingForm = new MeetingForm(
+        MeetingCreateDto meetingCreateDto = new MeetingCreateDto(
                 "test-path", "test meeting", "short description", "full description");
 
         Account simokitazawa = accountRepository.findByEmail("email@email.com");
-        meetingService.createNewMeeting(meetingForm, simokitazawa);
+        meetingService.createNewMeeting(meetingCreateDto, simokitazawa);
         mockMvc.perform(get("/meeting/test-path"))
                 .andExpect(view().name("meeting/meetingView"))
                 .andExpect(model().attributeExists("account"))

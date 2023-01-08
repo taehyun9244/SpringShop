@@ -81,14 +81,14 @@
 
 <div layout:fragment="content">
     <form class="needs-validation" th:action="@{/items/add}" role="form" method="post" enctype="multipart/form-data"
-          th:object="${form}" novalidate>
+          th:object="${itemCreateDto}" novalidate>
 
         <p class="h2">
             상품 등록
         </p>
 
         <div class="form-group">
-            <select th:field="*{itemSellStatus}" class="custom-select">
+            <select th:field="*{itemEnum}" class="custom-select">
                 <option value="none">=== 판매상태 ===</option>
                 <option value="SELL">판매중</option>
                 <option value="SOLD">품절</option>
@@ -96,7 +96,7 @@
         </div>
 
         <div class="form-group">
-            <select th:field="*{deliveryStatus}" th:errorclass="field-error" aria-describedby="deliveryHelp" class="custom-select">
+            <select th:field="*{deliveryEnum}" th:errorclass="field-error" aria-describedby="deliveryHelp" class="custom-select">
                 <option value="none">=== 택배사 선택 ===</option>
                 <option value="POST">우체국</option>
                 <option value="LOTTE">롯데</option>

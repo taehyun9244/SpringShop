@@ -39,8 +39,8 @@ public class ItemQueryRepository {
                         ItemListDto.class,
                         image.item.id,
                         image.item.itemName,
-                        image.item.itemSellStatus,
-                        image.item.deliveryChoice,
+                        image.item.itemEnum,
+                        image.item.deliveryEnum,
                         image.item.price,
                         image.storeFileName
                 ))
@@ -77,8 +77,8 @@ public class ItemQueryRepository {
                         image.item.id,
                         image.item.itemName,
                         image.item.itemBody,
-                        image.item.itemSellStatus,
-                        image.item.deliveryChoice,
+                        image.item.itemEnum,
+                        image.item.deliveryEnum,
                         image.item.price,
                                 list(Projections.constructor(
                                 ItemImageDto.class,

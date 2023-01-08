@@ -19,7 +19,7 @@
                 <h2 class="col-12">닉네임 변경</h2>
             </div>
             <div class="row">
-                <form class="needs-validation col-12" th:object="${nicknameForm}" th:action="@{/settings/account}"
+                <form class="needs-validation col-12" th:object="${nicknameDto}" th:action="@{/settings/account}"
                       method="post" novalidate>
                     <div class="alert alert-warning" role="alert">
                         닉네임을 변경하면 프로필 페이지 링크도 바뀝니다!

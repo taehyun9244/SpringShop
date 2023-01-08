@@ -50,9 +50,9 @@
                  th:alt="${itemDetailDto.itemName}">
         </div>
         <div class="wd50">
-             <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL}"
+             <span th:if="${itemDetailDto.getItemEnum == T(com.example.mvcprac.util.status.ItemEnum).SELL}"
                    class="badge badge-primary mgb-15">판매중</span>
-            <span th:if="${itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SOLD}"
+            <span th:if="${itemDetailDto.getItemEnum == T(com.example.mvcprac.util.status.ItemEnum).SOLD}"
                   class="badge btn-danger mgb-15">품절</span>
             <span th:if="${itemDetailDto.deliveryStatus == T(com.example.mvcprac.util.status.DeliveryStatus).POST }"
                   class="badge badge-primary mgb-15">우체국</span>
@@ -129,7 +129,7 @@
 
     <div style="text-align: center" class="button center" sec:authorize="isAuthenticated()"
          th:if="${itemDetailDto.nickname != #authentication.getName()
-         && itemDetailDto.itemSellStatus == T(com.example.mvcprac.util.status.ItemSellStatus).SELL}">
+         && itemDetailDto.getItemEnum == T(com.example.mvcprac.util.status.ItemEnum).SELL}">
         <button class="btn btn-primary" data-toggle="modal" data-target="#buy">
             구매하기
         </button>

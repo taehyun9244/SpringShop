@@ -1,6 +1,6 @@
 package com.example.mvcprac.factory;
 
-import com.example.mvcprac.dto.meeting.MeetingForm;
+import com.example.mvcprac.dto.meeting.MeetingCreateDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.service.MeetingService;
@@ -15,7 +15,7 @@ public class MeetingFactory {
     MeetingService meetingService;
 
     public Meeting createMeeting(String path, Account manager) {
-        MeetingForm meeting = new MeetingForm(
+        MeetingCreateDto meeting = new MeetingCreateDto(
                 path, "testTile", "TestShortDescription", "TestFullDescription"
         );
         Meeting newMeeting = meetingService.createNewMeeting(meeting, manager);

@@ -71,8 +71,8 @@
                     <div class="card-body">
                         <a th:href="'/items/' +${item.id}" class="text-dark">
                             <h4 class="card-title">[[${item.itemName}]]</h4>
-                            <h6 class="card-text">[[${item.itemSellStatus}]]</h6>
-                            <h6 class="card-text">[[${item.deliveryChoice}]]</h6>
+                            <h6 class="card-text">[[${item.itemEnum}]]</h6>
+                            <h6 class="card-text">[[${item.deliveryEnum}]]</h6>
                             <h3 class="card-title text-danger"
                                 data-th-text="${#numbers.formatInteger(item.price, 3, 'COMMA') + '원'}"></h3>
                         </a>

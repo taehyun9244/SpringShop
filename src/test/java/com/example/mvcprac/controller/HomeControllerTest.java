@@ -1,7 +1,7 @@
 package com.example.mvcprac.controller;
 
 import com.example.mvcprac.MockMvcTest;
-import com.example.mvcprac.dto.account.SignUpForm;
+import com.example.mvcprac.dto.account.SignUpDto;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.service.AccountService;
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +31,7 @@ class HomeControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        SignUpForm signUpForm = new SignUpForm(
+        SignUpDto signUpDto = new SignUpDto(
                         "남태현",
                         "12341234!a",
                         "19920404",
@@ -39,7 +39,7 @@ class HomeControllerTest {
                         "email@email.com",
                         "서울",
                         "01012345678");
-        accountService.createUser(signUpForm);
+        accountService.createUser(signUpDto);
     }
 
     @AfterEach

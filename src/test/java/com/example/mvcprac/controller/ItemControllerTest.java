@@ -1,7 +1,7 @@
 package com.example.mvcprac.controller;
 
 import com.example.mvcprac.MockMvcTest;
-import com.example.mvcprac.dto.account.SignUpForm;
+import com.example.mvcprac.dto.account.SignUpDto;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.repository.ItemRepository;
 import com.example.mvcprac.service.AccountService;
@@ -37,7 +37,7 @@ class ItemControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        SignUpForm signUpForm = new SignUpForm(
+        SignUpDto signUpDto = new SignUpDto(
                 "남태값",
                 "12341234!a",
                 "19920404",
@@ -45,7 +45,7 @@ class ItemControllerTest {
                 "email@email.com",
                 "서울",
                 "01012345678");
-        accountService.createUser(signUpForm);
+        accountService.createUser(signUpDto);
     }
 
     @AfterEach
@@ -60,7 +60,7 @@ class ItemControllerTest {
         mockMvc.perform(get("/items/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("item/itemForm"))
-                .andExpect(model().attributeExists("form"));
+                .andExpect(model().attributeExists("itemCreateDto"));
     }
 
     @WithUserDetails(value = "email@email.com", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라

@@ -1,19 +1,19 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.account.NicknameForm;
-import com.example.mvcprac.dto.account.PasswordForm;
-import com.example.mvcprac.dto.profile.Notifications;
-import com.example.mvcprac.dto.profile.Profile;
-import com.example.mvcprac.dto.tag.TagForm;
-import com.example.mvcprac.dto.zone.ZoneForm;
+import com.example.mvcprac.dto.account.NicknameDto;
+import com.example.mvcprac.dto.account.PasswordDto;
+import com.example.mvcprac.dto.profile.NotificationsDto;
+import com.example.mvcprac.dto.profile.ProfileDto;
+import com.example.mvcprac.dto.tag.TagRegisterDto;
+import com.example.mvcprac.dto.zone.ZoneRegisterDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Tag;
 import com.example.mvcprac.model.Zone;
 import com.example.mvcprac.service.AccountService;
 import com.example.mvcprac.service.SettingService;
-import com.example.mvcprac.validation.customize.CurrentAccount;
-import com.example.mvcprac.validation.validator.NicknameValidator;
-import com.example.mvcprac.validation.validator.PasswordFormValidator;
+import com.example.mvcprac.validation.annotation.CurrentAccount;
+import com.example.mvcprac.validation.validator.NicknameDtoValidator;
+import com.example.mvcprac.validation.validator.PasswordDtoValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class SettingController {
 
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(new PasswordFormValidator());
+        webDataBinder.addValidators(new PasswordDtoValidator());
     }
 
     static final String ROOT = "/";
@@ -58,18 +58,18 @@ public class SettingController {
     private final AccountService accountService;
     private final ModelMapper modelMapper;
 
-    private final NicknameValidator nicknameValidator;
+    private final NicknameDtoValidator nicknameDtoValidator;
     private final SettingService settingService;
     private final ObjectMapper objectMapper;
 
-    @InitBinder("passwordForm")
+    @InitBinder("passwordDto")
         public void passwordFormInitBinder(WebDataBinder webDataBinder) {
-            webDataBinder.addValidators(new PasswordFormValidator());
+            webDataBinder.addValidators(new PasswordDtoValidator());
         }
 
-    @InitBinder("nicknameForm")
+    @InitBinder("nicknameDto")
     public void nicknameFormInitBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(nicknameValidator);
+        webDataBinder.addValidators(nicknameDtoValidator);
     }
 
     /**
@@ -79,20 +79,20 @@ public class SettingController {
     public String profileUpdateForm(@CurrentAccount Account account, Model model) {
 
         model.addAttribute(account);
-        model.addAttribute(modelMapper.map(account, Profile.class));
+        model.addAttribute(modelMapper.map(account, ProfileDto.class));
         return SETTINGS + PROFILE;
 
     }
 
     @PostMapping(PROFILE)
-    public String updateProfile(@CurrentAccount Account account, @Valid Profile profile, BindingResult bindingResult,
+    public String updateProfile(@CurrentAccount Account account, @Valid ProfileDto profileDto, BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);
             return SETTINGS + PROFILE;
         }
 
-        accountService.updateProfile(account, profile);
+        accountService.updateProfile(account, profileDto);
         redirectAttributes.addFlashAttribute("message", "프로필을 수정했습니다");
         return "redirect:/" + SETTINGS + PROFILE;
     }
@@ -103,19 +103,19 @@ public class SettingController {
     @GetMapping(PASSWORD)
     public String updatePasswordForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new PasswordForm());
+        model.addAttribute(new PasswordDto());
         return SETTINGS + PASSWORD;
     }
 
     @PostMapping(PASSWORD)
-    public String updatePassword(@CurrentAccount Account account, @Valid PasswordForm passwordForm, BindingResult bindingResult,
+    public String updatePassword(@CurrentAccount Account account, @Valid PasswordDto passwordDto, BindingResult bindingResult,
                                  Model model, RedirectAttributes attributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);
             return SETTINGS + PASSWORD;
         }
 
-        accountService.updatePassword(account, passwordForm.getNewPassword());
+        accountService.updatePassword(account, passwordDto.getNewPassword());
         attributes.addFlashAttribute("message", "패스워드를 변경했습니다.");
         return "redirect:/" + SETTINGS + PASSWORD;
     }
@@ -126,19 +126,19 @@ public class SettingController {
     @GetMapping(NOTIFICATIONS)
     public String updateNotificationsForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(modelMapper.map(account, Notifications.class));
+        model.addAttribute(modelMapper.map(account, NotificationsDto.class));
         return SETTINGS + NOTIFICATIONS;
     }
 
     @PostMapping(NOTIFICATIONS)
-    public String updateNotifications(@CurrentAccount Account account, @Valid Notifications notifications, BindingResult bindingResult,
+    public String updateNotifications(@CurrentAccount Account account, @Valid NotificationsDto notificationsDto, BindingResult bindingResult,
                                       Model model, RedirectAttributes attributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);
             return SETTINGS + NOTIFICATIONS;
         }
 
-        accountService.updateNotifications(account, notifications);
+        accountService.updateNotifications(account, notificationsDto);
         attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
         return "redirect:/" + SETTINGS + NOTIFICATIONS;
     }
@@ -149,19 +149,19 @@ public class SettingController {
     @GetMapping(ACCOUNT)
     public String updateAccountForm(@CurrentAccount Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(modelMapper.map(account, NicknameForm.class));
+        model.addAttribute(modelMapper.map(account, NicknameDto.class));
         return SETTINGS + ACCOUNT;
     }
 
     @PostMapping(ACCOUNT)
-    public String updateAccount(@CurrentAccount Account account, @Valid NicknameForm nicknameForm, BindingResult bindingResult,
+    public String updateAccount(@CurrentAccount Account account, @Valid NicknameDto nicknameDto, BindingResult bindingResult,
                                 Model model, RedirectAttributes attributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);
             return SETTINGS + ACCOUNT;
         }
 
-        accountService.updateNickname(account, nicknameForm.getNickname());
+        accountService.updateNickname(account, nicknameDto.getNickname());
         attributes.addFlashAttribute("message", "닉네임을 수정했습니다.");
         return "redirect:/" + SETTINGS + ACCOUNT;
     }
@@ -184,8 +184,8 @@ public class SettingController {
 
     @PostMapping(TAGS + "/add")
     @ResponseBody
-    public ResponseEntity updateTags(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        Tag tag = settingService.findTagTitle(tagForm);
+    public ResponseEntity updateTags(@CurrentAccount Account account, @RequestBody TagRegisterDto tagRegisterDto) {
+        Tag tag = settingService.findTagTitle(tagRegisterDto);
         if (tag == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -196,8 +196,8 @@ public class SettingController {
 
     @PostMapping(TAGS + "/remove")
     @ResponseBody
-    public ResponseEntity removeTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        Tag tag = settingService.removeTag(tagForm);
+    public ResponseEntity removeTag(@CurrentAccount Account account, @RequestBody TagRegisterDto tagRegisterDto) {
+        Tag tag = settingService.removeTag(tagRegisterDto);
         if (tag == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -223,8 +223,8 @@ public class SettingController {
 
     @PostMapping(ZONES + "/add")
     @ResponseBody
-    public ResponseEntity updateZones(@CurrentAccount Account account, @RequestBody ZoneForm zoneForm) {
-        Zone zone = settingService.addZone(zoneForm);
+    public ResponseEntity updateZones(@CurrentAccount Account account, @RequestBody ZoneRegisterDto zoneRegisterDto) {
+        Zone zone = settingService.addZone(zoneRegisterDto);
         if (zone == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -234,8 +234,8 @@ public class SettingController {
     }
     @PostMapping(ZONES + "/remove")
     @ResponseBody
-    public ResponseEntity removeZone(@CurrentAccount Account account, @RequestBody ZoneForm zoneForm) {
-        Zone zone = settingService.removeZone(zoneForm);
+    public ResponseEntity removeZone(@CurrentAccount Account account, @RequestBody ZoneRegisterDto zoneRegisterDto) {
+        Zone zone = settingService.removeZone(zoneRegisterDto);
         if (zone == null) {
             return ResponseEntity.badRequest().build();
         }

@@ -1,8 +1,8 @@
 package com.example.mvcprac.service;
 
-import com.example.mvcprac.dto.account.SignUpForm;
-import com.example.mvcprac.dto.profile.Notifications;
-import com.example.mvcprac.dto.profile.Profile;
+import com.example.mvcprac.dto.account.SignUpDto;
+import com.example.mvcprac.dto.profile.NotificationsDto;
+import com.example.mvcprac.dto.profile.ProfileDto;
 import com.example.mvcprac.mail.EmailMessage;
 import com.example.mvcprac.mail.EmailService;
 import com.example.mvcprac.model.Account;
@@ -44,16 +44,16 @@ public class AccountService implements UserDetailsService {
     private final AppProperties appProperties;
 
 
-    public Account createUser(SignUpForm signUpForm)  {
-        Account newAccount = saveNewUser(signUpForm);
+    public Account createUser(SignUpDto signUpDto)  {
+        Account newAccount = saveNewUser(signUpDto);
         sendSignUpConfirmEmail(newAccount);
         return newAccount;
     }
 
-    private Account saveNewUser(SignUpForm signUpForm) {
-        
-        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
-        Account account = modelMapper.map(signUpForm, Account.class);
+    private Account saveNewUser(SignUpDto signUpDto) {
+
+        signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
+        Account account = modelMapper.map(signUpDto, Account.class);
         account.generateEmailCheckToken();
         Account newAccount = accountRepository.save(account);
         return newAccount;
@@ -103,9 +103,9 @@ public class AccountService implements UserDetailsService {
         login(account);
     }
 
-    public void updateProfile(Account account, Profile profile) {
+    public void updateProfile(Account account, ProfileDto profileDto) {
 
-        modelMapper.map(profile, account);
+        modelMapper.map(profileDto, account);
         accountRepository.save(account);
     }
 
@@ -114,9 +114,9 @@ public class AccountService implements UserDetailsService {
         accountRepository.save(account);
     }
 
-    public void updateNotifications(Account account, Notifications notifications) {
+    public void updateNotifications(Account account, NotificationsDto notificationsDto) {
 
-        modelMapper.map(notifications, account);
+        modelMapper.map(notificationsDto, account);
         accountRepository.save(account);
     }
 

@@ -49,23 +49,23 @@ public class ItemService {
         return itemDetailDto;
     }
 
-    public Long createItem(ItemForm form, Account account) throws IOException {
+    public Long createItem(ItemCreateDto itemCreateDto, Account account) throws IOException {
 
-        Item item = new Item(form, account);
+        Item item = new Item(itemCreateDto, account);
         Item saveItem = itemRepository.save(item);
 
-        List<MultipartFile> imageFiles = form.getImageFiles();
+        List<MultipartFile> imageFiles = itemCreateDto.getImageFiles();
         fileStore.saveImages(imageFiles, saveItem);
 
         return saveItem.getId();
     }
 
 
-    public Long editItem(Item findItem, ItemForm itemForm, Account account) throws IOException {
-        Item item = new Item(findItem.getId(), itemForm, account);
+    public Long editItem(Item findItem, ItemCreateDto itemCreateDto, Account account) throws IOException {
+        Item item = new Item(findItem.getId(), itemCreateDto, account);
         Item editItem = itemRepository.save(item);
 
-        List<MultipartFile> imageFiles = itemForm.getImageFiles();
+        List<MultipartFile> imageFiles = itemCreateDto.getImageFiles();
         fileStore.saveImages(imageFiles, editItem);
 
         return editItem.getId();

@@ -1,14 +1,14 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.event.EventForm;
+import com.example.mvcprac.dto.event.EventCreateDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Enrollment;
 import com.example.mvcprac.model.Event;
 import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.service.EventService;
 import com.example.mvcprac.service.MeetingService;
-import com.example.mvcprac.validation.customize.CurrentAccount;
-import com.example.mvcprac.validation.validator.EventValidator;
+import com.example.mvcprac.validation.annotation.CurrentAccount;
+import com.example.mvcprac.validation.validator.EventCreateDtoValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -30,11 +30,11 @@ public class EventController {
     private final MeetingService meetingService;
     private final EventService eventService;
     private final ModelMapper modelMapper;
-    private final EventValidator eventValidator;
+    private final EventCreateDtoValidator eventCreateDtoValidator;
 
-    @InitBinder("eventForm")
+    @InitBinder("eventCreateDto")
     public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(eventValidator);
+        webDataBinder.addValidators(eventCreateDtoValidator);
     }
 
     @GetMapping("/new-event")
@@ -42,12 +42,12 @@ public class EventController {
         Meeting meeting = meetingService.getMeetingToUpdateStatus(account, path);
         model.addAttribute(meeting);
         model.addAttribute(account);
-        model.addAttribute(new EventForm());
+        model.addAttribute(new EventCreateDto());
         return "event/eventForm";
     }
 
     @PostMapping("/new-event")
-    public String newEventSubmit(@CurrentAccount Account account, @PathVariable String path, @Validated EventForm eventForm,
+    public String newEventSubmit(@CurrentAccount Account account, @PathVariable String path, @Validated EventCreateDto eventCreateDto,
                                  BindingResult bindingResult, Model model) {
         Meeting meeting = meetingService.getMeetingToUpdateStatus(account, path);
         if (bindingResult.hasErrors()) {
@@ -56,7 +56,7 @@ public class EventController {
             return "event/eventForm";
         }
 
-        Event event = eventService.createEvent(modelMapper.map(eventForm, Event.class), meeting, account);
+        Event event = eventService.createEvent(modelMapper.map(eventCreateDto, Event.class), meeting, account);
         return "redirect:/meeting/" + meeting.getEncodedPath() + "/events/" + event.getId();
     }
 
@@ -98,18 +98,18 @@ public class EventController {
         model.addAttribute(meeting);
         model.addAttribute(account);
         model.addAttribute(event);
-        model.addAttribute(modelMapper.map(event, EventForm.class));
+        model.addAttribute(modelMapper.map(event, EventCreateDto.class));
         return "event/eventEdit";
     }
 
     @PostMapping("/events/{id}/edit")
     public String updateEventSubmit(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id,
-                                    @Validated EventForm eventForm, BindingResult bindingResult, Model model) {
+                                    @Validated EventCreateDto eventCreateDto, BindingResult bindingResult, Model model) {
 
         Meeting meeting = meetingService.getMeetingToUpdate(account, path);
         Event event = eventService.findById(id);
-        eventForm.setEventType(event.getEventType());
-        eventValidator.validateUpdateForm(eventForm, event, bindingResult);
+        eventCreateDto.setEventEunm(event.getEventEunm());
+        eventCreateDtoValidator.validateUpdateForm(eventCreateDto, event, bindingResult);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);
@@ -118,7 +118,7 @@ public class EventController {
             return "event/eventForm";
         }
 
-        eventService.updateEvent(event, eventForm);
+        eventService.updateEvent(event, eventCreateDto);
         return "redirect:/meeting/" + meeting.getEncodedPath() +  "/events/" + event.getId();
     }
 

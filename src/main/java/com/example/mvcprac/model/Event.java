@@ -1,7 +1,7 @@
 package com.example.mvcprac.model;
 
 
-import com.example.mvcprac.util.status.EventType;
+import com.example.mvcprac.util.status.EventEunm;
 import com.example.mvcprac.validation.validator.UserAccount;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Setter
 @EqualsAndHashCode(of = "id")
 public class Event {
-
     @Id @GeneratedValue
     private Long id;
 
@@ -49,7 +48,7 @@ public class Event {
     private Integer limitOfEnrollments;
 
     @Enumerated(EnumType.STRING)
-    private EventType eventType;
+    private EventEunm eventEunm;
 
     @ManyToOne
     private Meeting meeting;
@@ -113,11 +112,11 @@ public class Event {
     }
 
     public boolean isAbleToAcceptWaitingEnrollment() {
-        return this.eventType == EventType.FCFS && this.limitOfEnrollments > this.getNumberOfAcceptedEnrollments();
+        return this.eventEunm == EventEunm.FCFS && this.limitOfEnrollments > this.getNumberOfAcceptedEnrollments();
     }
 
     public boolean canAccept(Enrollment enrollment) {
-        return this.eventType == EventType.CONFIRMATIVE
+        return this.eventEunm == EventEunm.CONFIRMATIVE
                 && this.enrollments.contains(enrollment)
                 && this.limitOfEnrollments > this.getNumberOfAcceptedEnrollments()
                 && !enrollment.isAttended()
@@ -125,7 +124,7 @@ public class Event {
     }
 
     public boolean canReject(Enrollment enrollment) {
-        return this.eventType == EventType.CONFIRMATIVE
+        return this.eventEunm == EventEunm.CONFIRMATIVE
                 && this.enrollments.contains(enrollment)
                 && !enrollment.isAttended()
                 && enrollment.isAccepted();
@@ -163,14 +162,14 @@ public class Event {
     }
 
     public void accept(Enrollment enrollment) {
-        if (this.eventType == EventType.CONFIRMATIVE
+        if (this.eventEunm == EventEunm.CONFIRMATIVE
                 && this.limitOfEnrollments > this.getNumberOfAcceptedEnrollments()) {
             enrollment.setAccepted(true);
         }
     }
 
     public void reject(Enrollment enrollment) {
-        if (this.eventType == EventType.CONFIRMATIVE) {
+        if (this.eventEunm == EventEunm.CONFIRMATIVE) {
             enrollment.setAccepted(false);
         }
     }

@@ -1,9 +1,9 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.dto.item.ItemForm;
+import com.example.mvcprac.dto.item.ItemCreateDto;
 import com.example.mvcprac.util.Timestamped;
-import com.example.mvcprac.util.status.DeliveryStatus;
-import com.example.mvcprac.util.status.ItemSellStatus;
+import com.example.mvcprac.util.status.DeliveryEnum;
+import com.example.mvcprac.util.status.ItemEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,10 +34,10 @@ public class Item extends Timestamped {
     private int price;
 
     @Enumerated(EnumType.STRING)
-    private ItemSellStatus itemSellStatus;
+    private ItemEnum itemEnum;
 
     @Enumerated(EnumType.STRING)
-    private DeliveryStatus deliveryChoice;
+    private DeliveryEnum deliveryEnum;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
@@ -47,22 +47,22 @@ public class Item extends Timestamped {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
-    public Item(ItemForm form, Account account) {
-        this.itemName = form.getItemName();
-        this.itemBody = form.getItemBody();
-        this.price = form.getPrice();
-        this.itemSellStatus = form.getItemSellStatus();
-        this.deliveryChoice = form.getDeliveryStatus();
+    public Item(ItemCreateDto itemCreateDto, Account account) {
+        this.itemName = itemCreateDto.getItemName();
+        this.itemBody = itemCreateDto.getItemBody();
+        this.price = itemCreateDto.getPrice();
+        this.itemEnum = itemCreateDto.getItemEnum();
+        this.deliveryEnum = itemCreateDto.getDeliveryEnum();
         this.account = account;
     }
 
-    public Item(Long id, ItemForm form, Account account) {
+    public Item(Long id, ItemCreateDto itemCreateDto, Account account) {
         this.id = id;
-        this.itemName = form.getItemName();
-        this.itemBody = form.getItemBody();
-        this.price = form.getPrice();
-        this.itemSellStatus = form.getItemSellStatus();
-        this.deliveryChoice = form.getDeliveryStatus();
+        this.itemName = itemCreateDto.getItemName();
+        this.itemBody = itemCreateDto.getItemBody();
+        this.price = itemCreateDto.getPrice();
+        this.itemEnum = itemCreateDto.getItemEnum();
+        this.deliveryEnum = itemCreateDto.getDeliveryEnum();
         this.account = account;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.mvcprac.service;
 
-import com.example.mvcprac.dto.event.EventForm;
+import com.example.mvcprac.dto.event.EventCreateDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Enrollment;
 import com.example.mvcprac.model.Event;
@@ -44,7 +44,7 @@ public class EventService {
         return events;
     }
 
-    public void updateEvent(Event event, EventForm eventForm) {
+    public void updateEvent(Event event, EventCreateDto eventForm) {
         modelMapper.map(eventForm, event);
         event.acceptWaitingList();
     }

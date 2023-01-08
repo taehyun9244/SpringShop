@@ -1,7 +1,7 @@
 package com.example.mvcprac.service;
 
-import com.example.mvcprac.dto.tag.TagForm;
-import com.example.mvcprac.dto.zone.ZoneForm;
+import com.example.mvcprac.dto.tag.TagRegisterDto;
+import com.example.mvcprac.dto.zone.ZoneRegisterDto;
 import com.example.mvcprac.model.Tag;
 import com.example.mvcprac.model.Zone;
 import com.example.mvcprac.repository.TagRepository;
@@ -26,7 +26,7 @@ public class SettingService {
         return findAllTags;
     }
 
-    public Tag findTagTitle(TagForm tagForm) {
+    public Tag findTagTitle(TagRegisterDto tagForm) {
 
         String tagTitle = tagForm.getTagTitle();
         Tag tag = tagRepository.findByTitle(tagTitle);
@@ -38,7 +38,7 @@ public class SettingService {
         return tag;
     }
 
-    public Tag removeTag(TagForm tagForm) {
+    public Tag removeTag(TagRegisterDto tagForm) {
         String tagTitle = tagForm.getTagTitle();
         Tag tag = tagRepository.findByTitle(tagTitle);
 
@@ -52,7 +52,7 @@ public class SettingService {
     }
 
 
-    public Zone addZone(ZoneForm zoneForm) {
+    public Zone addZone(ZoneRegisterDto zoneForm) {
         Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
         log.info("zone ={}", zone);
 
@@ -62,7 +62,7 @@ public class SettingService {
         return zone;
     }
 
-    public Zone removeZone(ZoneForm zoneForm) {
+    public Zone removeZone(ZoneRegisterDto zoneForm) {
         Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
 
         return zone;

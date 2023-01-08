@@ -1,6 +1,6 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.dto.zone.ZoneForm;
+import com.example.mvcprac.dto.zone.ZoneRegisterDto;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -35,10 +35,10 @@ public class Zone {
         this.province = province;
     }
 
-    public Zone(ZoneForm zoneForm) {
-        this.city = zoneForm.getCityName();
-        this.localNameOfCity = zoneForm.getLocalNameOfCity();
-        this.province = zoneForm.getProvinceName();
+    public Zone(ZoneRegisterDto zoneRegisterDto) {
+        this.city = zoneRegisterDto.getCityName();
+        this.localNameOfCity = zoneRegisterDto.getLocalNameOfCity();
+        this.province = zoneRegisterDto.getProvinceName();
     }
 
     @Override

@@ -10,7 +10,7 @@ import com.example.mvcprac.repository.MeetingRepository;
 import com.example.mvcprac.repository.NotificationRepository;
 import com.example.mvcprac.repository.query.AccountPredicates;
 import com.example.mvcprac.security.config.AppProperties;
-import com.example.mvcprac.util.status.NotificationType;
+import com.example.mvcprac.util.status.NotificationEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -44,7 +44,6 @@ public class MeetingEventListener {
             if (account.isShopCreatedByEmail()) {
                 sendMeetingCreatedEmail(meeting, account);
             }
-
             if (account.isShopCreatedByWeb()) {
                 saveMeetingCreatedNotification(meeting, account);
             }
@@ -59,12 +58,13 @@ public class MeetingEventListener {
             notification.setCreatedLocalDateTime(LocalDateTime.now());
             notification.setMessage(meeting.getShortDescription());
             notification.setAccount(account);
-            notification.setNotificationType(NotificationType.MEETING_CREATED);
+            notification.setNotificationEnum(NotificationEnum.MEETING_CREATED);
             notificationRepository.save(notification);
         }
 
         private void sendMeetingCreatedEmail(Meeting meeting, Account account) {
             Context context = new Context();
+
             context.setVariable("nickname", account.getNickname());
             context.setVariable("link", "/study/" + meeting.getEncodedPath());
             context.setVariable("linkName", meeting.getTitle());

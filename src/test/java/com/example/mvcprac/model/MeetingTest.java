@@ -1,7 +1,7 @@
 package com.example.mvcprac.model;
 
 import com.example.mvcprac.MockMvcTest;
-import com.example.mvcprac.dto.account.SignUpForm;
+import com.example.mvcprac.dto.account.SignUpDto;
 import com.example.mvcprac.service.AccountService;
 import com.example.mvcprac.validation.validator.UserAccount;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ class MeetingTest {
     @BeforeEach
     void beforeEach() {
         meeting = new Meeting();
-        SignUpForm signUpForm = new SignUpForm(
+        SignUpDto signUpDto = new SignUpDto(
                 "남태값",
                 "12341234!a",
                 "19920404",
@@ -34,7 +34,7 @@ class MeetingTest {
                 "email@email.com",
                 "서울",
                 "01012345678");
-        createAccount = accountService.createUser(signUpForm);
+        createAccount = accountService.createUser(signUpDto);
         userAccount = new UserAccount(createAccount);
 
     }

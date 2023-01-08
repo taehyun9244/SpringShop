@@ -1,6 +1,6 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.util.status.NotificationType;
+import com.example.mvcprac.util.status.NotificationEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +31,7 @@ public class Notification {
     private LocalDateTime createdLocalDateTime;
 
     @Enumerated(EnumType.STRING)
-    private NotificationType notificationType;
+    private NotificationEnum notificationEnum;
 
 
 }

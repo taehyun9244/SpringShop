@@ -1,15 +1,13 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.account.SignUpForm;
+import com.example.mvcprac.dto.account.SignUpDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.repository.AccountRepository;
 import com.example.mvcprac.service.AccountService;
-import com.example.mvcprac.validation.customize.CurrentAccount;
-import com.example.mvcprac.validation.validator.SignUpFormValidator;
-import com.example.mvcprac.validation.validator.UserAccount;
+import com.example.mvcprac.validation.annotation.CurrentAccount;
+import com.example.mvcprac.validation.validator.SignUpDtoValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,29 +22,29 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final SignUpFormValidator signUpFormValidator;
+    private final SignUpDtoValidator signUpDtoValidator;
     private final AccountService accountService;
     private final AccountRepository accountRepository;
 
-    @InitBinder("signUpForm")
+    @InitBinder("signUpDto")
     public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(signUpFormValidator);
+        webDataBinder.addValidators(signUpDtoValidator);
     }
 
     @GetMapping("/signup")
     public String createUser(Model model){
-        model.addAttribute("signUpForm", new SignUpForm());
+        model.addAttribute("signUpDto", new SignUpDto());
         return "user/signup";
     }
 
     @PostMapping("/signup")
-    public String createUser(@Valid @ModelAttribute SignUpForm signUpForm, BindingResult bindingResult)  {
+    public String createUser(@Valid @ModelAttribute SignUpDto signUpDto, BindingResult bindingResult)  {
         if (bindingResult.hasErrors()) {
             log.info("errors={} ", bindingResult);
             return "user/signup";
         }
 
-        Account account = accountService.createUser(signUpForm);
+        Account account = accountService.createUser(signUpDto);
         accountService.login(account);
         return "redirect:/";
     }
@@ -90,7 +88,7 @@ public class AccountController {
     }
 
     @GetMapping("/profile/{nickname}")
-    public String viewProfile(@PathVariable String nickname, Model model, @AuthenticationPrincipal UserAccount userAccount) {
+    public String viewProfile(@PathVariable String nickname, Model model) {
 
         Account accountToView = accountService.getAccount(nickname);
 

@@ -1,7 +1,10 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.dto.visa.VisaForm;
-import lombok.*;
+import com.example.mvcprac.dto.visa.VisaCreateDto;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,7 +35,7 @@ public class Visa {
     @ManyToOne
     private Account account;
 
-    public Visa(VisaForm visaForm, Account account) {
+    public Visa(VisaCreateDto visaForm, Account account) {
         this.title = visaForm.getTitle();
         this.body = visaForm.getBody();
         this.country = visaForm.getCountry();

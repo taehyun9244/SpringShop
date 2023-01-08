@@ -68,7 +68,7 @@ class MeetingSettingsControllerTest {
         mockMvc.perform(get("/meeting/" + meeting.getPath() + "/settings/description"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("meeting/settings/description"))
-                .andExpect(model().attributeExists("meetingDescriptionForm"))
+                .andExpect(model().attributeExists("meetingDescriptionDto"))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("meeting"));
     }
@@ -87,7 +87,7 @@ class MeetingSettingsControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeExists("meetingDescriptionForm"))
+                .andExpect(model().attributeExists("meetingDescriptionDto"))
                 .andExpect(model().attributeExists("meeting"))
                 .andExpect(model().attributeExists("account"));
     }

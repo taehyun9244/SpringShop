@@ -1,7 +1,7 @@
 package com.example.mvcprac.service;
 
 import com.example.mvcprac.dto.school.SchoolDetailDto;
-import com.example.mvcprac.dto.school.SchoolListDto;
+import com.example.mvcprac.dto.school.SchoolInfoDto;
 import com.example.mvcprac.model.School;
 import com.example.mvcprac.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +20,12 @@ public class SchoolService {
     private final SchoolRepository schoolRepository;
 
     @Transactional(readOnly = true)
-    public List<SchoolListDto> findListSchool() {
+    public List<SchoolInfoDto> findListSchool() {
         List<School> schools = schoolRepository.findAllByOrderByCreateAtDesc();
-        List<SchoolListDto> schoolListDtos = schools.stream()
-                .map(school -> new SchoolListDto(school))
+        List<SchoolInfoDto> schoolInfoDtos = schools.stream()
+                .map(school -> new SchoolInfoDto(school))
                 .collect(Collectors.toList());
-        return schoolListDtos;
+        return schoolInfoDtos;
     }
 
     @Transactional(readOnly = true)

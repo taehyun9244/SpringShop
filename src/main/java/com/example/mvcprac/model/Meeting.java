@@ -1,6 +1,6 @@
 package com.example.mvcprac.model;
 
-import com.example.mvcprac.dto.meeting.MeetingForm;
+import com.example.mvcprac.dto.meeting.MeetingCreateDto;
 import com.example.mvcprac.validation.validator.UserAccount;
 import lombok.*;
 
@@ -82,7 +82,7 @@ public class Meeting {
 
     private boolean useBanner;
 
-    public Meeting(MeetingForm meetingForm) {
+    public Meeting(MeetingCreateDto meetingForm) {
         this.path = meetingForm.getPath();
         this.title = meetingForm.getTitle();
         this.fullDescription = meetingForm.getFullDescription();

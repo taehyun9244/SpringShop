@@ -2,7 +2,7 @@ package com.example.mvcprac.controller;
 
 import com.example.mvcprac.dto.item.ItemListDto;
 import com.example.mvcprac.dto.item.ItemSearchDto;
-import com.example.mvcprac.dto.school.SchoolListDto;
+import com.example.mvcprac.dto.school.SchoolInfoDto;
 import com.example.mvcprac.dto.visa.VisaListDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.service.ItemService;
@@ -10,7 +10,7 @@ import com.example.mvcprac.service.MeetingService;
 import com.example.mvcprac.service.SchoolService;
 import com.example.mvcprac.service.VisaService;
 import com.example.mvcprac.service.file.FileStore;
-import com.example.mvcprac.validation.customize.CurrentAccount;
+import com.example.mvcprac.validation.annotation.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -72,8 +72,8 @@ public class HomeController {
             model.addAttribute(account);
         }
 
-        List<SchoolListDto> schoolListDtos = schoolService.findListSchool();
-        model.addAttribute("schoolList", schoolListDtos);
+        List<SchoolInfoDto> schoolInfoDtos = schoolService.findListSchool();
+        model.addAttribute("schoolList", schoolInfoDtos);
         return "school/school-home";
     }
 

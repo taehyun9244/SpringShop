@@ -1,12 +1,12 @@
 package com.example.mvcprac.controller;
 
+import com.example.mvcprac.dto.item.ItemCreateDto;
 import com.example.mvcprac.dto.item.ItemDetailDto;
-import com.example.mvcprac.dto.item.ItemForm;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Item;
 import com.example.mvcprac.service.ItemService;
 import com.example.mvcprac.service.file.FileStore;
-import com.example.mvcprac.validation.customize.CurrentAccount;
+import com.example.mvcprac.validation.annotation.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -42,19 +42,19 @@ public class ItemController {
     }
 
     @GetMapping("/add")
-    public String itemFormView(@ModelAttribute(name = "form") ItemForm form) {
+    public String itemFormView(@ModelAttribute ItemCreateDto itemCreateDto) {
         return "item/itemForm";
     }
 
     @PostMapping("/add")
-    public String itemFormSubmit(@Validated @ModelAttribute(name = "form") ItemForm form, @CurrentAccount Account account,
+    public String itemFormSubmit(@Validated @ModelAttribute ItemCreateDto itemCreateDto, @CurrentAccount Account account,
                                  BindingResult bindingResult, RedirectAttributes redirectAttributes) throws IOException {
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
             return "item/itemForm";
         }
 
-        Long itemId = itemService.createItem(form, account);
+        Long itemId = itemService.createItem(itemCreateDto, account);
         redirectAttributes.addAttribute("itemId", itemId);
         return "redirect:/items/{itemId}";
     }
@@ -63,12 +63,12 @@ public class ItemController {
     public String editItemView(@PathVariable Long id, Model model) {
         Item item = itemService.getItemId(id);
         itemService.deleteImages(item);
-        model.addAttribute(modelMapper.map(item, ItemForm.class));
+        model.addAttribute(modelMapper.map(item, ItemCreateDto.class));
         return "item/itemEdit";
     }
 
     @PostMapping("/{id}/edit")
-    public String editItemSubmit(@Validated @ModelAttribute ItemForm itemForm, @PathVariable Long id, @CurrentAccount Account account,
+    public String editItemSubmit(@Validated @ModelAttribute ItemCreateDto itemForm, @PathVariable Long id, @CurrentAccount Account account,
                                  BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) throws IOException {
 
         Item item = itemService.getItemId(id);

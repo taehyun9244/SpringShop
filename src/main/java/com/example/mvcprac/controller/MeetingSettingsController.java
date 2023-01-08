@@ -1,8 +1,8 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.meeting.MeetingDescriptionForm;
-import com.example.mvcprac.dto.tag.TagForm;
-import com.example.mvcprac.dto.zone.ZoneForm;
+import com.example.mvcprac.dto.meeting.MeetingDescriptionDto;
+import com.example.mvcprac.dto.tag.TagRegisterDto;
+import com.example.mvcprac.dto.zone.ZoneRegisterDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Meeting;
 import com.example.mvcprac.model.Tag;
@@ -11,7 +11,7 @@ import com.example.mvcprac.repository.TagRepository;
 import com.example.mvcprac.repository.ZoneRepository;
 import com.example.mvcprac.service.MeetingService;
 import com.example.mvcprac.service.TagService;
-import com.example.mvcprac.validation.customize.CurrentAccount;
+import com.example.mvcprac.validation.annotation.CurrentAccount;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -44,13 +44,13 @@ public class MeetingSettingsController {
         Meeting meeting = meetingService.getMeetingToUpdate(account, path);
         model.addAttribute(account);
         model.addAttribute(meeting);
-        model.addAttribute(modelMapper.map(meeting, MeetingDescriptionForm.class));
+        model.addAttribute(modelMapper.map(meeting, MeetingDescriptionDto.class));
         return "meeting/settings/description";
     }
 
     @PostMapping("/description")
     public String updateMeetingInfo(@CurrentAccount Account account, @PathVariable String path,
-                                    @Validated MeetingDescriptionForm studyDescriptionForm, BindingResult bindingResult,
+                                    @Validated MeetingDescriptionDto meetingDescriptionDto, BindingResult bindingResult,
                                     Model model, RedirectAttributes attributes) {
         Meeting meeting = meetingService.getMeetingToUpdate(account, path);
 
@@ -60,7 +60,7 @@ public class MeetingSettingsController {
             return "meeting/settings/description";
         }
 
-        meetingService.updateMeetingDescription(meeting, studyDescriptionForm);
+        meetingService.updateMeetingDescription(meeting, meetingDescriptionDto);
         attributes.addFlashAttribute("message", "교류회 소개를 수정했습니다.");
         return "redirect:/meeting/" + meeting.getEncodedPath() + "/settings/description";
     }
@@ -70,7 +70,7 @@ public class MeetingSettingsController {
         Meeting meeting = meetingService.getMeetingToUpdate(account, path);
         model.addAttribute(account);
         model.addAttribute(meeting);
-        model.addAttribute(modelMapper.map(meeting, MeetingDescriptionForm.class));
+        model.addAttribute(modelMapper.map(meeting, MeetingDescriptionDto.class));
         return "meeting/settings/banner";
     }
 
@@ -115,9 +115,9 @@ public class MeetingSettingsController {
     @PostMapping("/tags/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentAccount Account account, @PathVariable String path,
-                                 @RequestBody TagForm tagForm) {
+                                 @RequestBody TagRegisterDto tagRegisterDto) {
         Meeting meeting = meetingService.getMeetingToUpdateTag(account, path);
-        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
+        Tag tag = tagService.findOrCreateNew(tagRegisterDto.getTagTitle());
         meetingService.addTag(meeting, tag);
         return ResponseEntity.ok().build();
     }
@@ -125,9 +125,9 @@ public class MeetingSettingsController {
     @PostMapping("/tags/remove")
     @ResponseBody
     public ResponseEntity removeTag(@CurrentAccount Account account, @PathVariable String path,
-                                    @RequestBody TagForm tagForm) {
+                                    @RequestBody TagRegisterDto tagRegisterDto) {
         Meeting meeting = meetingService.getMeetingToUpdateTag(account, path);
-        Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
+        Tag tag = tagRepository.findByTitle(tagRegisterDto.getTagTitle());
         if (tag == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -152,9 +152,9 @@ public class MeetingSettingsController {
     @PostMapping("/zones/add")
     @ResponseBody
     public ResponseEntity addZone(@CurrentAccount Account account, @PathVariable String path,
-                                  @RequestBody ZoneForm zoneForm) {
+                                  @RequestBody ZoneRegisterDto zoneRegisterDto) {
         Meeting meeting = meetingService.getMeetingToUpdateZone(account, path);
-        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        Zone zone = zoneRepository.findByCityAndProvince(zoneRegisterDto.getCityName(), zoneRegisterDto.getProvinceName());
         if (zone == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -166,9 +166,9 @@ public class MeetingSettingsController {
     @PostMapping("/zones/remove")
     @ResponseBody
     public ResponseEntity removeZone(@CurrentAccount Account account, @PathVariable String path,
-                                     @RequestBody ZoneForm zoneForm) {
+                                     @RequestBody ZoneRegisterDto zoneRegisterDto) {
         Meeting meeting = meetingService.getMeetingToUpdateZone(account, path);
-        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+        Zone zone = zoneRepository.findByCityAndProvince(zoneRegisterDto.getCityName(), zoneRegisterDto.getProvinceName());
         if (zone == null) {
             return ResponseEntity.badRequest().build();
         }

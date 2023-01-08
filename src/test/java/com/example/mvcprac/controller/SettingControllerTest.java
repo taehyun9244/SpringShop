@@ -1,9 +1,9 @@
 package com.example.mvcprac.controller;
 
 import com.example.mvcprac.MockMvcTest;
-import com.example.mvcprac.dto.account.SignUpForm;
-import com.example.mvcprac.dto.tag.TagForm;
-import com.example.mvcprac.dto.zone.ZoneForm;
+import com.example.mvcprac.dto.account.SignUpDto;
+import com.example.mvcprac.dto.tag.TagRegisterDto;
+import com.example.mvcprac.dto.zone.ZoneRegisterDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Tag;
 import com.example.mvcprac.model.Zone;
@@ -50,7 +50,7 @@ class SettingControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        SignUpForm signUpForm = new SignUpForm(
+        SignUpDto signUpDto= new SignUpDto(
                 "남태현",
                 "12341234!a",
                 "19920404",
@@ -58,7 +58,7 @@ class SettingControllerTest {
                 "email@email.com",
                 "서울",
                 "01012345678");
-        accountService.createUser(signUpForm);
+        accountService.createUser(signUpDto);
 
         zoneRepository.save(testZone);
     }
@@ -84,12 +84,12 @@ class SettingControllerTest {
     @DisplayName("계정의 지역 정보 add")
     @Test
     void addZone() throws Exception {
-        ZoneForm zoneForm = new ZoneForm();
-        zoneForm.setZoneName(testZone.toString());
+        ZoneRegisterDto ZoneRegisterDto = new ZoneRegisterDto();
+        ZoneRegisterDto.setZoneName(testZone.toString());
 
         mockMvc.perform(post(ROOT + SETTINGS + ZONES + "/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(zoneForm))
+                        .content(objectMapper.writeValueAsString(ZoneRegisterDto))
                         .with(csrf()))
                 .andExpect(status().isOk());
 
@@ -106,12 +106,12 @@ class SettingControllerTest {
         Zone zone = zoneRepository.findByCityAndProvince(testZone.getCity(), testZone.getProvince());
         accountService.addZone(simokitazawa, zone);
 
-        ZoneForm zoneForm = new ZoneForm();
-        zoneForm.setZoneName(testZone.toString());
+        ZoneRegisterDto ZoneRegisterDto = new ZoneRegisterDto();
+        ZoneRegisterDto.setZoneName(testZone.toString());
 
         mockMvc.perform(post(ROOT + SETTINGS + ZONES + "/remove")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(zoneForm))
+                        .content(objectMapper.writeValueAsString(ZoneRegisterDto))
                         .with(csrf()))
                 .andExpect(status().isOk());
 
@@ -125,7 +125,7 @@ class SettingControllerTest {
         mockMvc.perform(get(ROOT + SETTINGS + PROFILE))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("profile"));
+                .andExpect(model().attributeExists("profileDto"));
     }
 
     @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
@@ -155,7 +155,7 @@ class SettingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name(SETTINGS + PROFILE))
                 .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("profile"))
+                .andExpect(model().attributeExists("profileDto"))
                 .andExpect(model().hasErrors());
 
         Account taehyun = accountRepository.findByNickname("시모키타자와");
@@ -169,7 +169,7 @@ class SettingControllerTest {
         mockMvc.perform(get(ROOT + SETTINGS + PASSWORD))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("passwordForm"));
+                .andExpect(model().attributeExists("passwordDto"));
     }
 
     @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
@@ -183,7 +183,7 @@ class SettingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name(SETTINGS + PASSWORD))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("passwordDto"))
                 .andExpect(model().attributeExists("account"));
     }
 
@@ -210,7 +210,7 @@ class SettingControllerTest {
         mockMvc.perform(get(ROOT + SETTINGS + ACCOUNT))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("nicknameForm"));
+                .andExpect(model().attributeExists("nicknameDto"));
     }
 
     @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
@@ -223,7 +223,7 @@ class SettingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name(SETTINGS + ACCOUNT))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeExists("nicknameForm"))
+                .andExpect(model().attributeExists("nicknameDto"))
                 .andExpect(model().attributeExists("account"));
     }
 
@@ -257,7 +257,7 @@ class SettingControllerTest {
     @DisplayName("계정의 Tag add")
     void addTag() throws Exception {
 
-        TagForm tagForm = new TagForm();
+        TagRegisterDto tagForm = new TagRegisterDto();
         tagForm.setTagTitle("newTagTitle");
 
         mockMvc.perform(post(ROOT + SETTINGS + TAGS + "/add")
@@ -278,7 +278,7 @@ class SettingControllerTest {
 
         Account simokitazawa = accountRepository.findByPhoneNumber("01012345678");
 
-        TagForm tagForm = new TagForm();
+        TagRegisterDto tagForm = new TagRegisterDto();
         tagForm.setTagTitle("newTagTitle");
         Tag saveTag = new Tag(tagForm.getTagTitle());
         Tag newTag = tagRepository.save(saveTag);

@@ -1,7 +1,7 @@
 package com.example.mvcprac.service;
 
+import com.example.mvcprac.dto.visa.VisaCreateDto;
 import com.example.mvcprac.dto.visa.VisaDetailDto;
-import com.example.mvcprac.dto.visa.VisaForm;
 import com.example.mvcprac.dto.visa.VisaListDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.model.Visa;
@@ -41,8 +41,8 @@ public class VisaService {
         return visaDetailDto;
     }
 
-    public Long createVisa(VisaForm visaForm, Account account) {
-        Visa visa = new Visa(visaForm, account);
+    public Long createVisa(VisaCreateDto visaCreateDto, Account account) {
+        Visa visa = new Visa(visaCreateDto, account);
         Visa saveVisa = visaRepository.save(visa);
         return saveVisa.getId();
     }

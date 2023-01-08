@@ -67,12 +67,12 @@ class AccountControllerTest {
 
     @Test
     @DisplayName("회원가입 화면 보이는지 테스트")
-    void signupForm() throws Exception {
+    void SignupDto() throws Exception {
         mockMvc.perform(get("/signup"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("user/signup"))
-                .andExpect(model().attributeExists("signUpForm"))
+                .andExpect(model().attributeExists("signUpDto"))
                 .andExpect(unauthenticated());;
     }
 
