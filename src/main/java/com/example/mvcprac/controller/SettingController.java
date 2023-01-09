@@ -1,9 +1,9 @@
 package com.example.mvcprac.controller;
 
-import com.example.mvcprac.dto.account.NicknameDto;
-import com.example.mvcprac.dto.account.PasswordDto;
+import com.example.mvcprac.dto.profile.NicknameDto;
+import com.example.mvcprac.dto.profile.PasswordDto;
 import com.example.mvcprac.dto.profile.NotificationsDto;
-import com.example.mvcprac.dto.profile.ProfileDto;
+import com.example.mvcprac.dto.profile.Profile;
 import com.example.mvcprac.dto.tag.TagRegisterDto;
 import com.example.mvcprac.dto.zone.ZoneRegisterDto;
 import com.example.mvcprac.model.Account;
@@ -23,11 +23,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,11 +40,6 @@ import static com.example.mvcprac.controller.SettingController.SETTINGS;
 @RequiredArgsConstructor
 @RequestMapping(ROOT + SETTINGS)
 public class SettingController {
-
-    @InitBinder("passwordForm")
-    public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(new PasswordDtoValidator());
-    }
 
     static final String ROOT = "/";
     static final String SETTINGS = "settings";
@@ -79,22 +74,24 @@ public class SettingController {
     public String profileUpdateForm(@CurrentAccount Account account, Model model) {
 
         model.addAttribute(account);
-        model.addAttribute(modelMapper.map(account, ProfileDto.class));
+        model.addAttribute(modelMapper.map(account, Profile.class));
         return SETTINGS + PROFILE;
 
     }
 
     @PostMapping(PROFILE)
-    public String updateProfile(@CurrentAccount Account account, @Valid ProfileDto profileDto, BindingResult bindingResult,
+    public String updateProfile(@CurrentAccount Account account, @Validated Profile profile, BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);
             return SETTINGS + PROFILE;
         }
 
-        accountService.updateProfile(account, profileDto);
+        accountService.updateProfile(account, profile);
         redirectAttributes.addFlashAttribute("message", "프로필을 수정했습니다");
         return "redirect:/" + SETTINGS + PROFILE;
+
+        //TODO 현재 refactoring 한 결과, 프로필 사진 업로드 및 수정이 불가
     }
 
     /**
@@ -108,7 +105,7 @@ public class SettingController {
     }
 
     @PostMapping(PASSWORD)
-    public String updatePassword(@CurrentAccount Account account, @Valid PasswordDto passwordDto, BindingResult bindingResult,
+    public String updatePassword(@CurrentAccount Account account, @Validated PasswordDto passwordDto, BindingResult bindingResult,
                                  Model model, RedirectAttributes attributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);
@@ -131,7 +128,7 @@ public class SettingController {
     }
 
     @PostMapping(NOTIFICATIONS)
-    public String updateNotifications(@CurrentAccount Account account, @Valid NotificationsDto notificationsDto, BindingResult bindingResult,
+    public String updateNotifications(@CurrentAccount Account account, @Validated NotificationsDto notificationsDto, BindingResult bindingResult,
                                       Model model, RedirectAttributes attributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);
@@ -154,7 +151,7 @@ public class SettingController {
     }
 
     @PostMapping(ACCOUNT)
-    public String updateAccount(@CurrentAccount Account account, @Valid NicknameDto nicknameDto, BindingResult bindingResult,
+    public String updateAccount(@CurrentAccount Account account, @Validated NicknameDto nicknameDto, BindingResult bindingResult,
                                 Model model, RedirectAttributes attributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute(account);

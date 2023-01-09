@@ -66,6 +66,8 @@ public class EventController {
         model.addAttribute(eventService.findById(id));
         model.addAttribute(meetingService.findMeetingWithMembersByPath(path));
         return "event/eventView";
+
+        //TODO 현재 refactoring 한 결과, 참가 신청 후 view가 제대로 나오지 않음
     }
 
     @GetMapping("/events")

@@ -54,9 +54,9 @@
                    class="badge badge-primary mgb-15">판매중</span>
             <span th:if="${itemDetailDto.getItemEnum == T(com.example.mvcprac.util.status.ItemEnum).SOLD}"
                   class="badge btn-danger mgb-15">품절</span>
-            <span th:if="${itemDetailDto.deliveryStatus == T(com.example.mvcprac.util.status.DeliveryStatus).POST }"
+            <span th:if="${itemDetailDto.deliveryEnum == T(com.example.mvcprac.util.status.DeliveryEnum).POST }"
                   class="badge badge-primary mgb-15">우체국</span>
-            <span th:if="${itemDetailDto.deliveryStatus == T(com.example.mvcprac.util.status.DeliveryStatus).LOTTE}"
+            <span th:if="${itemDetailDto.deliveryEnum == T(com.example.mvcprac.util.status.DeliveryEnum).LOTTE}"
                   class="badge btn-danger mgb-15">롯데</span>
             <div class="h4" th:value="${itemDetailDto.itemName}"></div>
             <hr class="my-4">

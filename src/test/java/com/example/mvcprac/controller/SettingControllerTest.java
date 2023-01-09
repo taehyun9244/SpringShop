@@ -140,8 +140,8 @@ class SettingControllerTest {
                 .andExpect(redirectedUrl(ROOT + SETTINGS + PROFILE))
                 .andExpect(flash().attributeExists("message"));
 
-        Account taehyun = accountRepository.findByNickname("시모키타자와");
-        assertThat(bio).isEqualTo(taehyun.getBio());
+        Account simokitazawa = accountRepository.findByNickname("시모키타자와");
+        assertThat(bio).isEqualTo(simokitazawa.getBio());
     }
 
     @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
@@ -158,8 +158,8 @@ class SettingControllerTest {
                 .andExpect(model().attributeExists("profileDto"))
                 .andExpect(model().hasErrors());
 
-        Account taehyun = accountRepository.findByNickname("시모키타자와");
-        Assertions.assertNull(taehyun.getBio());
+        Account simokitazawa = accountRepository.findByNickname("시모키타자와");
+        Assertions.assertNull(simokitazawa.getBio());
     }
 
     @WithUserDetails(value = "01012345678", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라

@@ -1,6 +1,6 @@
 package com.example.mvcprac.validation.validator;
 
-import com.example.mvcprac.dto.account.PasswordDto;
+import com.example.mvcprac.dto.profile.PasswordDto;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

@@ -77,7 +77,7 @@ class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("item/itemForm"))
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeExists("form"));
+                .andExpect(model().attributeExists("itemCreateDto"));
     }
 
     @WithUserDetails(value = "email@email.com", setupBefore = TestExecutionEvent.TEST_EXECUTION) // before 실행 후 test code 실행 직전에 실행해라
@@ -93,7 +93,7 @@ class ItemControllerTest {
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/items/{id}"))
-                .andExpect(model().attributeExists("form"));
+                .andExpect(model().attributeExists("itemCreateDto"));
 
 //        Optional<Item> byId = itemRepository.findById();
 //        Assertions.assertTrue(passwordEncoder.matches("12345678@a", byEmail.getPassword()));

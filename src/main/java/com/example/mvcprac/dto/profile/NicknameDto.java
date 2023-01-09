@@ -1,4 +1,4 @@
-package com.example.mvcprac.dto.account;
+package com.example.mvcprac.dto.profile;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

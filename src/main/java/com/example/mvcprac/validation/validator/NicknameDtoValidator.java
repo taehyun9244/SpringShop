@@ -1,6 +1,6 @@
 package com.example.mvcprac.validation.validator;
 
-import com.example.mvcprac.dto.account.NicknameDto;
+import com.example.mvcprac.dto.profile.NicknameDto;
 import com.example.mvcprac.model.Account;
 import com.example.mvcprac.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;

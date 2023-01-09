@@ -42,7 +42,7 @@ public class ItemController {
     }
 
     @GetMapping("/add")
-    public String itemFormView(@ModelAttribute ItemCreateDto itemCreateDto) {
+    public String itemFormView(@ModelAttribute(name = "itemCreateDto") ItemCreateDto itemCreateDto) {
         return "item/itemForm";
     }
 

@@ -102,7 +102,7 @@
                 <option value="LOTTE">롯데</option>
             </select>
             <small class="invalid-feedback">택배사를 선택해 주세요</small>
-            <p th:errors="*{deliveryStatus}" class="field-error">Incorrect data</p>
+            <p th:errors="*{deliveryEnum}" class="field-error">Incorrect data</p>
         </div>
 
         <div class="input-group">
@@ -145,9 +145,6 @@
                 <input type="file" class="custom-file-input" name="imageFiles" th:errorclass="field-error" aria-describedby="imageHelp" required>
                 <label class="custom-file-label" th:text="상품이미지"></label>
             </div>
-            <small id="imageHelp" class="form-text text-muted">
-                상품의 이미지를 최소 1장이상 등록해 주세요
-            </small>
             <small class="invalid-feedback">
                 이미지를 등록하세요.
             </small>

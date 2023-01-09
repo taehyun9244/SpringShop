@@ -2,7 +2,7 @@ package com.example.mvcprac.service;
 
 import com.example.mvcprac.dto.account.SignUpDto;
 import com.example.mvcprac.dto.profile.NotificationsDto;
-import com.example.mvcprac.dto.profile.ProfileDto;
+import com.example.mvcprac.dto.profile.Profile;
 import com.example.mvcprac.mail.EmailMessage;
 import com.example.mvcprac.mail.EmailService;
 import com.example.mvcprac.model.Account;
@@ -103,9 +103,9 @@ public class AccountService implements UserDetailsService {
         login(account);
     }
 
-    public void updateProfile(Account account, ProfileDto profileDto) {
+    public void updateProfile(Account account, Profile profile) {
 
-        modelMapper.map(profileDto, account);
+        modelMapper.map(profile, account);
         accountRepository.save(account);
     }
 

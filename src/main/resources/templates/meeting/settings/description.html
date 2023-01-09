@@ -14,7 +14,7 @@
         <div class="col-8">
             <div th:replace="fragments.html :: message"></div>
             <form class="needs-validation" th:action="@{'/meeting/' + ${meeting.getPath()} + '/settings/description'}"
-                  th:object="${meetingDescriptionForm}" method="post" novalidate>
+                  th:object="${meetingDescriptionDto}" method="post" novalidate>
                 <div class="form-group">
                     <label for="shortDescription">짧은 소개</label>
                     <textarea id="shortDescription" type="textarea" th:field="*{shortDescription}" class="form-control"
