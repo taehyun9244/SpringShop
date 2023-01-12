@@ -1,7 +1,7 @@
 package com.example.mvcprac.security.handler;
 
 import com.example.mvcprac.model.Account;
-import com.example.mvcprac.service.NotificationService;
+import com.example.mvcprac.repository.NotificationRepository;
 import com.example.mvcprac.validation.validator.UserAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,15 +18,15 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class NotificationInterceptor implements HandlerInterceptor {
 
-    private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (modelAndView != null && !isRedirectView(modelAndView) && authentication != null && authentication.getPrincipal() instanceof UserAccount) {
-            Account account = ((UserAccount) authentication.getPrincipal()).getAccount();
-            Long countByAccountAndChecked = notificationService.countByAccountAndChecked(account, false);
-            modelAndView.addObject("hasNotification", countByAccountAndChecked > 0);
+            Account account = ((UserAccount)authentication.getPrincipal()).getAccount();
+            long count = notificationRepository.countByAccountAndChecked(account, false);
+            modelAndView.addObject("hasNotification", count > 0);
         }
     }
 

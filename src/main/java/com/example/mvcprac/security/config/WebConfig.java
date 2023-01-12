@@ -19,14 +19,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
-        List<String> staticResourceLocation = Arrays.stream(StaticResourceLocation.values())
+        List<String> staticResourcesPath = Arrays.stream(StaticResourceLocation.values())
                 .flatMap(StaticResourceLocation::getPatterns)
                 .collect(Collectors.toList());
-        staticResourceLocation.add("/node_modules/**");
+        staticResourcesPath.add("/node_modules/**");
 
         registry.addInterceptor(notificationInterceptor)
-                .excludePathPatterns(staticResourceLocation);
-
+                .excludePathPatterns(staticResourcesPath);
     }
 }

@@ -116,8 +116,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/meetings">
-                    <i th:if="${!hasNotification}" class="fa fa-bell-o" aria-hidden="true"></i>
-                    <span class="text-info" th:if="${hasNotification}"><i class="fa fa-bell" aria-hidden="true"></i></span>
+                    <i class="fa fa-bell-o" aria-hidden="true"></i>
                     교류회</a>
             </li>
             <li class="nav-item">
@@ -566,4 +565,15 @@
         </form>
     </div>
 </div>
+
+<ul th:fragment="notification-list (notifications)" class="list-group list-group-flush">
+    <a href="#" th:href="@{${noti.link}}" th:each="noti: ${notifications}"
+       class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <small class="text-muted" th:text="${noti.title}">Noti title</small>
+            <small class="fromNow text-muted" th:text="${noti.createdDateTime}">3 days ago</small>
+        </div>
+        <p th:text="${noti.message}" class="text-left mb-0 mt-1">message</p>
+    </a>
+</ul>
 </html>
