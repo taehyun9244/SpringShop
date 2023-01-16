@@ -10,7 +10,7 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     boolean existsByPath(String path);
 
     @EntityGraph(value = "Meeting.withAll", type = EntityGraph.EntityGraphType.LOAD)
-     Meeting findByPath(String path);
+    Meeting findByPath(String path);
     @EntityGraph(value = "Meeting.withTagsAndManagers", type = EntityGraph.EntityGraphType.FETCH)
     Meeting findMeetingWithTagsByPath(String path);
     @EntityGraph(value = "Meeting.withZonesAndManagers", type = EntityGraph.EntityGraphType.FETCH)

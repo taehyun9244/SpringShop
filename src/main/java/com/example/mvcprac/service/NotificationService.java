@@ -18,5 +18,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     public void markAsRead(List<Notification> notifications) {
+        notifications.forEach(n -> n.setChecked(true));
+        notificationRepository.saveAll(notifications);
     }
 }

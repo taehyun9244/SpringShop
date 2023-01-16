@@ -12,4 +12,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     long countByAccountAndChecked(Account account, boolean checked);
 
     List<Notification> findByAccountAndCheckedOrderByCreatedDateTimeDesc(Account account, boolean b);
+
+    @Transactional
+    void deleteByAccountAndChecked(Account account, boolean checked);
 }

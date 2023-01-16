@@ -55,7 +55,7 @@ public class MeetingEventListener {
             notification.setTitle(meeting.getTitle());
             notification.setLink("/meeting/" + meeting.getEncodedPath());
             notification.setChecked(false);
-            notification.setCreatedLocalDateTime(LocalDateTime.now());
+            notification.setCreatedDateTime(LocalDateTime.now());
             notification.setMessage(meeting.getShortDescription());
             notification.setAccount(account);
             notification.setNotificationEnum(NotificationEnum.MEETING_CREATED);
