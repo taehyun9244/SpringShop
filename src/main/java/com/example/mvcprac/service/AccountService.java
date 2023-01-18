@@ -51,7 +51,6 @@ public class AccountService implements UserDetailsService {
     }
 
     private Account saveNewUser(SignUpDto signUpDto) {
-
         signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
         Account account = modelMapper.map(signUpDto, Account.class);
         account.generateEmailCheckToken();
